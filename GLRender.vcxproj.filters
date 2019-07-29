@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\glad">
+      <UniqueIdentifier>{07f25533-a776-43ca-baf6-d87db352071a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{2989fb2e-8836-47a2-9c3e-ee16cf96fcbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\shaders\src">
+      <UniqueIdentifier>{fc90f40e-f343-437f-b200-641166da96c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\stb">
+      <UniqueIdentifier>{a10f772e-d4d5-463e-81f3-14b3a3122a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\resources">
+      <UniqueIdentifier>{a444d9b8-2fed-48c3-9e1c-dea3067e3f3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{1cd37520-a3b5-41d0-8ae7-a7fffc710995}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{72aebfc8-6e77-45bc-b2de-ae1326db2a84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene\camera">
+      <UniqueIdentifier>{0ce71e81-7e79-466f-8a2e-b99f6ff3d685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene\mesh">
+      <UniqueIdentifier>{09355495-89f2-4774-8a0e-fc2230d3fe33}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\glad\glad.c">
+      <Filter>Source Files\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\Shader.cpp">
+      <Filter>Source Files\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stb\stb_image.cpp">
+      <Filter>Source Files\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resources\Texture.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\SceneObjectBase.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Transform.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\SceneObjectComponent.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\ObjectBase.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\camera\CameraComponent.cpp">
+      <Filter>Source Files\scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\camera\CameraObject.cpp">
+      <Filter>Source Files\scene\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\mesh\MeshComponent.cpp">
+      <Filter>Source Files\scene\mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\mesh\MeshObject.cpp">
+      <Filter>Source Files\scene\mesh</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\shaders\Shader.h">
+      <Filter>Source Files\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stb\stb_image.h">
+      <Filter>Source Files\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\Texture.h">
+      <Filter>Source Files\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\SceneObjectBase.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Transform.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\SceneObjectComponent.h">
+      <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\ObjectBase.h">
+      <Filter>Source Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\camera\CameraComponent.h">
+      <Filter>Source Files\scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\camera\CameraObject.h">
+      <Filter>Source Files\scene\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\mesh\MeshComponent.h">
+      <Filter>Source Files\scene\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\mesh\MeshObject.h">
+      <Filter>Source Files\scene\mesh</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\src\BasicVertexShader.vs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+    <None Include="src\shaders\src\BasicFragmentShader.fs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+  </ItemGroup>
+</Project>
