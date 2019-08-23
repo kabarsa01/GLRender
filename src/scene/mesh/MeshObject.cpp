@@ -13,3 +13,7 @@ void MeshObject::Initialize()
 {
 
 }
+
+void MeshObject::IntializeComponents()
+{
+}

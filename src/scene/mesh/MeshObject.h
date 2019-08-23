@@ -13,4 +13,6 @@ public:
 	virtual void Initialize() override;
 protected:
 	std::shared_ptr<MeshComponent> MeshComp;
+
+	virtual void IntializeComponents() override;
 };

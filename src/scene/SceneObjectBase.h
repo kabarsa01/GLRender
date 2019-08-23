@@ -18,6 +18,7 @@ public:
 	virtual ~SceneObjectBase();
 
 	virtual void Initialize() override;
+	bool RegisterComponent(std::shared_ptr<SceneObjectComponent> InComponent);
 protected:
 	// components container
 	std::vector<std::shared_ptr<SceneObjectComponent>> Components;

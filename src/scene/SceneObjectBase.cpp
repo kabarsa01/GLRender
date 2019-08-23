@@ -14,6 +14,12 @@ void SceneObjectBase::Initialize()
 	IntializeComponents();
 }
 
+bool SceneObjectBase::RegisterComponent(std::shared_ptr<SceneObjectComponent> InComponent)
+{
+	Components.push_back(InComponent);
+	return true;
+}
+
 void SceneObjectBase::IntializeComponents()
 {
 

@@ -7,7 +7,7 @@ SceneObjectComponent::SceneObjectComponent(std::shared_ptr<SceneObjectBase> InPa
 {
 	if (Parent.get() != nullptr)
 	{
-//		Parent->Components.push_back(shared_from_this());
+		Parent->RegisterComponent(shared_from_this());
 	}
 }
 

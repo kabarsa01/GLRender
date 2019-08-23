@@ -4,7 +4,7 @@
 
 class SceneObjectBase;
 
-class SceneObjectComponent : public ObjectBase
+class SceneObjectComponent : public ObjectBase, public std::enable_shared_from_this<SceneObjectComponent>
 {
 public:
 	SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent);
