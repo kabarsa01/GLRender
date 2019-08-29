@@ -8,7 +8,9 @@
 #include <sstream>
 #include <iostream>
 
-class Shader
+#include "core/ObjectBase.h"
+
+class Shader : public ObjectBase
 {
 public:
 	// shader program ID

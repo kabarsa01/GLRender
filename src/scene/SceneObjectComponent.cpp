@@ -5,15 +5,19 @@
 SceneObjectComponent::SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent)
 	: Parent(InParent)
 {
-	if (Parent.get() != nullptr)
-	{
-		Parent->RegisterComponent(shared_from_this());
-	}
 }
 
 SceneObjectComponent::~SceneObjectComponent()
 {
 
+}
+
+void SceneObjectComponent::Initialize()
+{
+	if (Parent.get() != nullptr)
+	{
+		Parent->RegisterComponent(derived_shared_from_this<SceneObjectComponent>());
+	}
 }
 
 std::shared_ptr<SceneObjectBase> SceneObjectComponent::GetParent()

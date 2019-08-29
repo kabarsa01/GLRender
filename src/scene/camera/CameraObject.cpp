@@ -18,6 +18,5 @@ std::shared_ptr<CameraComponent> CameraObject::GetCameraComponent()
 
 void CameraObject::IntializeComponents()
 {
-	CameraComp = std::shared_ptr<CameraComponent>(new CameraComponent(shared_from_this()));
-	Components.push_back(std::dynamic_pointer_cast<SceneObjectComponent>(CameraComp));
+	CameraComp = std::shared_ptr<CameraComponent>(new CameraComponent(derived_shared_from_this<SceneObjectBase>()));
 }

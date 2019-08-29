@@ -20,7 +20,7 @@ public:
 
 	void MarkDirty();
 	glm::mat4 GetMatrix() const;
-	const glm::mat4& GetMatrix();
+	glm::mat4& GetMatrix();
 protected:
 	glm::vec3 Location;
 	glm::vec3 Rotation;

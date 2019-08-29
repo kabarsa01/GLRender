@@ -44,18 +44,18 @@ void main() \n \
 //======================================================================
 //======================================================================
 
-float vertices[] = {
-	// coords              // color             // uv coords
-	 0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,  // top right
-	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,    1.0f, 0.0f,  // bottom right
-	-0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,  // bottom left
-	-0.5f,  0.5f, 0.0f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f   // top left 
-};
-
-unsigned int indices[] = {  // note that we start from 0!
-	0, 1, 3,   // first triangle
-	1, 2, 3    // second triangle
-};
+//float vertices[] = {
+//	// coords              // color             // uv coords
+//	 0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,  // top right
+//	 0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,    1.0f, 0.0f,  // bottom right
+//	-0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f,  // bottom left
+//	-0.5f,  0.5f, 0.0f,    1.0f, 1.0f, 0.0f,    0.0f, 1.0f   // top left 
+//};
+//
+//unsigned int indices[] = {  // note that we start from 0!
+//	0, 1, 3,   // first triangle
+//	1, 2, 3    // second triangle
+//};
 
 //======================================================================
 //======================================================================
@@ -67,10 +67,6 @@ Renderer::Renderer()
 
 Renderer::~Renderer()
 {
-	if (defaultShader != nullptr)
-	{
-		delete defaultShader;
-	}
 }
 
 
@@ -81,16 +77,18 @@ void Renderer::Init()
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
-	defaultShader = new Shader("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
+	DefaultShader = std::shared_ptr<Shader>(new Shader("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs"));
 
-	defaultAlbedo = new Texture("./content/textures/container.jpg", false);
-	secondaryAlbedo = new Texture("./content/textures/awesomeface.png", true);
+	DefaultAlbedo = std::shared_ptr<Texture>(new Texture("./content/textures/container.jpg", false));
+	SecondaryAlbedo = std::shared_ptr<Texture>(new Texture("./content/textures/awesomeface.png", true));
+
+	MeshObj = ObjectBase::NewObject<MeshObject>();
 
 	// use default shader
-	defaultShader->Use();
+	DefaultShader->Use();
 	// uniforms setup once
-	defaultShader->SetInt("albedo", 0);
-	defaultShader->SetInt("secondaryAlbedo", 1);
+	DefaultShader->SetInt("albedo", 0);
+	DefaultShader->SetInt("secondaryAlbedo", 1);
 
 	// VAO & VBO init
 	glGenVertexArrays(1, &VAO);
@@ -99,10 +97,13 @@ void Renderer::Init()
 	// VAO bind
 	glBindVertexArray(VAO);
 
+	float* MeshData = MeshObj->GetMeshComponent()->GetVerticesData().data();
+	unsigned int* IndicesData = MeshObj->GetMeshComponent()->GetIndicesData().data();
+
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(MeshData/*vertices*/), MeshData, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndicesData), IndicesData, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -119,21 +120,24 @@ void Renderer::Init()
 void Renderer::RenderFrame()
 {
 	// prerender init
-	glm::mat4 transform = glm::mat4(1.0f);
-	transform = glm::translate(transform, glm::vec3(0.1f, 0.2f, 0.0f));
-	transform = glm::rotate(transform, (float)glfwGetTime()/*glm::radians(45.0f)*/, glm::vec3(0.0f, 0.0f, 1.0f));
-	transform = glm::scale(transform, glm::vec3(0.7f, 0.7f, 0.7f));
+	MeshObj->Transform.SetLocation(glm::vec3(0.1f, 0.2f, 0.0f));
+	MeshObj->Transform.SetRotation(glm::vec3(0.0f, 0.0f, (float)glfwGetTime()));
+	MeshObj->Transform.SetScale(glm::vec3(0.7f, 0.7f, 0.7f));
+	//glm::mat4 transform = glm::mat4(1.0f);
+	//transform = glm::translate(transform, glm::vec3(0.1f, 0.2f, 0.0f));
+	//transform = glm::rotate(transform, (float)glfwGetTime()/*glm::radians(45.0f)*/, glm::vec3(0.0f, 0.0f, 1.0f));
+	//transform = glm::scale(transform, glm::vec3(0.7f, 0.7f, 0.7f));
 
 	// use default shader
-	defaultShader->Use();
-	defaultShader->SetUniformMatrix("transform", transform);
+	DefaultShader->Use();
+	DefaultShader->SetUniformMatrix("transform", MeshObj->Transform.GetMatrix());
 
 	// uniforms and variables
 //	defaultShader->SetInt("albedo", 0);
 //	defaultShader->SetInt("secondaryAlbedo", 1);
 
-	defaultAlbedo->Use(GL_TEXTURE0);
-	secondaryAlbedo->Use(GL_TEXTURE1);
+	DefaultAlbedo->Use(GL_TEXTURE0);
+	SecondaryAlbedo->Use(GL_TEXTURE1);
 
 	// bind VAO and draw
 	glBindVertexArray(VAO);

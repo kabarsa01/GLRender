@@ -7,7 +7,7 @@
 
 class SceneObjectComponent;
 
-class SceneObjectBase : public ObjectBase, public std::enable_shared_from_this<SceneObjectBase>
+class SceneObjectBase : public ObjectBase
 {
 public:
 	// fields
@@ -25,4 +25,6 @@ protected:
 
 	virtual void IntializeComponents();
 };
+
+
 

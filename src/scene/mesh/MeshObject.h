@@ -11,6 +11,8 @@ public:
 	virtual ~MeshObject();
 
 	virtual void Initialize() override;
+
+	std::shared_ptr<MeshComponent> GetMeshComponent();
 protected:
 	std::shared_ptr<MeshComponent> MeshComp;
 

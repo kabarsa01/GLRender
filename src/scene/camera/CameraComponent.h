@@ -6,7 +6,7 @@
 #include "scene/SceneObjectComponent.h"
 #include <memory>
 
-class CameraComponent : public SceneObjectComponent, public std::enable_shared_from_this<CameraComponent>
+class CameraComponent : public SceneObjectComponent
 {
 public:
 	CameraComponent(std::shared_ptr<SceneObjectBase> InParent);

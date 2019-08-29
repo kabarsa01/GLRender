@@ -11,6 +11,7 @@ SceneObjectBase::~SceneObjectBase()
 
 void SceneObjectBase::Initialize()
 {
+	ObjectBase::Initialize();
 	IntializeComponents();
 }
 

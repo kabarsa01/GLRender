@@ -48,7 +48,7 @@ glm::mat4 Transform::GetMatrix() const
 	return Matrix;
 }
 
-const glm::mat4& Transform::GetMatrix()
+glm::mat4& Transform::GetMatrix()
 {
 	if (IsDirty)
 	{

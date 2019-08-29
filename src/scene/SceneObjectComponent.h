@@ -4,15 +4,18 @@
 
 class SceneObjectBase;
 
-class SceneObjectComponent : public ObjectBase, public std::enable_shared_from_this<SceneObjectComponent>
+class SceneObjectComponent : public ObjectBase
 {
 public:
 	SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent);
 	virtual ~SceneObjectComponent();
 
+	virtual void Initialize() override;
 	std::shared_ptr<SceneObjectBase> GetParent();
 protected:
 	std::shared_ptr<SceneObjectBase> Parent;
 
 	bool Register();
 };
+
+

@@ -2,8 +2,8 @@
 #include <array>
 
 // default mesh data is a quad
-namespace
-{
+//namespace
+//{
 	float vertices[] = {
 		// coords              // color             // uv coords
 		 0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,  // top right
@@ -16,7 +16,7 @@ namespace
 		0, 1, 3,   // first triangle
 		1, 2, 3    // second triangle
 	};
-}
+//}
 
 MeshComponent::MeshComponent(std::shared_ptr<SceneObjectBase> Parent)
 	: SceneObjectComponent(Parent)
@@ -28,18 +28,26 @@ MeshComponent::~MeshComponent()
 {
 }
 
-void MeshComponent::SetMeshData(std::vector<float> InMeshData)
+void MeshComponent::SetMeshData(const std::vector<float>& InVerticesData, const std::vector<unsigned int>& InIndicesData)
 {
-	MeshData = InMeshData;
+	VerticesData = InVerticesData;
+	IndicesData = InIndicesData;
 }
 
-std::vector<float> MeshComponent::GetMeshData()
+std::vector<float>& MeshComponent::GetVerticesData()
 {
-	return MeshData;
+	return VerticesData;
+}
+
+std::vector<unsigned int>& MeshComponent::GetIndicesData()
+{
+	return IndicesData;
 }
 
 void MeshComponent::Initialize()
 {
+	SceneObjectComponent::Initialize();
 	// default quad mesh
-	MeshData.assign(vertices, vertices + 32);
+	VerticesData.assign(vertices, vertices + 32);
+	IndicesData.assign(indices, indices + 6);
 }

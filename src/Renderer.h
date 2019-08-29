@@ -1,7 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <glad/glad.h>
 #include <core/ObjectBase.h>
+
+#include "scene/mesh/MeshObject.h"
 
 class Shader;
 class Texture;
@@ -20,9 +23,12 @@ private:
 	unsigned int VBO;
 	unsigned int EBO;
 
-	Shader* defaultShader;
-	Texture* defaultAlbedo;
-	Texture* secondaryAlbedo;
+	std::shared_ptr<Shader> DefaultShader;
+	std::shared_ptr<Texture> DefaultAlbedo;
+	std::shared_ptr<Texture> SecondaryAlbedo;
+
+	// test
+	std::shared_ptr<MeshObject> MeshObj;
 	//==================== METHODS ===============================
 };
 
