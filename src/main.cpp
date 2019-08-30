@@ -55,8 +55,6 @@ int main()
 		processInput(window);
 
 		// rendering
-		glClearColor(0.2f, 0.3f, 0.35f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
 		renderer.RenderFrame();
 
 		// events and buffers swapping

@@ -1,4 +1,4 @@
-#include "scene/CameraComponent.h"
+#include "scene/camera/CameraComponent.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>

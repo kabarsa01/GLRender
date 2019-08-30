@@ -12,9 +12,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <scene/SceneObjectBase.h>
-#include <scene/camera/CameraObject.h>
-#include <scene/mesh/MeshObject.h>
+#include "scene/SceneObjectBase.h"
+#include "scene/mesh/MeshObject.h"
+#include "scene/camera/CameraObject.h"
 
 //======================================================================
 const char* vertexShaderSource = "#version 330 core \n \
@@ -72,17 +72,23 @@ Renderer::~Renderer()
 
 void Renderer::Init()
 {
+	glEnable(GL_DEPTH_TEST);
+
+	CameraObj = ObjectBase::NewObject<CameraObject>();
+	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 0.0f, 3.0f));
+
 	// output simple stats
 	int maxVertexAttrib = 0;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
-	DefaultShader = std::shared_ptr<Shader>(new Shader("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs"));
-
-	DefaultAlbedo = std::shared_ptr<Texture>(new Texture("./content/textures/container.jpg", false));
-	SecondaryAlbedo = std::shared_ptr<Texture>(new Texture("./content/textures/awesomeface.png", true));
-
+	DefaultShader = ObjectBase::NewObject<Shader, const GLchar *, const GLchar *>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
+	DefaultAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/container.jpg", false);
+	SecondaryAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/awesomeface.png", true);
+	// mesh object init
 	MeshObj = ObjectBase::NewObject<MeshObject>();
+	MeshObj->Transform.SetScale(glm::vec3(0.7f, 0.7f, 0.7f));
+	MeshObj->Transform.SetLocation(glm::vec3(0.0f, 0.1f, 0.0f));
 
 	// use default shader
 	DefaultShader->Use();
@@ -97,13 +103,13 @@ void Renderer::Init()
 	// VAO bind
 	glBindVertexArray(VAO);
 
-	float* MeshData = MeshObj->GetMeshComponent()->GetVerticesData().data();
-	unsigned int* IndicesData = MeshObj->GetMeshComponent()->GetIndicesData().data();
+	std::vector<float>& MeshData = MeshObj->GetMeshComponent()->GetVerticesData();
+	std::vector<unsigned int>& IndicesData = MeshObj->GetMeshComponent()->GetIndicesData();
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(MeshData/*vertices*/), MeshData, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, MeshData.size() * sizeof(float), MeshData.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(IndicesData), IndicesData, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndicesData.size() * sizeof(unsigned int), IndicesData.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -119,18 +125,19 @@ void Renderer::Init()
 
 void Renderer::RenderFrame()
 {
+	glClearColor(0.2f, 0.3f, 0.35f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// prerender init
-	MeshObj->Transform.SetLocation(glm::vec3(0.1f, 0.2f, 0.0f));
-	MeshObj->Transform.SetRotation(glm::vec3(0.0f, 0.0f, (float)glfwGetTime()));
-	MeshObj->Transform.SetScale(glm::vec3(0.7f, 0.7f, 0.7f));
-	//glm::mat4 transform = glm::mat4(1.0f);
-	//transform = glm::translate(transform, glm::vec3(0.1f, 0.2f, 0.0f));
-	//transform = glm::rotate(transform, (float)glfwGetTime()/*glm::radians(45.0f)*/, glm::vec3(0.0f, 0.0f, 1.0f));
-	//transform = glm::scale(transform, glm::vec3(0.7f, 0.7f, 0.7f));
+	MeshObj->Transform.SetRotation(glm::vec3(-60.0f, 0.0f, 10.0f * (float)glfwGetTime()));
+	glm::mat4 View = CameraObj->GetCameraComponent()->CalculateViewMatrix();
+	glm::mat4 Proj = CameraObj->GetCameraComponent()->CalculateProjectionMatrix();
 
 	// use default shader
 	DefaultShader->Use();
-	DefaultShader->SetUniformMatrix("transform", MeshObj->Transform.GetMatrix());
+	DefaultShader->SetUniformMatrix("model", MeshObj->Transform.GetMatrix());
+	DefaultShader->SetUniformMatrix("view", View);
+	DefaultShader->SetUniformMatrix("projection", Proj);
 
 	// uniforms and variables
 //	defaultShader->SetInt("albedo", 0);

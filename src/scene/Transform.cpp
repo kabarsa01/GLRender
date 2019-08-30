@@ -6,7 +6,7 @@
 Transform::Transform()
 	: Location()
 	, Rotation()
-	, Scale()
+	, Scale(1.0f)
 	, Matrix(1.0f)
 	, IsDirty(true)
 {
@@ -61,11 +61,11 @@ glm::mat4& Transform::GetMatrix()
 glm::mat4 Transform::CalculateMatrix() const
 {
 	glm::mat4 Mat(1.0f);
-	glm::translate(Mat, Location);
-	glm::rotate(Mat, Rotation[2], glm::vec3(0.0f, 0.0, 1.0f));
-	glm::rotate(Mat, Rotation[1], glm::vec3(0.0f, 1.0, 0.0f));
-	glm::rotate(Mat, Rotation[0], glm::vec3(1.0f, 0.0, 0.0f));
-	glm::scale(Mat, Scale);
+	Mat = glm::translate(Mat, Location);
+	Mat = glm::rotate(Mat, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0, 1.0f));
+	Mat = glm::rotate(Mat, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0, 0.0f));
+	Mat = glm::rotate(Mat, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0, 0.0f));
+	Mat = glm::scale(Mat, Scale);
 
 	return Mat;
 }

@@ -6,12 +6,14 @@ layout(location = 2) in vec2 InUV;
 out vec3 vertexColor;
 out vec2 uv;
 
-uniform mat4 transform;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
 	//gl_Position = vec4(InPos.x, InPos.y, InPos.z, 1.0);
-	gl_Position = transform * vec4(InPos, 1.0);
+	gl_Position = projection * view * model * vec4(InPos, 1.0);
 	vertexColor = InColor;
 	uv = InUV;
 }

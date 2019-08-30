@@ -4,10 +4,10 @@
 #include <glad/glad.h>
 #include <core/ObjectBase.h>
 
-#include "scene/mesh/MeshObject.h"
-
 class Shader;
 class Texture;
+class MeshObject;
+class CameraObject;
 
 class Renderer : public ObjectBase
 {
@@ -29,6 +29,7 @@ private:
 
 	// test
 	std::shared_ptr<MeshObject> MeshObj;
+	std::shared_ptr<CameraObject> CameraObj;
 	//==================== METHODS ===============================
 };
 

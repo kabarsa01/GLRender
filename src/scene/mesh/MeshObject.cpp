@@ -23,5 +23,5 @@ void MeshObject::IntializeComponents()
 {
 	SceneObjectBase::IntializeComponents();
 
-	MeshComp = NewObject<MeshComponent, SceneObjectBase>(shared_from_this());
+	MeshComp = ObjectBase::NewObject<MeshComponent, std::shared_ptr<SceneObjectBase>>(derived_shared_from_this<SceneObjectBase>());
 }
