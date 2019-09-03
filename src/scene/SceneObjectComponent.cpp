@@ -16,7 +16,7 @@ void SceneObjectComponent::Initialize()
 {
 	if (Parent.get() != nullptr)
 	{
-		Parent->RegisterComponent(derived_shared_from_this<SceneObjectComponent>());
+		Parent->RegisterComponent(get_shared_from_this<SceneObjectComponent>());
 	}
 }
 

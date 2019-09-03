@@ -11,13 +11,15 @@ public:
 	virtual ~ObjectBase();
 
 	template <typename Derived>
-	std::shared_ptr<Derived> derived_shared_from_this();
+	std::shared_ptr<Derived> get_shared_from_this();
 
 	// static object creation methods
 	/*template <typename Type>
 	static std::shared_ptr<Type> NewObject();*/
 	template <typename Type, typename ...ArgTypes>
 	static std::shared_ptr<Type> NewObject(ArgTypes ...Args);
+	template <typename Type, typename OriginalType>
+	static std::shared_ptr<Type> Cast(std::shared_ptr<OriginalType> InPointer);
 
 	virtual void Initialize();
 };
@@ -27,9 +29,9 @@ public:
 //-----------------------------------------------------------------------------------
 
 template <typename Derived>
-std::shared_ptr<Derived> ObjectBase::derived_shared_from_this()
+std::shared_ptr<Derived> ObjectBase::get_shared_from_this()
 {
-	return std::dynamic_pointer_cast<Derived>(shared_from_this());
+	return std::dynamic_pointer_cast<Derived, ObjectBase>(shared_from_this());
 }
 
 //template<typename Type>
@@ -46,6 +48,12 @@ inline std::shared_ptr<Type> ObjectBase::NewObject(ArgTypes ...Args)
 	std::shared_ptr<Type> NewObject = std::make_shared<Type>(Args...);
 	NewObject->Initialize();
 	return NewObject;
+}
+
+template<typename Type, typename OriginalType>
+inline std::shared_ptr<Type> ObjectBase::Cast(std::shared_ptr<OriginalType> InPointer)
+{
+	return std::dynamic_pointer_cast<Type, OriginalType>(InPointer);
 }
 
 

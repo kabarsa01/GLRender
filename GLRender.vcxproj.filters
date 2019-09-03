@@ -84,6 +84,9 @@
     <ClCompile Include="src\scene\mesh\MeshObject.cpp">
       <Filter>Source Files\scene\mesh</Filter>
     </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="src\scene\mesh\MeshObject.h">
       <Filter>Source Files\scene\mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>Source Files\scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

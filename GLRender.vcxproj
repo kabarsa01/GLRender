@@ -94,7 +94,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)3rdParty\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;GLFW/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW/glfw3.lib;Assimp/assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -124,7 +124,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;GLFW/glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;GLFW/glfw3.lib;Assimp/assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -137,6 +137,7 @@
     <ClCompile Include="src\scene\camera\CameraObject.cpp" />
     <ClCompile Include="src\scene\mesh\MeshComponent.cpp" />
     <ClCompile Include="src\scene\mesh\MeshObject.cpp" />
+    <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneObjectBase.cpp" />
     <ClCompile Include="src\scene\SceneObjectComponent.cpp" />
     <ClCompile Include="src\scene\Transform.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="src\scene\camera\CameraObject.h" />
     <ClInclude Include="src\scene\mesh\MeshComponent.h" />
     <ClInclude Include="src\scene\mesh\MeshObject.h" />
+    <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneObjectBase.h" />
     <ClInclude Include="src\scene\SceneObjectComponent.h" />
     <ClInclude Include="src\scene\Transform.h" />
