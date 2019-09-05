@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <core/ObjectBase.h>
 
+#include "render/MeshData.h"
+
 class Shader;
 class Texture;
 class MeshObject;

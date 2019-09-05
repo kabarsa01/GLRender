@@ -40,6 +40,9 @@
     <Filter Include="Source Files\scene\mesh">
       <UniqueIdentifier>{09355495-89f2-4774-8a0e-fc2230d3fe33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{427512da-d374-464e-873d-0cde83cda2ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -87,6 +90,9 @@
     <ClCompile Include="src\scene\Scene.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\MeshData.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -127,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="src\scene\Scene.h">
       <Filter>Source Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\MeshData.h">
+      <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

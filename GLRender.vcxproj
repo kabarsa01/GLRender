@@ -132,6 +132,7 @@
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\render\MeshData.cpp" />
     <ClCompile Include="src\resources\Texture.cpp" />
     <ClCompile Include="src\scene\camera\CameraComponent.cpp" />
     <ClCompile Include="src\scene\camera\CameraObject.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="src\core\ObjectBase.h" />
     <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\render\MeshData.h" />
     <ClInclude Include="src\resources\Texture.h" />
     <ClInclude Include="src\scene\camera\CameraComponent.h" />
     <ClInclude Include="src\scene\camera\CameraObject.h" />
