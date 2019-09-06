@@ -28,5 +28,12 @@ class MeshData : public ObjectBase
 public:
 	vector<Vertex> Vertices;
 	vector<unsigned int> Indices;
+	// gl objects for mesh data
+	unsigned int VAO;
+	unsigned int VBO;
+	unsigned int EBO;
+
+	void SetupBufferObjects();
+
 };
 

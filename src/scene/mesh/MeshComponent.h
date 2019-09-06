@@ -1,11 +1,15 @@
 #pragma once
 
 #include "scene/SceneObjectComponent.h"
+#include "render/MeshData.h"
+
 #include <vector>
 
 class MeshComponent : public SceneObjectComponent
 {
 public:
+	MeshData MeshData;
+
 	MeshComponent(std::shared_ptr<SceneObjectBase> Parent);
 	virtual ~MeshComponent();
 
