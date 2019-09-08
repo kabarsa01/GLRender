@@ -2,6 +2,20 @@
 
 #include <glad/glad.h>
 
+MeshData::MeshData(string InId)
+	: Resource{InId}
+	, VAO{ (unsigned int)-1 }
+	, VBO{ (unsigned int)-1 }
+	, EBO{ (unsigned int)-1 }
+{
+
+}
+
+MeshData::~MeshData()
+{
+
+}
+
 void MeshData::SetupBufferObjects()
 {
 	// VAO & VBO init
@@ -29,4 +43,12 @@ void MeshData::SetupBufferObjects()
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void MeshData::Draw()
+{
+	// bind VAO and draw
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, (GLsizei) Indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }

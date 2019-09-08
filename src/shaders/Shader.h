@@ -8,9 +8,10 @@
 #include <sstream>
 #include <iostream>
 
+#include "data/Resource.h"
 #include "core/ObjectBase.h"
 
-class Shader : public ObjectBase
+class Shader : public Resource
 {
 public:
 	// shader program ID

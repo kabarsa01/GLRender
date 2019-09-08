@@ -8,7 +8,7 @@
 class MeshComponent : public SceneObjectComponent
 {
 public:
-	MeshData MeshData;
+	std::shared_ptr<MeshData> MeshDataPtr;
 
 	MeshComponent(std::shared_ptr<SceneObjectBase> Parent);
 	virtual ~MeshComponent();

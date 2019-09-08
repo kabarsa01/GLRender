@@ -4,7 +4,8 @@
 #include <iostream>
 
 Texture::Texture(const char * path, bool InputUsesAlpha)
-	: ID(-1)
+	: Resource{ path }
+	, ID{ (unsigned int)-1 }
 {
 	stbi_set_flip_vertically_on_load(true);
 	data = stbi_load(path, &width, &height, &numChannels, 0);

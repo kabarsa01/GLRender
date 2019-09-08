@@ -1,9 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "core/ObjectBase.h"
+#include "data/Resource.h"
 
-class Texture : public ObjectBase
+class Texture : public Resource
 {
 public:
 	Texture(const char* path, bool InputUsesAlpha);
