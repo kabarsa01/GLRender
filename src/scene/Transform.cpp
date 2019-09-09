@@ -58,6 +58,16 @@ glm::mat4& Transform::GetMatrix()
 	return Matrix;
 }
 
+glm::mat4 Transform::CalculateRotationMatrix() const
+{
+	glm::mat4 Mat(1.0f);
+	Mat = glm::rotate(Mat, glm::radians(Rotation.z), glm::vec3(0.0f, 0.0, 1.0f));
+	Mat = glm::rotate(Mat, glm::radians(Rotation.y), glm::vec3(0.0f, 1.0, 0.0f));
+	Mat = glm::rotate(Mat, glm::radians(Rotation.x), glm::vec3(1.0f, 0.0, 0.0f));
+
+	return Mat;
+}
+
 glm::mat4 Transform::CalculateMatrix() const
 {
 	glm::mat4 Mat(1.0f);
@@ -69,3 +79,5 @@ glm::mat4 Transform::CalculateMatrix() const
 
 	return Mat;
 }
+
+

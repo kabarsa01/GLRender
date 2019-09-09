@@ -14,4 +14,6 @@ public:
 	std::string GetResourceId();
 protected:
 	std::string Id;
+private:
+	Resource();
 };

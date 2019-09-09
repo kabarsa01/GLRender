@@ -30,6 +30,8 @@ private:
 	std::shared_ptr<Texture> SecondaryAlbedo;
 
 	// test
+	std::vector<std::shared_ptr<MeshObject>> MeshObjects;
+	std::vector<std::shared_ptr<Texture>> Albedos;
 	std::shared_ptr<MeshObject> MeshObj;
 	std::shared_ptr<CameraObject> CameraObj;
 	//==================== METHODS ===============================

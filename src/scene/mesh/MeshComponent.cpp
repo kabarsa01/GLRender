@@ -28,26 +28,13 @@ MeshComponent::~MeshComponent()
 {
 }
 
-void MeshComponent::SetMeshData(const std::vector<float>& InVerticesData, const std::vector<unsigned int>& InIndicesData)
+void MeshComponent::SetMeshData(std::shared_ptr<MeshData> InMeshData)
 {
-	VerticesData = InVerticesData;
-	IndicesData = InIndicesData;
-}
-
-std::vector<float>& MeshComponent::GetVerticesData()
-{
-	return VerticesData;
-}
-
-std::vector<unsigned int>& MeshComponent::GetIndicesData()
-{
-	return IndicesData;
 }
 
 void MeshComponent::Initialize()
 {
 	SceneObjectComponent::Initialize();
 	// default quad mesh
-	VerticesData.assign(vertices, vertices + 32);
-	IndicesData.assign(indices, indices + 6);
+
 }

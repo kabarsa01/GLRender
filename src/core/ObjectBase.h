@@ -45,9 +45,9 @@ std::shared_ptr<Derived> ObjectBase::get_shared_from_this()
 template<typename Type, typename ...ArgTypes>
 inline std::shared_ptr<Type> ObjectBase::NewObject(ArgTypes ...Args)
 {
-	std::shared_ptr<Type> NewObject = std::make_shared<Type>(Args...);
-	NewObject->Initialize();
-	return NewObject;
+	std::shared_ptr<Type> NewObjectPtr = std::make_shared<Type>(Args...);
+	NewObjectPtr->Initialize();
+	return NewObjectPtr;
 }
 
 template<typename Type, typename OriginalType>

@@ -13,12 +13,7 @@ public:
 	MeshComponent(std::shared_ptr<SceneObjectBase> Parent);
 	virtual ~MeshComponent();
 
-	void SetMeshData(const std::vector<float>& InVerticesData, const std::vector<unsigned int>& InIndicesData);
-	std::vector<float>& GetVerticesData();
-	std::vector<unsigned int>& GetIndicesData();
-
+	void SetMeshData(std::shared_ptr<MeshData> InMeshData);
 	virtual void Initialize() override;
 protected:
-	std::vector<float> VerticesData;
-	std::vector<unsigned int> IndicesData;
 };

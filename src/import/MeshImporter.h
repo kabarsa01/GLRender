@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <memory>
 #include "render/MeshData.h"
 
@@ -12,10 +13,13 @@
 class MeshImporter
 {
 public:
-	std::shared_ptr<MeshData> Import(std::string InPath);
+	void Import(std::string InPath);
+	std::vector<std::shared_ptr<MeshData>>& GetMeshes();
 protected:
-	std::shared_ptr<MeshData> ImportedData;
+	std::string Path;
+	std::vector<std::shared_ptr<MeshData>> Meshes;
 
-	void ProcessNode(aiNode *node, const aiScene *scene);
+	void ProcessNode(aiNode *Node, const aiScene *Scene);
+	std::shared_ptr<MeshData> ProcessMesh(aiMesh* AiMesh);
 };
 

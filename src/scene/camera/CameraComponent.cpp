@@ -22,10 +22,11 @@ CameraComponent::~CameraComponent()
 
 glm::mat4 CameraComponent::CalculateViewMatrix() const
 {
-	glm::mat4 view = glm::mat4(1.0f);
-	// note that we're translating the scene in the reverse direction of where we want to move
-	view = glm::translate(view, Parent->Transform.GetLocation() * -1.0f);
-	return view;
+	glm::vec4 Forward = {0.0f, 0.0f, -1.0f, 0.0f};
+	Forward = Forward * Parent->Transform.CalculateRotationMatrix();
+	glm::vec3 Eye = Parent->Transform.GetLocation();
+	glm::vec3 Direction = { Forward.x, Forward.y, Forward.z };
+	return glm::lookAt(Eye, Eye + Direction, glm::vec3{ 0.0f, 1.0f, 0.0f });
 }
 
 glm::mat4 CameraComponent::CalculateProjectionMatrix() const

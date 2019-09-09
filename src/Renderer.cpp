@@ -16,6 +16,8 @@
 #include "scene/mesh/MeshObject.h"
 #include "scene/camera/CameraObject.h"
 
+#include "import/MeshImporter.h"
+
 //======================================================================
 const char* vertexShaderSource = "#version 330 core \n \
 layout(location = 0) in vec3 aPos; \n \
@@ -69,13 +71,36 @@ Renderer::~Renderer()
 {
 }
 
-
 void Renderer::Init()
 {
 	glEnable(GL_DEPTH_TEST);
 
+	vector<std::string> Paths{
+		"./content/nanosuit/helmet_dif.png",
+		"./content/nanosuit/body_dif.png",
+		"./content/nanosuit/arm_dif.png",
+		"./content/nanosuit/glass_dif.png",
+		"./content/nanosuit/hand_dif.png",
+		"./content/nanosuit/helmet_dif.png",
+		"./content/nanosuit/leg_dif.png",
+	};
+
+	MeshImporter Importer;
+	Importer.Import("./content/nanosuit/nanosuit.obj");
+	for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
+	{
+		std::shared_ptr<MeshObject> MO = ObjectBase::NewObject<MeshObject>();
+		MO->GetMeshComponent()->MeshDataPtr = Importer.GetMeshes()[MeshIndex];
+		MeshObjects.push_back(MO);
+		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
+
+		unsigned int TextureIndex = MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1;
+		Albedos.push_back(ObjectBase::NewObject<Texture, const char *, bool>(Paths[TextureIndex].c_str(), false));
+	}
+
 	CameraObj = ObjectBase::NewObject<CameraObject>();
-	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 0.0f, 3.0f));
+	CameraObj->Transform.SetLocation(glm::vec3(9.0f, 8.0f, 6.0f));
+	CameraObj->Transform.SetRotation(glm::vec3(40.0f, -45.0f, 0.0f));
 
 	// output simple stats
 	int maxVertexAttrib = 0;
@@ -85,10 +110,6 @@ void Renderer::Init()
 	DefaultShader = ObjectBase::NewObject<Shader, const GLchar *, const GLchar *>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
 	DefaultAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/container.jpg", false);
 	SecondaryAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/awesomeface.png", true);
-	// mesh object init
-	MeshObj = ObjectBase::NewObject<MeshObject>();
-	MeshObj->Transform.SetScale(glm::vec3(0.7f, 0.7f, 0.7f));
-	MeshObj->Transform.SetLocation(glm::vec3(0.0f, 0.1f, 0.0f));
 
 	// use default shader
 	DefaultShader->Use();
@@ -96,60 +117,42 @@ void Renderer::Init()
 	DefaultShader->SetInt("albedo", 0);
 	DefaultShader->SetInt("secondaryAlbedo", 1);
 
-	// VAO & VBO init
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-	// VAO bind
-	glBindVertexArray(VAO);
-
-	std::vector<float>& MeshData = MeshObj->GetMeshComponent()->GetVerticesData();
-	std::vector<unsigned int>& IndicesData = MeshObj->GetMeshComponent()->GetIndicesData();
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, MeshData.size() * sizeof(float), MeshData.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndicesData.size() * sizeof(unsigned int), IndicesData.data(), GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
+	{
+		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->SetupBufferObjects();
+	}
 }
 
 void Renderer::RenderFrame()
 {
-	glClearColor(0.2f, 0.3f, 0.35f, 1.0f);
+	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// prerender init
-	MeshObj->Transform.SetRotation(glm::vec3(-60.0f, 0.0f, 10.0f * (float)glfwGetTime()));
+	//MeshObj->Transform.SetRotation(glm::vec3(-60.0f, 0.0f, 10.0f * (float)glfwGetTime()));
 	glm::mat4 View = CameraObj->GetCameraComponent()->CalculateViewMatrix();
 	glm::mat4 Proj = CameraObj->GetCameraComponent()->CalculateProjectionMatrix();
 
 	// use default shader
 	DefaultShader->Use();
-	DefaultShader->SetUniformMatrix("model", MeshObj->Transform.GetMatrix());
-	DefaultShader->SetUniformMatrix("view", View);
-	DefaultShader->SetUniformMatrix("projection", Proj);
 
 	// uniforms and variables
 //	defaultShader->SetInt("albedo", 0);
 //	defaultShader->SetInt("secondaryAlbedo", 1);
 
-	DefaultAlbedo->Use(GL_TEXTURE0);
+	//DefaultAlbedo->Use(GL_TEXTURE0);
 	SecondaryAlbedo->Use(GL_TEXTURE1);
 
-	// bind VAO and draw
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	//MeshObj->GetMeshComponent()->MeshDataPtr->Draw();
+	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
+	{
+		Albedos[MeshIndex]->Use(GL_TEXTURE0);
+
+		DefaultShader->SetUniformMatrix("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
+		DefaultShader->SetUniformMatrix("view", View);
+		DefaultShader->SetUniformMatrix("projection", Proj);
+		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->Draw();
+	}
 }
 
 

@@ -8,6 +8,12 @@ Resource::Resource(std::string InId)
 {
 }
 
+Resource::Resource()
+	: ObjectBase{}
+{
+
+}
+
 Resource::~Resource()
 {
 

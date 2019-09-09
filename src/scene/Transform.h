@@ -21,13 +21,14 @@ public:
 	void MarkDirty();
 	glm::mat4 GetMatrix() const;
 	glm::mat4& GetMatrix();
+
+	glm::mat4 CalculateRotationMatrix() const;
+	glm::mat4 CalculateMatrix() const;
 protected:
 	glm::vec3 Location;
 	glm::vec3 Rotation;
 	glm::vec3 Scale;
 	glm::mat4 Matrix;
 	bool IsDirty;
-
-	glm::mat4 CalculateMatrix() const;
 };
 
