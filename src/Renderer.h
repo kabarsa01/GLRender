@@ -21,10 +21,6 @@ public:
 	void RenderFrame();
 private:
 	//======================= VARS ===============================
-	unsigned int VAO;
-	unsigned int VBO;
-	unsigned int EBO;
-
 	std::shared_ptr<Shader> DefaultShader;
 	std::shared_ptr<Texture> DefaultAlbedo;
 	std::shared_ptr<Texture> SecondaryAlbedo;

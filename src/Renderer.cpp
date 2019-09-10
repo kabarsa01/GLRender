@@ -143,9 +143,9 @@ void Renderer::RenderFrame()
 	{
 		Albedos[MeshIndex]->Use(GL_TEXTURE0);
 
-		DefaultShader->SetUniformMatrix("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
-		DefaultShader->SetUniformMatrix("view", View);
-		DefaultShader->SetUniformMatrix("projection", Proj);
+		DefaultShader->SetMat4("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
+		DefaultShader->SetMat4("view", View);
+		DefaultShader->SetMat4("projection", Proj);
 
 		MeshObjects[MeshIndex]->Transform.SetRotation({10.0f * (float)glfwGetTime(), 0.0f , -90.0f});
 		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->Draw();

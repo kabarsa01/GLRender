@@ -21,6 +21,8 @@ struct Vertex
 	vec3 Position;
 	vec3 Normal;
 	vec2 TexCoord;
+	vec3 Tangent;
+	vec3 Bitangent;
 };
 
 
