@@ -6,7 +6,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-//#include "core/ObjectBase.h"
 #include "data/Resource.h"
 
 using namespace std;

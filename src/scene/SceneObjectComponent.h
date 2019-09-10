@@ -16,6 +16,8 @@ protected:
 	std::shared_ptr<SceneObjectBase> Parent;
 
 	bool Register();
+private:
+	SceneObjectComponent();
 };
 
 

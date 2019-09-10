@@ -3,8 +3,15 @@
 
 
 SceneObjectComponent::SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent)
-	: Parent(InParent)
+	: ObjectBase()
+	, Parent(InParent)
 {
+}
+
+SceneObjectComponent::SceneObjectComponent()
+	: ObjectBase()
+{
+
 }
 
 SceneObjectComponent::~SceneObjectComponent()
