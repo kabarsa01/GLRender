@@ -76,17 +76,12 @@ void Renderer::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	vector<std::string> Paths{
-		"./content/nanosuit/helmet_dif.png",
-		"./content/nanosuit/body_dif.png",
-		"./content/nanosuit/arm_dif.png",
-		"./content/nanosuit/glass_dif.png",
-		"./content/nanosuit/hand_dif.png",
-		"./content/nanosuit/helmet_dif.png",
-		"./content/nanosuit/leg_dif.png",
+		"./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg",
 	};
 
 	MeshImporter Importer;
-	Importer.Import("./content/nanosuit/nanosuit.obj");
+	//Importer.Import("./content/nanosuit/nanosuit.obj");
+	Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
 	for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 	{
 		std::shared_ptr<MeshObject> MO = ObjectBase::NewObject<MeshObject>();
@@ -99,8 +94,8 @@ void Renderer::Init()
 	}
 
 	CameraObj = ObjectBase::NewObject<CameraObject>();
-	CameraObj->Transform.SetLocation(glm::vec3(9.0f, 8.0f, 6.0f));
-	CameraObj->Transform.SetRotation(glm::vec3(40.0f, -45.0f, 0.0f));
+	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
+	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
 
 	// output simple stats
 	int maxVertexAttrib = 0;
@@ -151,6 +146,8 @@ void Renderer::RenderFrame()
 		DefaultShader->SetUniformMatrix("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
 		DefaultShader->SetUniformMatrix("view", View);
 		DefaultShader->SetUniformMatrix("projection", Proj);
+
+		MeshObjects[MeshIndex]->Transform.SetRotation({10.0f * (float)glfwGetTime(), 0.0f , -90.0f});
 		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->Draw();
 	}
 }

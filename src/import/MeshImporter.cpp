@@ -11,7 +11,7 @@ void MeshImporter::Import(std::string InPath)
 {
 	Path = InPath;
 	Assimp::Importer LocalImporter;
-	const aiScene* Scene = LocalImporter.ReadFile(InPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* Scene = LocalImporter.ReadFile(InPath, aiProcess_Triangulate);// | aiProcess_FlipUVs);
 
 	if ( (Scene == nullptr) || (Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || (Scene->mRootNode == nullptr) )
 	{
