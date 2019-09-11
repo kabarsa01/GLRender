@@ -25,6 +25,7 @@ void SceneObjectComponent::Initialize()
 	{
 		Parent->RegisterComponent(get_shared_from_this<SceneObjectComponent>());
 	}
+//	Scene
 }
 
 std::shared_ptr<SceneObjectBase> SceneObjectComponent::GetParent()
