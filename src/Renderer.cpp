@@ -110,8 +110,11 @@ void Renderer::Init()
 	DefaultShader->Use();
 	// uniforms setup once
 	DefaultShader->SetVec3("ambient_color", { 0.2f, 0.2f, 0.25f });
-	DefaultShader->SetVec3("light_dir",{ -1.0f, -1.0f, -0.5f });
+	DefaultShader->SetVec3("light_dir",{ -1.0f, -0.5f, -0.5f });
 	DefaultShader->SetVec3("light_color", { 1.0f, 1.0f, 0.9f });
+	DefaultShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
+	DefaultShader->SetFloat("spec_strength", 0.5f);
+	DefaultShader->SetVec3("view_pos", CameraObj->Transform.GetLocation());
 	DefaultShader->SetInt("albedo", 0);
 	DefaultShader->SetInt("secondaryAlbedo", 1);
 
