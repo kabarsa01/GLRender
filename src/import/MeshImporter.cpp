@@ -11,11 +11,16 @@ void MeshImporter::Import(std::string InPath)
 {
 	Path = InPath;
 	Assimp::Importer LocalImporter;
-	const aiScene* Scene = LocalImporter.ReadFile(InPath, aiProcess_Triangulate);// | aiProcess_FlipUVs);
+	const aiScene* Scene = LocalImporter.ReadFile(InPath, aiProcess_Triangulate | aiProcess_CalcTangentSpace);// | aiProcess_FlipUVs);
 
 	if ( (Scene == nullptr) || (Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) || (Scene->mRootNode == nullptr) )
 	{
 		cout << "ASSIMP::ERROR import " << LocalImporter.GetErrorString() << endl;
+
+		if (Scene != nullptr)
+		{
+//			delete Scene;
+		}
 		return;
 	}
 
@@ -68,6 +73,17 @@ std::shared_ptr<MeshData> MeshImporter::ProcessMesh(aiMesh* AiMesh)
 		else
 		{
 			V.TexCoord = glm::vec2{0.0f, 0.0f};
+		}
+
+		if (AiMesh->HasTangentsAndBitangents())
+		{
+			V.Tangent.x = AiMesh->mTangents[Index].x;
+			V.Tangent.y = AiMesh->mTangents[Index].y;
+			V.Tangent.z = AiMesh->mTangents[Index].z;
+
+			V.Bitangent.x = AiMesh->mBitangents[Index].x;
+			V.Bitangent.y = AiMesh->mBitangents[Index].y;
+			V.Bitangent.z = AiMesh->mBitangents[Index].z;
 		}
 
 		Vertices.push_back(V);

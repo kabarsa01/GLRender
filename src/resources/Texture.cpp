@@ -3,14 +3,39 @@
 #include <stb/stb_image.h>
 #include <iostream>
 
-Texture::Texture(const char * path, bool InputUsesAlpha)
-	: Resource{ path }
+Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVertical, bool InLinear)
+	: Resource{ InPath }
 	, ID{ (unsigned int)-1 }
+	, Path{ InPath }
+	, UseAlpha{ InputUsesAlpha }
+	, FlipVertical{ InFlipVertical }
+	, Linear{ InLinear }
 {
-	stbi_set_flip_vertically_on_load(true);
-	data = stbi_load(path, &width, &height, &numChannels, 0);
+}
 
-	if (data)
+
+Texture::~Texture()
+{
+	UnloadData();
+}
+
+void Texture::LoadData()
+{
+	stbi_set_flip_vertically_on_load(FlipVertical);
+	Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
+}
+
+void Texture::UnloadData()
+{
+	if (Data != nullptr)
+	{
+		stbi_image_free(Data);
+	}
+}
+
+void Texture::InitializeBuffer()
+{
+	if (Data)
 	{
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
@@ -20,20 +45,32 @@ Texture::Texture(const char * path, bool InputUsesAlpha)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, InputUsesAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLint InternalFormat = 0;
+		if (Linear)
+		{
+			InternalFormat = UseAlpha ? GL_RGBA : GL_RGB;
+		}
+		else
+		{
+			InternalFormat = UseAlpha ? GL_SRGB_ALPHA : GL_SRGB;
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Width, Height, 0, UseAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
-
-	stbi_image_free(data);
 }
 
-
-Texture::~Texture()
+void Texture::DestroyBuffer()
 {
+	if (ID != -1)
+	{
+		glDeleteTextures(1, &ID);
+		ID = -1;
+	}
 }
 
 unsigned int Texture::GetID() const
@@ -43,7 +80,17 @@ unsigned int Texture::GetID() const
 
 unsigned char * Texture::GetData() const
 {
-	return data;
+	return Data;
+}
+
+std::string Texture::GetPath()
+{
+	return Path;
+}
+
+bool Texture::GetFlipVertical()
+{
+	return FlipVertical;
 }
 
 void Texture::Use(GLenum textureUnit) const

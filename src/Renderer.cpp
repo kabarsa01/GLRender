@@ -74,9 +74,18 @@ Renderer::~Renderer()
 void Renderer::Init()
 {
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glCullFace(GL_BACK);
 
 	vector<std::string> Paths{
 		"./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg",
+	};
+	vector<std::string> NormalPaths{
+		"./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg",
 	};
 
 	MeshImporter Importer;
@@ -90,12 +99,23 @@ void Renderer::Init()
 		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
 
 		unsigned int TextureIndex = MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1;
-		Albedos.push_back(ObjectBase::NewObject<Texture, const char *, bool>(Paths[TextureIndex].c_str(), false));
+
+		std::shared_ptr<Texture> Tex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(Paths[TextureIndex], false, true, false);
+		Tex->LoadData();
+		Tex->InitializeBuffer();
+		Albedos.push_back(Tex);
+
+		std::shared_ptr<Texture> NormalTex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(NormalPaths[TextureIndex], false, true, true);
+		NormalTex->LoadData();
+		NormalTex->InitializeBuffer();
+		NormalMaps.push_back(NormalTex);
 	}
 
 	CameraObj = ObjectBase::NewObject<CameraObject>();
 	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
 	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
+	CameraObj->GetCameraComponent()->SetNearPlane(0.1f);
+	CameraObj->GetCameraComponent()->SetFarPlane(10000.f);
 
 	// output simple stats
 	int maxVertexAttrib = 0;
@@ -103,20 +123,20 @@ void Renderer::Init()
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
 	DefaultShader = ObjectBase::NewObject<Shader, const GLchar *, const GLchar *>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
-	DefaultAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/container.jpg", false);
-	SecondaryAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/awesomeface.png", true);
+//	DefaultAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/container.jpg", false);
+//	SecondaryAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/awesomeface.png", true);
 
 	// use default shader
 	DefaultShader->Use();
 	// uniforms setup once
-	DefaultShader->SetVec3("ambient_color", { 0.2f, 0.2f, 0.25f });
+	DefaultShader->SetVec3("ambient_color", { 0.04f, 0.04f, 0.045f });
 	DefaultShader->SetVec3("light_dir",{ -1.0f, -0.5f, -0.5f });
-	DefaultShader->SetVec3("light_color", { 1.0f, 1.0f, 0.9f });
+	DefaultShader->SetVec3("light_color", { 0.95f, 0.95f, 0.95f });
 	DefaultShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
-	DefaultShader->SetFloat("spec_strength", 0.5f);
+	DefaultShader->SetFloat("spec_strength", 0.0f);
 	DefaultShader->SetVec3("view_pos", CameraObj->Transform.GetLocation());
 	DefaultShader->SetInt("albedo", 0);
-	DefaultShader->SetInt("secondaryAlbedo", 1);
+	DefaultShader->SetInt("normalMap", 1);
 
 	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
 	{
@@ -126,8 +146,10 @@ void Renderer::Init()
 
 void Renderer::RenderFrame()
 {
+//	glDepthMask(GL_FALSE);
+//	glDepthFunc(GL_LESS);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// prerender init
 	//MeshObj->Transform.SetRotation(glm::vec3(-60.0f, 0.0f, 10.0f * (float)glfwGetTime()));
@@ -142,12 +164,13 @@ void Renderer::RenderFrame()
 //	defaultShader->SetInt("secondaryAlbedo", 1);
 
 	//DefaultAlbedo->Use(GL_TEXTURE0);
-	SecondaryAlbedo->Use(GL_TEXTURE1);
+//	SecondaryAlbedo->Use(GL_TEXTURE1);
 
 	//MeshObj->GetMeshComponent()->MeshDataPtr->Draw();
 	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
 	{
 		Albedos[MeshIndex]->Use(GL_TEXTURE0);
+		NormalMaps[MeshIndex]->Use(GL_TEXTURE1);
 
 		DefaultShader->SetMat4("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
 		DefaultShader->SetMat4("view", View);

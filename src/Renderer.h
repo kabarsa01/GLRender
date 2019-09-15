@@ -28,6 +28,7 @@ private:
 	// test
 	std::vector<std::shared_ptr<MeshObject>> MeshObjects;
 	std::vector<std::shared_ptr<Texture>> Albedos;
+	std::vector<std::shared_ptr<Texture>> NormalMaps;
 	std::shared_ptr<MeshObject> MeshObj;
 	std::shared_ptr<CameraObject> CameraObj;
 	//==================== METHODS ===============================
