@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\common\HashString.cpp" />
     <ClCompile Include="src\core\ObjectBase.cpp" />
     <ClCompile Include="src\data\DataManager.cpp" />
     <ClCompile Include="src\data\Resource.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="src\stb\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\common\HashString.h" />
     <ClInclude Include="src\core\ObjectBase.h" />
     <ClInclude Include="src\data\DataManager.h" />
     <ClInclude Include="src\data\Resource.h" />

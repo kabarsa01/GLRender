@@ -52,6 +52,9 @@
     <Filter Include="Source Files\scene\light">
       <UniqueIdentifier>{a0fdb6b5-cc5c-43cb-a372-e73f4c7b7aac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{3391731a-bd03-4261-9453-84b311dd0cfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -114,6 +117,9 @@
     <ClCompile Include="src\scene\light\LightComponent.cpp">
       <Filter>Source Files\scene\light</Filter>
     </ClCompile>
+    <ClCompile Include="src\common\HashString.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -169,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="src\scene\light\LightComponent.h">
       <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\HashString.h">
+      <Filter>Source Files\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
