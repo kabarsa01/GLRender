@@ -18,6 +18,8 @@
 
 #include "import/MeshImporter.h"
 
+#include "common/HashString.h"
+
 //======================================================================
 const char* vertexShaderSource = "#version 330 core \n \
 layout(location = 0) in vec3 aPos; \n \
@@ -98,7 +100,7 @@ void Renderer::Init()
 		MeshObjects.push_back(MO);
 		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
 
-		unsigned int TextureIndex = MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1;
+		unsigned int TextureIndex = static_cast<unsigned int>( MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1 );
 
 		std::shared_ptr<Texture> Tex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(Paths[TextureIndex], false, true, false);
 		Tex->LoadData();
