@@ -38,8 +38,23 @@ private:
 	Class& operator=(Class arg) noexcept;
 };
 
+//==========================================================================================
+//==========================================================================================
+
 template<class T>
 inline const Class & Class::Get()
 {
-	// TODO: insert return statement here
+	HashString HashStr{ T::GetClassName() };
+
+	if (Classes.find(HashStr.GetHash()) == Classes.end())
+	{
+		Classes.insert( std::pair<size_t, std::shared_ptr<Class>> { HashStr.GetHash(), std::make_shared<Class>(HashStr) } );
+	}
+
+	return * Classes.at(HashStr.GetHash());
 }
+
+#define DECLARE_CLASS(Type) \
+friend class Class;
+
+

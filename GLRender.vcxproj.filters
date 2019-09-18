@@ -120,6 +120,9 @@
     <ClCompile Include="src\common\HashString.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Class.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="src\common\HashString.h">
       <Filter>Source Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Class.h">
+      <Filter>Source Files\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
