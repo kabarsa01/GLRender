@@ -11,7 +11,7 @@ std::shared_ptr<std::string> WrapString(const std::string& InStr)
 	return std::make_shared<std::string>( InStr );
 }
 
-std::map<size_t, std::shared_ptr<std::string>> HashString::StringsMap { { NONEHash, WrapString(NONE) } };
+std::map<size_t, std::shared_ptr<std::string>> HashString::StringsMap { { NONEHash, WrapString(::NONE) } };
 
 HashString::HashString(std::string InString)
 	: HashValue{ NONEHash }
@@ -22,13 +22,18 @@ HashString::HashString(std::string InString)
 
 	if (StringsMap.find(HashValue) == StringsMap.end())
 	{
-		StringsMap.insert(std::pair<size_t, std::shared_ptr<std::string>> { HashValue, WrapString(InString) } );
+		StringsMap.insert(std::pair<size_t, std::shared_ptr<std::string>> ( HashValue, WrapString(InString) ) );
 	}
 	CachedString = StringsMap[HashValue];
 }
 
 HashString::~HashString()
 {
+}
+
+HashString HashString::NONE()
+{
+	return HashString(::NONE);
 }
 
 const size_t HashString::GetHash() const

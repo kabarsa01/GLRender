@@ -14,6 +14,8 @@ public:
 	HashString(std::string InString);
 	virtual ~HashString();
 
+	static HashString NONE();
+
 	const size_t GetHash() const;
 	const std::string& GetString() const;
 
