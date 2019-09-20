@@ -7,16 +7,24 @@
 
 #include "common/HashString.h"
 
+class ObjectBase;
+
 class Class
 {
 public:
 	template<class T>
 	static const Class& Get();
+	static const Class& Get(ObjectBase* InObject);
 
 	const HashString& GetName() const;
 
 	bool operator==(const Class& Other) const;
+	bool operator!=(const Class& Other) const;
 private:
+	friend class ObjectBase;
+	friend class std::shared_ptr<Class>;
+	friend class std::_Ref_count_obj<Class>;
+
 	static std::map<size_t, std::shared_ptr<Class>> Classes;
 	HashString Name;
 
@@ -27,6 +35,10 @@ private:
 	virtual ~Class();
 
 	Class& operator=(const Class& Other);
+	const Class* operator&() const;
+
+	static std::shared_ptr<Class> GetClass(const HashString& InName);
+	static std::shared_ptr<Class> GetClass(ObjectBase* InObject);
 };
 
 //==========================================================================================
@@ -35,14 +47,7 @@ private:
 template<class T>
 inline const Class & Class::Get()
 {
-	HashString HashStr{ typeid( T ).name() };
-
-	if (Classes.find(HashStr.GetHash()) == Classes.end())
-	{
-		Classes.insert( std::pair<size_t, std::shared_ptr<Class>> ( HashStr.GetHash(), std::make_shared<Class>(HashStr) ) );
-	}
-
-	return * Classes.at(HashStr.GetHash());
+	return * GetClass( HashString{ typeid(T).name() } );
 }
 
 

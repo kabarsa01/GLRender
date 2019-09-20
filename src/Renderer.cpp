@@ -12,6 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "core/Class.h"
+
 #include "scene/SceneObjectBase.h"
 #include "scene/mesh/MeshObject.h"
 #include "scene/camera/CameraObject.h"
@@ -144,6 +146,10 @@ void Renderer::Init()
 	{
 		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->SetupBufferObjects();
 	}
+
+	std::cout << * MeshObjects[0]->GetClass().GetName() << std::endl;
+	std::cout << * CameraObj->GetClass().GetName() << std::endl;
+	std::cout << * CameraObj->GetCameraComponent()->GetClass().GetName() << std::endl;
 }
 
 void Renderer::RenderFrame()

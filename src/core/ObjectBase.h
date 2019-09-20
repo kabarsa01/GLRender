@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "core/Class.h"
+class Class;
 
 #define THIS_PTR(Type) std::dynamic_pointer_cast<Type>(shared_from_this())
 
@@ -11,6 +11,8 @@ class ObjectBase : public std::enable_shared_from_this<ObjectBase>
 public:
 	ObjectBase();
 	virtual ~ObjectBase();
+
+	const Class& GetClass();
 
 	template <typename Derived>
 	std::shared_ptr<Derived> get_shared_from_this();
@@ -22,6 +24,8 @@ public:
 	static std::shared_ptr<Type> Cast(std::shared_ptr<OriginalType> InPointer);
 
 	virtual void Initialize();
+private:
+	std::shared_ptr<Class> InstanceClass;
 };
 
 //-----------------------------------------------------------------------------------

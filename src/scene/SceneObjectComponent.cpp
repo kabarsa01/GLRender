@@ -21,11 +21,12 @@ SceneObjectComponent::~SceneObjectComponent()
 
 void SceneObjectComponent::Initialize()
 {
+	ObjectBase::Initialize();
+
 	if (Parent.get() != nullptr)
 	{
 		Parent->RegisterComponent(get_shared_from_this<SceneObjectComponent>());
 	}
-//	Scene
 }
 
 std::shared_ptr<SceneObjectBase> SceneObjectComponent::GetParent()

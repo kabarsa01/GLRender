@@ -56,6 +56,11 @@ bool HashString::operator!=(const HashString & rhs) const noexcept
 	return this->HashValue != rhs.HashValue;
 }
 
+const std::string & HashString::operator*() const
+{
+	return * CachedString;
+}
+
 HashString::HashString()
 	: HashValue{ NONEHash }
 	, CachedString{ StringsMap[NONEHash] }
