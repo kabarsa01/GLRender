@@ -41,3 +41,5 @@ public:
 	void Draw();
 };
 
+typedef std::shared_ptr<MeshData> MeshDataPtr;
+

@@ -20,6 +20,10 @@ public:
 
 	bool operator==(const Class& Other) const;
 	bool operator!=(const Class& Other) const;
+	bool operator<(const Class& Other) const;
+	bool operator>(const Class& Other) const;
+	bool operator<=(const Class& Other) const;
+	bool operator>=(const Class& Other) const;
 private:
 	friend class ObjectBase;
 	friend class std::shared_ptr<Class>;
@@ -40,6 +44,8 @@ private:
 	static std::shared_ptr<Class> GetClass(const HashString& InName);
 	static std::shared_ptr<Class> GetClass(ObjectBase* InObject);
 };
+
+typedef std::shared_ptr<Class> ClassPtr;
 
 //==========================================================================================
 //==========================================================================================

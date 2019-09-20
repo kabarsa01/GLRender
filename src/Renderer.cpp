@@ -150,6 +150,13 @@ void Renderer::Init()
 	std::cout << * MeshObjects[0]->GetClass().GetName() << std::endl;
 	std::cout << * CameraObj->GetClass().GetName() << std::endl;
 	std::cout << * CameraObj->GetCameraComponent()->GetClass().GetName() << std::endl;
+	CameraComponentPtr CamComp = CameraObj->GetComponentByType<CameraComponent>();
+	SceneObjectComponentPtr Comp = CameraObj->GetComponent<CameraComponent>();
+	MeshComponentPtr MeshComp = CameraObj->GetComponentByType<MeshComponent>();
+	if (MeshComp)
+	{
+		volatile int a = 0;
+	}
 }
 
 void Renderer::RenderFrame()

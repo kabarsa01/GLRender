@@ -23,7 +23,7 @@ void SceneObjectComponent::Initialize()
 {
 	ObjectBase::Initialize();
 
-	if (Parent.get() != nullptr)
+	if (Parent)
 	{
 		Parent->RegisterComponent(get_shared_from_this<SceneObjectComponent>());
 	}

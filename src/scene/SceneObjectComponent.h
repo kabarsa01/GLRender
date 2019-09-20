@@ -20,4 +20,6 @@ private:
 	SceneObjectComponent();
 };
 
+typedef std::shared_ptr<SceneObjectComponent> SceneObjectComponentPtr;
+
 

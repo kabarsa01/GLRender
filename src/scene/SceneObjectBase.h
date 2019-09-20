@@ -3,9 +3,12 @@
 #include "scene/Transform.h"
 #include <vector>
 #include <memory>
+
 #include "core/ObjectBase.h"
+#include "core/Class.h"
 
 class SceneObjectComponent;
+typedef std::shared_ptr<SceneObjectComponent> SceneObjectComponentPtr;
 
 class SceneObjectBase : public ObjectBase
 {
@@ -19,12 +22,43 @@ public:
 
 	virtual void Initialize() override;
 	bool RegisterComponent(std::shared_ptr<SceneObjectComponent> InComponent);
+
+	template<class T>
+	std::shared_ptr<T> GetComponentByType();
+	template<class T>
+	SceneObjectComponentPtr GetComponent();
 protected:
 	// components container
-	std::vector<std::shared_ptr<SceneObjectComponent>> Components;
+	std::vector<SceneObjectComponentPtr> Components;
 
 	virtual void IntializeComponents();
 };
 
+typedef std::shared_ptr<SceneObjectBase> SceneObjectBasePtr;
 
+//---------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------
+
+template<class T>
+inline std::shared_ptr<T> SceneObjectBase::GetComponentByType()
+{
+	return ObjectBase::Cast<T, SceneObjectComponent>(GetComponent<T>());
+}
+
+//---------------------------------------------------------------------------------------------------
+
+template<class T>
+inline SceneObjectComponentPtr SceneObjectBase::GetComponent()
+{
+	const Class& SearchedClass = Class::Get<T>();
+	for (SceneObjectComponentPtr Component : Components)
+	{
+		if (SearchedClass == Component->GetClass())
+		{
+			return Component;
+		}
+	}
+
+	return SceneObjectComponentPtr{ nullptr };
+}
 

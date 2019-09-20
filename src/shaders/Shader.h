@@ -45,3 +45,5 @@ protected:
 	unsigned int CreateAndLinkProgram(unsigned int vertexShader, unsigned int fragmentShader);
 };
 
+typedef std::shared_ptr<Shader> ShaderPtr;
+

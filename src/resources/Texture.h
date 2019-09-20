@@ -33,3 +33,6 @@ protected:
 	int Height;
 	int NumChannels;
 };
+
+typedef std::shared_ptr<Texture> TexturePtr;
+

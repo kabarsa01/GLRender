@@ -23,6 +23,26 @@ bool Class::operator!=(const Class & Other) const
 	return this->Name != Other.Name;
 }
 
+bool Class::operator<(const Class & Other) const
+{
+	return this->Name < Other.Name;
+}
+
+bool Class::operator>(const Class & Other) const
+{
+	return this->Name > Other.Name;
+}
+
+bool Class::operator<=(const Class & Other) const
+{
+	return this->Name <= Other.Name;
+}
+
+bool Class::operator>=(const Class & Other) const
+{
+	return this->Name >= Other.Name;
+}
+
 Class::Class()
 	: Name( HashString::NONE() )
 {

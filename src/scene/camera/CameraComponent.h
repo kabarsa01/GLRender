@@ -38,3 +38,7 @@ protected:
 	float FarPlane = 100.0f;
 };
 
+typedef std::shared_ptr<CameraComponent> CameraComponentPtr;
+
+
+

@@ -56,6 +56,26 @@ bool HashString::operator!=(const HashString & rhs) const noexcept
 	return this->HashValue != rhs.HashValue;
 }
 
+bool HashString::operator<(const HashString & Other) const noexcept
+{
+	return this->HashValue < Other.HashValue;
+}
+
+bool HashString::operator>(const HashString & Other) const noexcept
+{
+	return this->HashValue > Other.HashValue;
+}
+
+bool HashString::operator<=(const HashString & Other) const noexcept
+{
+	return this->HashValue <= Other.HashValue;
+}
+
+bool HashString::operator>=(const HashString & Other) const noexcept
+{
+	return this->HashValue >= Other.HashValue;
+}
+
 const std::string & HashString::operator*() const
 {
 	return * CachedString;

@@ -12,3 +12,6 @@ public:
 	LightComponent(std::shared_ptr<SceneObjectBase> InParent);
 	virtual ~LightComponent();
 };
+
+typedef std::shared_ptr<LightComponent> LightComponentPtr;
+
