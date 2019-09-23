@@ -17,6 +17,8 @@ public:
 	Renderer();
 	virtual ~Renderer();
 
+	virtual void Initialize() override;
+
 	void Init();
 	void RenderFrame();
 private:
@@ -33,4 +35,6 @@ private:
 	std::shared_ptr<CameraObject> CameraObj;
 	//==================== METHODS ===============================
 };
+
+typedef std::shared_ptr<Renderer> RendererPtr;
 

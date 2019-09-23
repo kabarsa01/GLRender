@@ -75,6 +75,11 @@ Renderer::~Renderer()
 {
 }
 
+void Renderer::Initialize()
+{
+	ObjectBase::Initialize();
+}
+
 void Renderer::Init()
 {
 	glEnable(GL_DEPTH_TEST);

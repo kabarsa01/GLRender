@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <stdio.h>
 
-#include "Renderer.h"
+#include "render/Renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -19,12 +19,6 @@ void processInput(GLFWwindow* window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
-}
-
-void ImportTest(const char* path)
-{
-	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 }
 
 int main()
