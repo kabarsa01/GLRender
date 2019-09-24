@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <stdio.h>
 
+#include "core/Engine.h"
 #include "render/Renderer.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -48,8 +49,10 @@ int main()
 	glViewport(200, 200, 800, 600);
 
 	// renderer initialization
-	Renderer renderer;
-	renderer.Init();
+	Engine* Engine = Engine::GetInstance();
+	Engine->InitModules();
+	RendererPtr renderer = Engine->GetRenderer();
+	renderer->Init();
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -59,7 +62,7 @@ int main()
 		processInput(window);
 
 		// rendering
-		renderer.RenderFrame();
+		renderer->RenderFrame();
 
 		// events and buffers swapping
 		glfwSwapBuffers(window);

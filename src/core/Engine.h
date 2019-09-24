@@ -7,6 +7,12 @@
 class Engine
 {
 public:
+	static Engine* GetInstance();
+
+	void InitModules();
+
+	ScenePtr GetScene();
+	RendererPtr GetRenderer();
 protected:
 	ScenePtr SceneInstance;
 	RendererPtr RendererInstance;
