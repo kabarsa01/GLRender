@@ -27,6 +27,9 @@ public:
 	std::shared_ptr<T> GetComponentByType();
 	template<class T>
 	SceneObjectComponentPtr GetComponent();
+	std::vector<SceneObjectComponentPtr> GetComponents() const;
+
+	virtual void Destroy() override;
 protected:
 	// components container
 	std::vector<SceneObjectComponentPtr> Components;

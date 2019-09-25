@@ -19,3 +19,7 @@ void ObjectBase::Initialize()
 	InstanceClass = Class::GetClass(this);
 }
 
+void ObjectBase::Destroy()
+{
+}
+

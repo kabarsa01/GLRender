@@ -24,6 +24,7 @@ public:
 	static std::shared_ptr<Type> Cast(std::shared_ptr<OriginalType> InPointer);
 
 	virtual void Initialize();
+	virtual void Destroy();
 private:
 	std::shared_ptr<Class> InstanceClass;
 };

@@ -25,6 +25,7 @@ public:
 	void RemoveSceneObject(SceneObjectBasePtr InSceneObject);
 
 	void RegisterSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent);
+	void RemoveSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent);
 protected:
 	std::map<HashString, std::set<SceneObjectBasePtr>> SceneObjects;
 	std::map<HashString, std::set<SceneObjectComponentPtr>> SceneObjectComponents;
