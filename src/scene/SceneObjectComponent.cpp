@@ -34,6 +34,10 @@ std::shared_ptr<SceneObjectBase> SceneObjectComponent::GetParent()
 	return Parent;
 }
 
+void SceneObjectComponent::TickComponent(float DeltaTime)
+{
+}
+
 bool SceneObjectComponent::Register()
 {
 	return true;

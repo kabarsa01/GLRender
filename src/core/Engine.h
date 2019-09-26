@@ -13,6 +13,8 @@ public:
 
 	ScenePtr GetScene();
 	RendererPtr GetRenderer();
+
+	void Tick();
 protected:
 	ScenePtr SceneInstance;
 	RendererPtr RendererInstance;

@@ -62,7 +62,8 @@ int main()
 		processInput(window);
 
 		// rendering
-		renderer->RenderFrame();
+		Engine->Tick();
+		//renderer->RenderFrame();
 
 		// events and buffers swapping
 		glfwSwapBuffers(window);

@@ -1,4 +1,5 @@
 #include "core/Engine.h"
+#include "core/TimeManager.h"
 
 Engine* Engine::StaticInstance = new Engine();
 
@@ -21,6 +22,14 @@ ScenePtr Engine::GetScene()
 RendererPtr Engine::GetRenderer()
 {
 	return RendererInstance;
+}
+
+void Engine::Tick()
+{
+	TimeManager::GetInstance()->UpdateTime();
+
+	SceneInstance->PerFrameUpdate();
+	RendererInstance->RenderFrame();
 }
 
 Engine::Engine()

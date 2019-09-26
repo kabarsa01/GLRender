@@ -26,8 +26,11 @@ public:
 
 	void RegisterSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent);
 	void RemoveSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent);
+
+	void PerFrameUpdate();
 protected:
-	std::map<HashString, std::set<SceneObjectBasePtr>> SceneObjects;
+	std::set<SceneObjectBasePtr> SceneObjectsSet;
+	std::map<HashString, std::set<SceneObjectBasePtr>> SceneObjectsMap;
 	std::map<HashString, std::set<SceneObjectComponentPtr>> SceneObjectComponents;
 };
 

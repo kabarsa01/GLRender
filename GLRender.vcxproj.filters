@@ -126,6 +126,9 @@
     <ClCompile Include="src\render\Renderer.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\TimeManager.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="src\render\Renderer.h">
       <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\TimeManager.h">
+      <Filter>Source Files\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

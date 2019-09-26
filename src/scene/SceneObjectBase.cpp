@@ -31,6 +31,10 @@ bool SceneObjectBase::RegisterComponent(std::shared_ptr<SceneObjectComponent> In
 	return true;
 }
 
+void SceneObjectBase::Tick(float DeltaTime)
+{
+}
+
 std::vector<SceneObjectComponentPtr> SceneObjectBase::GetComponents() const
 {
 	return Components;

@@ -2,6 +2,8 @@
 #include "scene/SceneObjectBase.h"
 #include "scene/SceneObjectComponent.h"
 
+#include "core/TimeManager.h"
+
 Scene::Scene()
 	: ObjectBase()
 {
@@ -18,12 +20,14 @@ void Scene::Initialize()
 
 void Scene::RegisterSceneObject(SceneObjectBasePtr InSceneObject)
 {
-	SceneObjects[InSceneObject->GetClass().GetName()].insert(InSceneObject);
+	SceneObjectsSet.insert(InSceneObject);
+	SceneObjectsMap[InSceneObject->GetClass().GetName()].insert(InSceneObject);
 }
 
 void Scene::RemoveSceneObject(SceneObjectBasePtr InSceneObject)
 {
-	SceneObjects[InSceneObject->GetClass().GetName()].erase(InSceneObject);
+	SceneObjectsSet.erase(InSceneObject);
+	SceneObjectsMap[InSceneObject->GetClass().GetName()].erase(InSceneObject);
 }
 
 void Scene::RegisterSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent)
@@ -34,4 +38,16 @@ void Scene::RegisterSceneObjectComponent(SceneObjectComponentPtr InSceneObjectCo
 void Scene::RemoveSceneObjectComponent(SceneObjectComponentPtr InSceneObjectComponent)
 {
 	SceneObjectComponents[InSceneObjectComponent->GetClass().GetName()].erase(InSceneObjectComponent);
+}
+
+void Scene::PerFrameUpdate()
+{
+	float DeltaTime = TimeManager::GetInstance()->GetDeltaTime();
+	for (SceneObjectBasePtr SceneObject : SceneObjectsSet)
+	{
+		if (SceneObject->IsTickEnabled)
+		{
+			SceneObject->Tick(DeltaTime);
+		}
+	}
 }

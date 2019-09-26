@@ -7,11 +7,15 @@ class SceneObjectBase;
 class SceneObjectComponent : public ObjectBase
 {
 public:
+	bool IsTickEnabled = true;
+
 	SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent);
 	virtual ~SceneObjectComponent();
 
 	virtual void Initialize() override;
 	std::shared_ptr<SceneObjectBase> GetParent();
+
+	virtual void TickComponent(float DeltaTime);
 protected:
 	std::shared_ptr<SceneObjectBase> Parent;
 
