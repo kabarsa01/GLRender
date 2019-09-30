@@ -24,6 +24,7 @@ public:
 	virtual void Initialize() override;
 	bool RegisterComponent(std::shared_ptr<SceneObjectComponent> InComponent);
 	virtual void Tick(float DeltaTime);
+	void TickComponents(float DeltaTime);
 
 	template<class T>
 	std::shared_ptr<T> GetComponentByType();

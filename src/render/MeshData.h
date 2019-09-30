@@ -31,13 +31,14 @@ public:
 	vector<Vertex> Vertices;
 	vector<unsigned int> Indices;
 	// gl objects for mesh data
-	unsigned int VAO;
-	unsigned int VBO;
-	unsigned int EBO;
+	unsigned int VAO = -1;
+	unsigned int VBO = -1;
+	unsigned int EBO = -1;
 
 	MeshData(string InId);
 	virtual ~MeshData();
 	void SetupBufferObjects();
+	void DestroyBufferObjects();
 	void Draw();
 };
 

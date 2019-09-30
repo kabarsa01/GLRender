@@ -35,6 +35,17 @@ void SceneObjectBase::Tick(float DeltaTime)
 {
 }
 
+void SceneObjectBase::TickComponents(float DeltaTime)
+{
+	for (SceneObjectComponentPtr Comp : Components)
+	{
+		if (Comp->IsTickEnabled)
+		{
+			Comp->TickComponent(DeltaTime);
+		}
+	}
+}
+
 std::vector<SceneObjectComponentPtr> SceneObjectBase::GetComponents() const
 {
 	return Components;

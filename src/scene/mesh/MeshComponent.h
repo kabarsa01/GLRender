@@ -9,6 +9,7 @@ class MeshComponent : public SceneObjectComponent
 {
 public:
 	std::shared_ptr<MeshData> MeshDataPtr;
+	bool CastShadows = true;
 
 	MeshComponent(std::shared_ptr<SceneObjectBase> Parent);
 	virtual ~MeshComponent();

@@ -46,6 +46,17 @@ void MeshData::SetupBufferObjects()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
+void MeshData::DestroyBufferObjects()
+{
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (VBO != -1) glDeleteBuffers(1, &VBO);
+	if (EBO != -1) glDeleteBuffers(1, &EBO);
+	if (VAO != -1) glDeleteVertexArrays(1, &VAO);
+}
+
 void MeshData::Draw()
 {
 	// bind VAO and draw

@@ -138,6 +138,7 @@
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\import\MeshImporter.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshData.cpp" />
     <ClCompile Include="src\render\Renderer.cpp" />
     <ClCompile Include="src\resources\Texture.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="src\data\DataManager.h" />
     <ClInclude Include="src\data\Resource.h" />
     <ClInclude Include="src\import\MeshImporter.h" />
+    <ClInclude Include="src\render\Material.h" />
     <ClInclude Include="src\render\MeshData.h" />
     <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\resources\Texture.h" />

@@ -48,6 +48,7 @@ void Scene::PerFrameUpdate()
 		if (SceneObject->IsTickEnabled)
 		{
 			SceneObject->Tick(DeltaTime);
+			SceneObject->TickComponents(DeltaTime);
 		}
 	}
 }
