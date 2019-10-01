@@ -1,10 +1,12 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <string>
 #include <memory>
 
 #include "core/ObjectBase.h"
+#include "common/HashString.h"
 #include "data/Resource.h"
 
 using namespace std;
@@ -15,13 +17,14 @@ public:
 	static DataManager* GetInstance();
 	static void ShutdownInstance();
 
-	bool AddResource(string InKey, shared_ptr<Resource> InValue);
-	bool IsResourcePresent(string InKey);
-	shared_ptr<Resource> GetResource(string InKey);
+	bool AddResource(HashString InKey, shared_ptr<Resource> InValue);
+	bool IsResourcePresent(HashString InKey);
+	shared_ptr<Resource> GetResource(HashString InKey);
 	template<class T>
-	shared_ptr<T> GetResourceType(string InKey);
+	shared_ptr<T> GetResourceType(HashString InKey);
 protected:
-	map<string, shared_ptr<Resource>> Resources;
+	map<HashString, ResourcePtr> ResourcesTable;
+	map<HashString, map<HashString, ResourcePtr>> ResourcesMap;
 private:
 	static DataManager* Instance;
 
@@ -32,7 +35,7 @@ private:
 //==================================================================================
 
 template<class T>
-shared_ptr<T> DataManager::GetResourceType(string InKey)
+shared_ptr<T> DataManager::GetResourceType(HashString InKey)
 {
 	return dynamic_pointer_cast<T>(GetResource(InKey));
 }

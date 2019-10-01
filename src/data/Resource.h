@@ -1,19 +1,29 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include "core/ObjectBase.h"
+#include "common/HashString.h"
 
 class Resource : public ObjectBase
 {
 public:
-	Resource(std::string InId);
+	Resource(HashString InId);
 	virtual ~Resource();
 
 	virtual void Initialize() override;
-	std::string GetResourceId();
+	HashString GetResourceId();
+
+	virtual bool Load();
+	bool IsValid();
 protected:
-	std::string Id;
+	HashString Id;
+	bool IsValid;
 private:
 	Resource();
 };
+
+typedef std::shared_ptr<Resource> ResourcePtr;
+
+

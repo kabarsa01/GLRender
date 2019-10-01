@@ -1,7 +1,7 @@
 #include "Shader.h"
 #include <glm/gtc/type_ptr.hpp>
 
-Shader::Shader(const GLchar * vertexPath, const GLchar * fragmentPath)
+Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
 	: Resource{ vertexPath }
 {
 	// 1. retrieve the vertex/fragment source code from filePath

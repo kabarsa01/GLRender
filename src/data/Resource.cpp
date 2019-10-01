@@ -2,7 +2,7 @@
 #include "data/Resource.h"
 #include "data/DataManager.h"
 
-Resource::Resource(std::string InId)
+Resource::Resource(HashString InId)
 	: ObjectBase()
 	, Id{ InId }
 {
@@ -10,6 +10,7 @@ Resource::Resource(std::string InId)
 
 Resource::Resource()
 	: ObjectBase{}
+	, Id{HashString::NONE()}
 {
 
 }
@@ -25,8 +26,18 @@ void Resource::Initialize()
 	DataManager::GetInstance()->AddResource(Id, get_shared_from_this<Resource>());
 }
 
-std::string Resource::GetResourceId()
+HashString Resource::GetResourceId()
 {
 	return Id;
+}
+
+bool Resource::Load()
+{
+	return false;
+}
+
+bool Resource::IsValid()
+{
+	return false;
 }
 
