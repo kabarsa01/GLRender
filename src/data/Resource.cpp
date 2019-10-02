@@ -38,6 +38,6 @@ bool Resource::Load()
 
 bool Resource::IsValid()
 {
-	return false;
+	return IsValidFlag;
 }
 

@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "core/ObjectBase.h"
+#include "core/Class.h"
 #include "common/HashString.h"
 #include "data/Resource.h"
 
@@ -21,7 +22,9 @@ public:
 	bool IsResourcePresent(HashString InKey);
 	shared_ptr<Resource> GetResource(HashString InKey);
 	template<class T>
-	shared_ptr<T> GetResourceType(HashString InKey);
+	shared_ptr<T> GetResource(HashString InKey);
+	template<class T>
+	shared_ptr<T> GetResourceByType(HashString InKey);
 protected:
 	map<HashString, ResourcePtr> ResourcesTable;
 	map<HashString, map<HashString, ResourcePtr>> ResourcesMap;
@@ -30,13 +33,30 @@ private:
 
 	DataManager();
 	virtual ~DataManager();
+
+	ResourcePtr GetResource(HashString InKey, map<HashString, ResourcePtr>& InMap);
 };
 
-//==================================================================================
+//===========================================================================================
+// templates
+//===========================================================================================
 
 template<class T>
-shared_ptr<T> DataManager::GetResourceType(HashString InKey)
+inline shared_ptr<T> DataManager::GetResource(HashString InKey)
 {
 	return dynamic_pointer_cast<T>(GetResource(InKey));
+}
+
+//-----------------------------------------------------------------------------------
+
+template<class T>
+inline shared_ptr<T> DataManager::GetResourceByType(HashString InKey)
+{
+	map<HashString, map<HashString, ResourcePtr>>::iterator It = ResourcesMap.find(Class::Get<T>().GetName());
+	if (It != ResourcesMap.end())
+	{
+		return dynamic_pointer_cast<T>( GetResource(InKey, ResourcesMap[InKey]) );
+	}
+	return nullptr;
 }
 

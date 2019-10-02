@@ -19,7 +19,7 @@ public:
 	bool IsValid();
 protected:
 	HashString Id;
-	bool IsValid;
+	bool IsValidFlag = false;
 private:
 	Resource();
 };

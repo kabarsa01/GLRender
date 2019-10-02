@@ -51,11 +51,17 @@ bool DataManager::IsResourcePresent(HashString InKey)
 
 shared_ptr<Resource> DataManager::GetResource(HashString InKey)
 {
-	map<HashString, shared_ptr<Resource>>::iterator It = ResourcesTable.find(InKey);
-	if (It != ResourcesTable.end())
+	return GetResource(InKey, ResourcesTable);
+}
+
+ResourcePtr DataManager::GetResource(HashString InKey, map<HashString, ResourcePtr>& InMap)
+{
+	map<HashString, ResourcePtr>::iterator It = InMap.find(InKey);
+	if (It != InMap.end())
 	{
 		return It->second;
 	}
-	return make_shared<Resource>( InKey );
+	return nullptr;
 }
+
 
