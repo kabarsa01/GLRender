@@ -34,7 +34,7 @@ void DataManager::ShutdownInstance()
 
 bool DataManager::AddResource(HashString InKey, shared_ptr<Resource> InValue)
 {
-	if (( InValue.get() != nullptr ) && ( ResourcesTable.find(InKey) != ResourcesTable.end() ))
+	if (( InValue.get() != nullptr ) && ( ResourcesTable.find(InKey) == ResourcesTable.end() ))
 	{
 		ResourcesTable[InKey] = InValue;
 		ResourcesMap[InValue->GetClass().GetName()][InKey] = InValue;

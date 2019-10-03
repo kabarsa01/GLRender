@@ -21,6 +21,10 @@ public:
 	Shader(const std::string &vertexPath, const std::string &fragmentPath);
 	virtual ~Shader();
 
+	// Inherited via Resource
+	virtual bool Load() override;
+	virtual bool Unload() override;
+
 	void Use();
 	void SetBool(const std::string &name, bool value) const;
 	void SetInt(const std::string &name, int value) const;

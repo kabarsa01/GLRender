@@ -64,3 +64,13 @@ void MeshData::Draw()
 	glDrawElements(GL_TRIANGLES, (GLsizei) Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
+
+bool MeshData::Load()
+{
+	return false;
+}
+
+bool MeshData::Unload()
+{
+	return false;
+}

@@ -37,6 +37,11 @@ public:
 
 	MeshData(string InId);
 	virtual ~MeshData();
+
+	// Inherited via Resource
+	virtual bool Load() override;
+	virtual bool Unload() override;
+
 	void SetupBufferObjects();
 	void DestroyBufferObjects();
 	void Draw();

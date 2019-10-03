@@ -25,6 +25,8 @@ public:
 	shared_ptr<T> GetResource(HashString InKey);
 	template<class T>
 	shared_ptr<T> GetResourceByType(HashString InKey);
+	template<class T, typename ...ArgTypes>
+	shared_ptr<T> RequestResourceByType(HashString InKey, ArgTypes ...Args);
 protected:
 	map<HashString, ResourcePtr> ResourcesTable;
 	map<HashString, map<HashString, ResourcePtr>> ResourcesMap;
@@ -38,7 +40,7 @@ private:
 };
 
 //===========================================================================================
-// templates
+// templated definitions
 //===========================================================================================
 
 template<class T>
@@ -58,5 +60,23 @@ inline shared_ptr<T> DataManager::GetResourceByType(HashString InKey)
 		return dynamic_pointer_cast<T>( GetResource(InKey, ResourcesMap[InKey]) );
 	}
 	return nullptr;
+}
+
+//-----------------------------------------------------------------------------------
+
+template<class T, typename ...ArgTypes>
+inline shared_ptr<T> DataManager::RequestResourceByType(HashString InKey, ArgTypes ...Args)
+{
+	map<HashString, map<HashString, ResourcePtr>>::iterator It = ResourcesMap.find(Class::Get<T>().GetName());
+	if (It != ResourcesMap.end())
+	{
+		return dynamic_pointer_cast<T>(GetResource(InKey, ResourcesMap[InKey]));
+	}
+	shared_ptr<T> Resource = ObjectBase::NewObject<T, ArgTypes...>(Args...);
+	if (Resource.get())
+	{
+		Resource->Load();
+	}
+	return Resource;
 }
 

@@ -2,7 +2,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
-	: Resource{ vertexPath }
+	: Resource{ vertexPath + fragmentPath }
 {
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
@@ -164,4 +164,14 @@ unsigned int Shader::CreateAndLinkProgram(unsigned int vertexShader, unsigned in
 	}
 
 	return program;
+}
+
+bool Shader::Load()
+{
+	return false;
+}
+
+bool Shader::Unload()
+{
+	return false;
 }

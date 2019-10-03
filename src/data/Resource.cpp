@@ -8,6 +8,11 @@ Resource::Resource(HashString InId)
 {
 }
 
+void Resource::SetValid(bool InValid)
+{
+	IsValidFlag = InValid;
+}
+
 Resource::Resource()
 	: ObjectBase{}
 	, Id{HashString::NONE()}
@@ -31,10 +36,15 @@ HashString Resource::GetResourceId()
 	return Id;
 }
 
-bool Resource::Load()
-{
-	return false;
-}
+//bool Resource::Load()
+//{
+//	return false;
+//}
+//
+//bool Resource::Unload()
+//{
+//	return false;
+//}
 
 bool Resource::IsValid()
 {

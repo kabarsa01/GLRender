@@ -10,8 +10,8 @@ public:
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
 	virtual ~Texture();
 
-	void LoadData();
-	void UnloadData();
+	virtual bool Load() override;
+	virtual bool Unload() override;
 	void InitializeBuffer();
 	void DestroyBuffer();
 

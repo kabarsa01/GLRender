@@ -15,12 +15,16 @@ public:
 	virtual void Initialize() override;
 	HashString GetResourceId();
 
-	virtual bool Load();
+	virtual bool Load() = 0;
+	virtual bool Unload() = 0;
 	bool IsValid();
 protected:
 	HashString Id;
-	bool IsValidFlag = false;
+
+	void SetValid(bool InValid);
 private:
+	bool IsValidFlag = false;
+
 	Resource();
 };
 

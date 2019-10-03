@@ -16,26 +16,30 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 
 Texture::~Texture()
 {
-	UnloadData();
+	DestroyBuffer();
+	Unload();
 }
 
-void Texture::LoadData()
+bool Texture::Load()
 {
 	stbi_set_flip_vertically_on_load(FlipVertical);
 	Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
+	return Data != nullptr;
 }
 
-void Texture::UnloadData()
+bool Texture::Unload()
 {
 	if (Data != nullptr)
 	{
 		stbi_image_free(Data);
+		return true;
 	}
+	return false;
 }
 
 void Texture::InitializeBuffer()
 {
-	if (Data)
+	if (Data && ( ID == -1 ))
 	{
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);

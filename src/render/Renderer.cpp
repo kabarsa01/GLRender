@@ -14,6 +14,8 @@
 
 #include "core/Class.h"
 
+#include "data/DataManager.h"
+
 #include "scene/SceneObjectBase.h"
 #include "scene/mesh/MeshObject.h"
 #include "scene/camera/CameraObject.h"
@@ -110,12 +112,12 @@ void Renderer::Init()
 		unsigned int TextureIndex = static_cast<unsigned int>( MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1 );
 
 		std::shared_ptr<Texture> Tex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(Paths[TextureIndex], false, true, false);
-		Tex->LoadData();
+		Tex->Load();
 		Tex->InitializeBuffer();
 		Albedos.push_back(Tex);
 
 		std::shared_ptr<Texture> NormalTex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(NormalPaths[TextureIndex], false, true, true);
-		NormalTex->LoadData();
+		NormalTex->Load();
 		NormalTex->InitializeBuffer();
 		NormalMaps.push_back(NormalTex);
 	}
@@ -131,9 +133,7 @@ void Renderer::Init()
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
-	DefaultShader = ObjectBase::NewObject<Shader, const GLchar *, const GLchar *>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
-//	DefaultAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/container.jpg", false);
-//	SecondaryAlbedo = ObjectBase::NewObject<Texture, const char *, bool>("./content/textures/awesomeface.png", true);
+	DefaultShader = ObjectBase::NewObject<Shader, std::string, std::string>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
 
 	// use default shader
 	DefaultShader->Use();
