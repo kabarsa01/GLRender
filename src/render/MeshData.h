@@ -11,7 +11,7 @@
 using namespace std;
 using namespace glm;
 
-//packing should probably be considered
+//packing should probably be considered, maybe in the future someday
 //#pragma pack(push, 1)
 //#pragma pack(pop)
 

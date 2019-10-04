@@ -22,7 +22,6 @@ Resource::Resource()
 
 Resource::~Resource()
 {
-
 }
 
 void Resource::Initialize()
@@ -35,16 +34,6 @@ HashString Resource::GetResourceId()
 {
 	return Id;
 }
-
-//bool Resource::Load()
-//{
-//	return false;
-//}
-//
-//bool Resource::Unload()
-//{
-//	return false;
-//}
 
 bool Resource::IsValid()
 {

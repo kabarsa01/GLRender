@@ -2,19 +2,21 @@
 
 #include "scene/SceneObjectComponent.h"
 #include "render/MeshData.h"
+#include "render/Material.h"
 
 #include <vector>
 
 class MeshComponent : public SceneObjectComponent
 {
 public:
-	std::shared_ptr<MeshData> MeshDataPtr;
+	MeshDataPtr MeshData;
+	MaterialPtr Material;
 	bool CastShadows = true;
 
 	MeshComponent(std::shared_ptr<SceneObjectBase> Parent);
 	virtual ~MeshComponent();
 
-	void SetMeshData(std::shared_ptr<MeshData> InMeshData);
+	void SetMeshData(MeshDataPtr InMeshData);
 	virtual void Initialize() override;
 protected:
 };

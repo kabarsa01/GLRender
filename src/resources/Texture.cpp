@@ -24,6 +24,7 @@ bool Texture::Load()
 {
 	stbi_set_flip_vertically_on_load(FlipVertical);
 	Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
+	SetValid(Data);
 	return Data != nullptr;
 }
 

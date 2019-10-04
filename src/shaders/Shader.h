@@ -15,7 +15,7 @@ class Shader : public Resource
 {
 public:
 	// shader program ID
-	unsigned int ID;
+	unsigned int ID = { static_cast<unsigned int>(-1) };
 	
 	// constructor reads and builds the shader
 	Shader(const std::string &vertexPath, const std::string &fragmentPath);
@@ -45,6 +45,9 @@ public:
 	// ------------------------------------------------------------------------
 	void SetMat4(const std::string &name, const glm::mat4 &mat) const;
 protected:
+	std::string VertexPath;
+	std::string FragmentPath;
+
 	unsigned int CreateAndCompileShader(GLenum type, const char* shaderSourceCode);
 	unsigned int CreateAndLinkProgram(unsigned int vertexShader, unsigned int fragmentShader);
 };

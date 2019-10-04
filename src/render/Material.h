@@ -3,18 +3,27 @@
 #include <memory>
 
 #include "core/ObjectBase.h"
+#include "data/Resource.h"
 #include "shaders/Shader.h"
 #include "resources/Texture.h"
 
-class Material : public ObjectBase
+class Material : public Resource
 {
 public:
-	Material();
+	Material(HashString InId);
 	virtual ~Material();
 
+	virtual bool Load() override;
+	virtual bool Unload() override;
+
+	std::string VertexShaderPath;
+	std::string FragmentShaderPath;
+	std::string AlbedoMapPath;
+	std::string NormalMapPath;
+
 	ShaderPtr ShaderInstance;
-	TexturePtr Albedo;
-	TexturePtr Normal;
+	TexturePtr AlbedoMap;
+	TexturePtr NormalMap;
 protected:
 private:
 };

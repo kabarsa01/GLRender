@@ -31,6 +31,8 @@ public:
 
 	template<class T>
 	std::set<SceneObjectComponentPtr> GetSceneComponents();
+	template<class T>
+	std::shared_ptr<T> GetSceneComponent();
 protected:
 	std::set<SceneObjectBasePtr> SceneObjectsSet;
 	std::map<HashString, std::set<SceneObjectBasePtr>> SceneObjectsMap;
@@ -48,4 +50,18 @@ inline std::set<SceneObjectComponentPtr> Scene::GetSceneComponents()
 {
 	HashString Key = Class::Get<T>().GetName();
 	return SceneObjectComponents[Key];
+}
+
+//-------------------------------------------------------------------------------------------
+
+template<class T>
+inline std::shared_ptr<T> Scene::GetSceneComponent()
+{
+	HashString Key = Class::Get<T>().GetName();
+	std::set<SceneObjectComponentPtr>& Components = SceneObjectComponents[Key];
+	if (Components.size() > 0)
+	{
+		return ObjectBase::Cast<T, SceneObjectComponent>( * Components.begin() );
+	}
+	return nullptr;
 }

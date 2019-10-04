@@ -28,8 +28,9 @@ MeshComponent::~MeshComponent()
 {
 }
 
-void MeshComponent::SetMeshData(std::shared_ptr<MeshData> InMeshData)
+void MeshComponent::SetMeshData(MeshDataPtr InMeshData)
 {
+	MeshData = InMeshData;
 }
 
 void MeshComponent::Initialize()

@@ -13,9 +13,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "core/Class.h"
+#include "core/Engine.h"
 
 #include "data/DataManager.h"
 
+#include "scene/Scene.h"
 #include "scene/SceneObjectBase.h"
 #include "scene/mesh/MeshObject.h"
 #include "scene/camera/CameraObject.h"
@@ -105,7 +107,7 @@ void Renderer::Init()
 	for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 	{
 		std::shared_ptr<MeshObject> MO = ObjectBase::NewObject<MeshObject>();
-		MO->GetMeshComponent()->MeshDataPtr = Importer.GetMeshes()[MeshIndex];
+		MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
 		MeshObjects.push_back(MO);
 		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
 
@@ -125,8 +127,8 @@ void Renderer::Init()
 	CameraObj = ObjectBase::NewObject<CameraObject>();
 	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
 	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
-	CameraObj->GetCameraComponent()->SetNearPlane(0.1f);
-	CameraObj->GetCameraComponent()->SetFarPlane(10000.f);
+	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
+	CameraObj->GetCameraComponent()->SetFarPlane(1000.f);
 
 	// output simple stats
 	int maxVertexAttrib = 0;
@@ -134,6 +136,7 @@ void Renderer::Init()
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
 	DefaultShader = ObjectBase::NewObject<Shader, std::string, std::string>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
+	DefaultShader->Load();
 
 	// use default shader
 	DefaultShader->Use();
@@ -149,7 +152,7 @@ void Renderer::Init()
 
 	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
 	{
-		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->SetupBufferObjects();
+		MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->SetupBufferObjects();
 	}
 
 	std::cout << * MeshObjects[0]->GetClass().GetName() << std::endl;
@@ -171,22 +174,21 @@ void Renderer::RenderFrame()
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	// prerender init
-	//MeshObj->Transform.SetRotation(glm::vec3(-60.0f, 0.0f, 10.0f * (float)glfwGetTime()));
-	glm::mat4 View = CameraObj->GetCameraComponent()->CalculateViewMatrix();
-	glm::mat4 Proj = CameraObj->GetCameraComponent()->CalculateProjectionMatrix();
+	ScenePtr Scene = Engine::GetInstance()->GetScene();
+
+	CameraComponentPtr MainCam = Scene->GetSceneComponent<CameraComponent>();
+
+	glm::mat4 View = MainCam->CalculateViewMatrix();
+	glm::mat4 Proj = MainCam->CalculateProjectionMatrix();
+	if (MainCam.get())
+	{
+		/*View = MainCam->CalculateViewMatrix();
+		Proj = MainCam->CalculateProjectionMatrix();*/
+	}
 
 	// use default shader
 	DefaultShader->Use();
 
-	// uniforms and variables
-//	defaultShader->SetInt("albedo", 0);
-//	defaultShader->SetInt("secondaryAlbedo", 1);
-
-	//DefaultAlbedo->Use(GL_TEXTURE0);
-//	SecondaryAlbedo->Use(GL_TEXTURE1);
-
-	//MeshObj->GetMeshComponent()->MeshDataPtr->Draw();
 	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
 	{
 		Albedos[MeshIndex]->Use(GL_TEXTURE0);
@@ -197,7 +199,7 @@ void Renderer::RenderFrame()
 		DefaultShader->SetMat4("projection", Proj);
 
 		MeshObjects[MeshIndex]->Transform.SetRotation({10.0f * (float)glfwGetTime(), 0.0f , -90.0f});
-		MeshObjects[MeshIndex]->GetMeshComponent()->MeshDataPtr->Draw();
+		MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->Draw();
 	}
 }
 
