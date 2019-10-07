@@ -67,10 +67,12 @@ inline shared_ptr<T> DataManager::GetResourceByType(HashString InKey)
 template<class T, typename ...ArgTypes>
 inline shared_ptr<T> DataManager::RequestResourceByType(HashString InKey, ArgTypes ...Args)
 {
-	map<HashString, map<HashString, ResourcePtr>>::iterator It = ResourcesMap.find(Class::Get<T>().GetName());
-	if (It != ResourcesMap.end())
+	HashString ClassName = Class::Get<T>().GetName();
+	map<HashString, ResourcePtr>& ResourceTypeMap = ResourcesMap[ClassName];
+	map<HashString, ResourcePtr>::iterator It = ResourceTypeMap.find(InKey);
+	if (It != ResourceTypeMap.end())
 	{
-		return dynamic_pointer_cast<T>(GetResource(InKey, ResourcesMap[InKey]));
+		return dynamic_pointer_cast<T>(GetResource(InKey, ResourceTypeMap));
 	}
 	shared_ptr<T> Resource = ObjectBase::NewObject<T, ArgTypes...>(Args...);
 	if (Resource.get())

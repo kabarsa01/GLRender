@@ -14,8 +14,8 @@ bool Material::Load()
 {
 	DataManager *DM = DataManager::GetInstance();
 	ShaderInstance = DM->RequestResourceByType<Shader>(VertexShaderPath + FragmentShaderPath, VertexShaderPath, FragmentShaderPath);
-	AlbedoMap = DM->RequestResourceByType<Texture>(AlbedoMapPath, AlbedoMapPath);
-	NormalMap = DM->RequestResourceByType<Texture>(NormalMapPath, NormalMapPath);
+	AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoMapPath, AlbedoMapPath, false, true, false);
+	NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalMapPath, NormalMapPath, false, true, true);
 
 	return true;
 }

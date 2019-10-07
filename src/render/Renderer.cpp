@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -101,6 +102,15 @@ void Renderer::Init()
 		"./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg",
 	};
 
+	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
+	Mat->AlbedoMapPath = "./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg";
+	Mat->NormalMapPath = "./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg";
+	Mat->VertexShaderPath = "./src/shaders/src/BasicVertexShader.vs";
+	Mat->FragmentShaderPath = "./src/shaders/src/BasicFragmentShader.fs";
+	Mat->Load();
+	Mat->AlbedoMap->InitializeBuffer();
+	Mat->NormalMap->InitializeBuffer();
+
 	MeshImporter Importer;
 	//Importer.Import("./content/nanosuit/nanosuit.obj");
 	Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
@@ -108,20 +118,22 @@ void Renderer::Init()
 	{
 		std::shared_ptr<MeshObject> MO = ObjectBase::NewObject<MeshObject>();
 		MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
-		MeshObjects.push_back(MO);
-		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
+		MO->GetMeshComponent()->Material = Mat;
+		MO->GetMeshComponent()->MeshData->SetupBufferObjects();
+		//MeshObjects.push_back(MO);
+		//MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
 
-		unsigned int TextureIndex = static_cast<unsigned int>( MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1 );
+		//unsigned int TextureIndex = static_cast<unsigned int>( MeshIndex < Paths.size() ? MeshIndex : Paths.size() - 1 );
 
-		std::shared_ptr<Texture> Tex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(Paths[TextureIndex], false, true, false);
-		Tex->Load();
-		Tex->InitializeBuffer();
-		Albedos.push_back(Tex);
+		//std::shared_ptr<Texture> Tex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(Paths[TextureIndex], false, true, false);
+		//Tex->Load();
+		//Tex->InitializeBuffer();
+		//Albedos.push_back(Tex);
 
-		std::shared_ptr<Texture> NormalTex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(NormalPaths[TextureIndex], false, true, true);
-		NormalTex->Load();
-		NormalTex->InitializeBuffer();
-		NormalMaps.push_back(NormalTex);
+		//std::shared_ptr<Texture> NormalTex = ObjectBase::NewObject<Texture, const std::string&, bool, bool, bool>(NormalPaths[TextureIndex], false, true, true);
+		//NormalTex->Load();
+		//NormalTex->InitializeBuffer();
+		//NormalMaps.push_back(NormalTex);
 	}
 
 	CameraObj = ObjectBase::NewObject<CameraObject>();
@@ -135,36 +147,32 @@ void Renderer::Init()
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
 	// shaders init
-	DefaultShader = ObjectBase::NewObject<Shader, std::string, std::string>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
-	DefaultShader->Load();
+	//DefaultShader = ObjectBase::NewObject<Shader, std::string, std::string>("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
+	//DefaultShader->Load();
 
-	// use default shader
-	DefaultShader->Use();
-	// uniforms setup once
-	DefaultShader->SetVec3("ambient_color", { 0.04f, 0.04f, 0.045f });
-	DefaultShader->SetVec3("light_dir",{ -1.0f, -0.5f, -0.5f });
-	DefaultShader->SetVec3("light_color", { 0.95f, 0.95f, 0.95f });
-	DefaultShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
-	DefaultShader->SetFloat("spec_strength", 0.0f);
-	DefaultShader->SetVec3("view_pos", CameraObj->Transform.GetLocation());
-	DefaultShader->SetInt("albedo", 0);
-	DefaultShader->SetInt("normalMap", 1);
+	//// use default shader
+	//DefaultShader->Use();
+	//// uniforms setup once
+	//DefaultShader->SetVec3("ambient_color", { 0.04f, 0.04f, 0.045f });
+	//DefaultShader->SetVec3("light_dir",{ -1.0f, -0.5f, -0.5f });
+	//DefaultShader->SetVec3("light_color", { 0.95f, 0.95f, 0.95f });
+	//DefaultShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
+	//DefaultShader->SetFloat("spec_strength", 0.0f);
+	//DefaultShader->SetVec3("view_pos", CameraObj->Transform.GetLocation());
+	//DefaultShader->SetInt("albedo", 0);
+	//DefaultShader->SetInt("normalMap", 1);
 
-	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
-	{
-		MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->SetupBufferObjects();
-	}
+	//for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
+	//{
+	//	MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->SetupBufferObjects();
+	//}
 
-	std::cout << * MeshObjects[0]->GetClass().GetName() << std::endl;
-	std::cout << * CameraObj->GetClass().GetName() << std::endl;
-	std::cout << * CameraObj->GetCameraComponent()->GetClass().GetName() << std::endl;
-	CameraComponentPtr CamComp = CameraObj->GetComponentByType<CameraComponent>();
-	SceneObjectComponentPtr Comp = CameraObj->GetComponent<CameraComponent>();
-	MeshComponentPtr MeshComp = CameraObj->GetComponentByType<MeshComponent>();
-	if (MeshComp)
-	{
-		volatile int a = 0;
-	}
+	//std::cout << * MeshObjects[0]->GetClass().GetName() << std::endl;
+	//std::cout << * CameraObj->GetClass().GetName() << std::endl;
+	//std::cout << * CameraObj->GetCameraComponent()->GetClass().GetName() << std::endl;
+	//CameraComponentPtr CamComp = CameraObj->GetComponentByType<CameraComponent>();
+	//SceneObjectComponentPtr Comp = CameraObj->GetComponent<CameraComponent>();
+	//MeshComponentPtr MeshComp = CameraObj->GetComponentByType<MeshComponent>();
 }
 
 void Renderer::RenderFrame()
@@ -176,31 +184,69 @@ void Renderer::RenderFrame()
 
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
 
-	CameraComponentPtr MainCam = Scene->GetSceneComponent<CameraComponent>();
+	MainCamera = Scene->GetSceneComponent<CameraComponent>();
 
-	glm::mat4 View = MainCam->CalculateViewMatrix();
-	glm::mat4 Proj = MainCam->CalculateProjectionMatrix();
-	if (MainCam.get())
+	View = MainCamera->CalculateViewMatrix();
+	Proj = MainCamera->CalculateProjectionMatrix();
+	if (MainCamera.get())
 	{
 		/*View = MainCam->CalculateViewMatrix();
 		Proj = MainCam->CalculateProjectionMatrix();*/
 	}
 
-	// use default shader
-	DefaultShader->Use();
-
-	for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
+	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
+	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
-		Albedos[MeshIndex]->Use(GL_TEXTURE0);
-		NormalMaps[MeshIndex]->Use(GL_TEXTURE1);
+		Model = MeshComp->GetParent()->Transform.GetMatrix();
 
-		DefaultShader->SetMat4("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
-		DefaultShader->SetMat4("view", View);
-		DefaultShader->SetMat4("projection", Proj);
+		MaterialPtr Material = MeshComp->Material;
+		ShaderPtr MeshShader = Material->ShaderInstance;
+		MeshShader->Use();
+		SetupShader(MeshShader);
+		Material->AlbedoMap->Use(GL_TEXTURE0);
+		Material->NormalMap->Use(GL_TEXTURE1);
+		//MeshShader->SetMat4( "model", Model );
+		//MeshShader->SetMat4( "view", View );
+		//MeshShader->SetMat4( "projection", Proj );
 
-		MeshObjects[MeshIndex]->Transform.SetRotation({10.0f * (float)glfwGetTime(), 0.0f , -90.0f});
-		MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->Draw();
+		MeshComp->MeshData->Draw();
 	}
+
+
+	// use default shader
+	//DefaultShader->Use();
+
+	//for (unsigned int MeshIndex = 0; MeshIndex < MeshObjects.size(); MeshIndex++)
+	//{
+	//	Albedos[MeshIndex]->Use(GL_TEXTURE0);
+	//	NormalMaps[MeshIndex]->Use(GL_TEXTURE1);
+
+	//	DefaultShader->SetMat4("model", MeshObjects[MeshIndex]->Transform.GetMatrix());
+	//	DefaultShader->SetMat4("view", View);
+	//	DefaultShader->SetMat4("projection", Proj);
+
+	//	MeshObjects[MeshIndex]->Transform.SetRotation({10.0f * (float)glfwGetTime(), 0.0f , -90.0f});
+	//	MeshObjects[MeshIndex]->GetMeshComponent()->MeshData->Draw();
+	//}
 }
+
+void Renderer::SetupShader(ShaderPtr InShader)
+{
+	InShader->SetMat4("model", Model);
+	InShader->SetMat4("view", View);
+	InShader->SetMat4("projection", Proj);
+
+	// uniforms setup once
+	InShader->SetVec3("ambient_color", { 0.04f, 0.04f, 0.045f });
+	InShader->SetVec3("light_dir", { -1.0f, -0.5f, -0.5f });
+	InShader->SetVec3("light_color", { 0.95f, 0.95f, 0.95f });
+	InShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
+	InShader->SetFloat("spec_strength", 0.0f);
+	InShader->SetVec3("view_pos", MainCamera->GetParent()->Transform.GetLocation());
+	InShader->SetInt("albedo", 0);
+	InShader->SetInt("normalMap", 1);
+}
+
+
 
 

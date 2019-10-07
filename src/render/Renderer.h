@@ -5,6 +5,9 @@
 #include <core/ObjectBase.h>
 
 #include "render/MeshData.h"
+#include "shaders/Shader.h"
+#include "scene/camera/CameraObject.h"
+#include "scene/camera/CameraComponent.h"
 
 class Shader;
 class Texture;
@@ -21,6 +24,10 @@ public:
 
 	void Init();
 	void RenderFrame();
+protected:
+	CameraComponentPtr MainCamera;
+
+	void SetupShader(ShaderPtr InShader);
 private:
 	//======================= VARS ===============================
 	std::shared_ptr<Shader> DefaultShader;
@@ -33,6 +40,10 @@ private:
 	std::vector<std::shared_ptr<Texture>> NormalMaps;
 	std::shared_ptr<MeshObject> MeshObj;
 	std::shared_ptr<CameraObject> CameraObj;
+
+	glm::mat4 Model;
+	glm::mat4 View;
+	glm::mat4 Proj;
 	//==================== METHODS ===============================
 };
 

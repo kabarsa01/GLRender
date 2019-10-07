@@ -34,6 +34,8 @@ protected:
 	int Width;
 	int Height;
 	int NumChannels;
+private:
+	Texture();
 };
 
 typedef std::shared_ptr<Texture> TexturePtr;

@@ -2,6 +2,7 @@
 
 #include <map>
 #include <set>
+#include <vector>
 #include <memory>
 
 #include "core/ObjectBase.h"
@@ -32,6 +33,8 @@ public:
 	template<class T>
 	std::set<SceneObjectComponentPtr> GetSceneComponents();
 	template<class T>
+	std::vector<std::shared_ptr<T>> GetSceneComponentsCast();
+	template<class T>
 	std::shared_ptr<T> GetSceneComponent();
 protected:
 	std::set<SceneObjectBasePtr> SceneObjectsSet;
@@ -50,6 +53,20 @@ inline std::set<SceneObjectComponentPtr> Scene::GetSceneComponents()
 {
 	HashString Key = Class::Get<T>().GetName();
 	return SceneObjectComponents[Key];
+}
+
+//-------------------------------------------------------------------------------------------
+
+template<class T>
+inline std::vector<std::shared_ptr<T>> Scene::GetSceneComponentsCast()
+{
+	HashString Key = Class::Get<T>().GetName();
+	std::vector<std::shared_ptr<T>> Components;
+	for (SceneObjectComponentPtr Comp : SceneObjectComponents[Key])
+	{
+		Components.push_back(ObjectBase::Cast<T, SceneObjectComponent>( Comp ));
+	}
+	return Components;
 }
 
 //-------------------------------------------------------------------------------------------

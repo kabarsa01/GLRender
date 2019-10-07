@@ -106,3 +106,8 @@ void Texture::Use(GLenum textureUnit) const
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
 }
+
+Texture::Texture()
+	: Resource( HashString::NONE() )
+{
+}
