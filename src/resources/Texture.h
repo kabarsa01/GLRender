@@ -17,6 +17,9 @@ public:
 	void InitializeBuffer();
 	void DestroyBuffer();
 
+	void SetSize(int Width, int Height);
+	void SetUseEmpty(bool InUseEmpty);
+
 	unsigned int GetID() const;
 	unsigned char* GetData() const;
 	std::string GetPath();
@@ -28,6 +31,7 @@ protected:
 	bool FlipVertical;
 	bool UseAlpha;
 	bool Linear;
+	bool UseEmpty = { false };
 
 	unsigned int ID = -1;
 	unsigned char* Data;

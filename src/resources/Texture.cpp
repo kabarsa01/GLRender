@@ -33,6 +33,7 @@ bool Texture::Unload()
 	if (Data != nullptr)
 	{
 		stbi_image_free(Data);
+		Data = nullptr;
 		return true;
 	}
 	return false;
@@ -40,7 +41,7 @@ bool Texture::Unload()
 
 void Texture::InitializeBuffer()
 {
-	if (Data && ( ID == -1 ))
+	if ( ID == -1 )
 	{
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
@@ -60,7 +61,7 @@ void Texture::InitializeBuffer()
 			InternalFormat = UseAlpha ? GL_SRGB_ALPHA : GL_SRGB;
 		}
 
-		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Width, Height, 0, UseAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, Data);
+		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Width, Height, 0, UseAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, UseEmpty ? NULL : Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -76,6 +77,17 @@ void Texture::DestroyBuffer()
 		glDeleteTextures(1, &ID);
 		ID = -1;
 	}
+}
+
+void Texture::SetSize(int InWidth, int InHeight)
+{
+	Width = InWidth;
+	Height = InHeight;
+}
+
+void Texture::SetUseEmpty(bool InUseEmpty)
+{
+	UseEmpty = InUseEmpty;
 }
 
 unsigned int Texture::GetID() const
