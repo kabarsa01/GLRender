@@ -16,6 +16,11 @@ public:
 	virtual bool Load() override;
 	virtual bool Unload() override;
 
+	void InitializeBuffers();
+	void DestroyBuffers();
+
+	void Use();
+
 	std::string VertexShaderPath;
 	std::string FragmentShaderPath;
 	std::string AlbedoMapPath;

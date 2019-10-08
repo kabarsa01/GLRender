@@ -30,7 +30,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_DEPTH_BITS, 24);
 
-	GLFWwindow* window = glfwCreateWindow(800, 600, "GLRender", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1280, 720, "GLRender", NULL, NULL);
 	if (window == nullptr)
 	{
 		std::printf("Failed to create GLFW window");
@@ -46,7 +46,7 @@ int main()
 		return -1;
 	}
 
-	glViewport(200, 200, 800, 600);
+	glViewport(0, 0, 1280, 720);
 
 	// renderer initialization
 	Engine* Engine = Engine::GetInstance();
@@ -61,9 +61,8 @@ int main()
 		// input
 		processInput(window);
 
-		// rendering
+		// engine frame iteration
 		Engine->Tick();
-		//renderer->RenderFrame();
 
 		// events and buffers swapping
 		glfwSwapBuffers(window);
