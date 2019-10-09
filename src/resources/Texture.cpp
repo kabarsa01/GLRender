@@ -51,17 +51,7 @@ void Texture::InitializeBuffer()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		GLint InternalFormat = 0;
-		if (Linear)
-		{
-			InternalFormat = UseAlpha ? GL_RGBA : GL_RGB;
-		}
-		else
-		{
-			InternalFormat = UseAlpha ? GL_SRGB_ALPHA : GL_SRGB;
-		}
-
-		glTexImage2D(GL_TEXTURE_2D, 0, InternalFormat, Width, Height, 0, UseAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, UseEmpty ? NULL : Data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
@@ -88,6 +78,11 @@ void Texture::SetSize(int InWidth, int InHeight)
 void Texture::SetUseEmpty(bool InUseEmpty)
 {
 	UseEmpty = InUseEmpty;
+}
+
+void Texture::SetUseDepth(bool InUseDepth)
+{
+	UseDepth = InUseDepth;
 }
 
 unsigned int Texture::GetID() const
@@ -117,6 +112,40 @@ void Texture::Use(GLenum textureUnit) const
 		glActiveTexture(textureUnit);
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
+}
+
+GLint Texture::GetInternalFormat()
+{
+	if (UseDepth)
+	{
+		return GL_DEPTH24_STENCIL8;
+	}
+
+	GLint InternalFormat = 0;
+	if (Linear)
+	{
+		InternalFormat = UseAlpha ? GL_RGBA : GL_RGB;
+	}
+	else
+	{
+		InternalFormat = UseAlpha ? GL_SRGB_ALPHA : GL_SRGB;
+	}
+	return InternalFormat;
+}
+
+GLenum Texture::GetFormat()
+{
+	if (UseDepth)
+	{
+		return GL_DEPTH_STENCIL;
+	}
+
+	return UseAlpha ? GL_RGBA : GL_RGB;
+}
+
+GLenum Texture::GetType()
+{
+	return UseDepth ? GL_UNSIGNED_INT_24_8 : GL_UNSIGNED_BYTE;
 }
 
 Texture::Texture()

@@ -45,6 +45,8 @@ public:
 	void SetupBufferObjects();
 	void DestroyBufferObjects();
 	void Draw();
+private:
+	MeshData() : Resource(HashString::NONE()) {}
 };
 
 typedef std::shared_ptr<MeshData> MeshDataPtr;

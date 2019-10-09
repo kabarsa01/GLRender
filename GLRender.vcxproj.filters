@@ -132,6 +132,9 @@
     <ClCompile Include="src\render\Material.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\FrameBuffer.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -201,6 +204,9 @@
       <Filter>Source Files\core</Filter>
     </ClInclude>
     <ClInclude Include="src\render\Material.h">
+      <Filter>Source Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\FrameBuffer.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
   </ItemGroup>

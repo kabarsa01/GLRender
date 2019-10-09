@@ -31,6 +31,7 @@ public:
 	TexturePtr NormalMap;
 protected:
 private:
+	Material();
 };
 
 typedef std::shared_ptr<Material> MaterialPtr;

@@ -50,6 +50,8 @@ protected:
 
 	unsigned int CreateAndCompileShader(GLenum type, const char* shaderSourceCode);
 	unsigned int CreateAndLinkProgram(unsigned int vertexShader, unsigned int fragmentShader);
+private:
+	Shader() : Resource(HashString::NONE()) {}
 };
 
 typedef std::shared_ptr<Shader> ShaderPtr;

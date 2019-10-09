@@ -43,3 +43,8 @@ void Material::Use()
 	AlbedoMap->Use(GL_TEXTURE0);
 	NormalMap->Use(GL_TEXTURE1);
 }
+
+Material::Material()
+	: Resource( HashString::NONE() )
+{
+}

@@ -19,6 +19,7 @@ public:
 
 	void SetSize(int Width, int Height);
 	void SetUseEmpty(bool InUseEmpty);
+	void SetUseDepth(bool InUseDepth);
 
 	unsigned int GetID() const;
 	unsigned char* GetData() const;
@@ -31,13 +32,18 @@ protected:
 	bool FlipVertical;
 	bool UseAlpha;
 	bool Linear;
-	bool UseEmpty = { false };
+	bool UseEmpty = false;
+	bool UseDepth = false;
 
 	unsigned int ID = -1;
 	unsigned char* Data;
 	int Width;
 	int Height;
 	int NumChannels;
+
+	GLint GetInternalFormat();
+	GLenum GetFormat();
+	GLenum GetType();
 private:
 	Texture();
 };
