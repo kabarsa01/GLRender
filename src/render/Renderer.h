@@ -5,6 +5,7 @@
 #include <core/ObjectBase.h>
 
 #include "render/MeshData.h"
+#include "render/FrameBuffer.h"
 #include "shaders/Shader.h"
 #include "scene/camera/CameraObject.h"
 #include "scene/camera/CameraComponent.h"
@@ -44,6 +45,10 @@ private:
 	glm::mat4 Model;
 	glm::mat4 View;
 	glm::mat4 Proj;
+
+	FrameBufferPtr PrimaryFrameBuffer;
+	ShaderPtr SSShader;
+	MeshDataPtr ScreenQuad;
 	//==================== METHODS ===============================
 };
 

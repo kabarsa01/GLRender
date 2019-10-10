@@ -55,6 +55,19 @@ void main() \n \
 //======================================================================
 //======================================================================
 
+std::vector<Vertex> QuadVertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+		// positions          // texCoords
+	{{-1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+	{{-1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+	{{ 1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+	{{ 1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}
+};
+
+std::vector<unsigned int> QuadIndices = {
+	0, 1, 2,
+	0, 2, 3
+};
+
 //float vertices[] = {
 //	// coords              // color             // uv coords
 //	 0.5f,  0.5f, 0.0f,    1.0f, 0.0f, 0.0f,    1.0f, 1.0f,  // top right
@@ -87,7 +100,7 @@ void Renderer::Initialize()
 
 void Renderer::Init()
 {
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
@@ -126,14 +139,34 @@ void Renderer::Init()
 	int maxVertexAttrib = 0;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
+
+	// Prepare frame buffer and shader for screen space drawing
+
+	PrimaryFrameBuffer = ObjectBase::NewObject<FrameBuffer>();
+	PrimaryFrameBuffer->SetSize(640, 360);
+	PrimaryFrameBuffer->GenerateBuffer(1, true, true);
+
+	SSShader = ObjectBase::NewObject<Shader, const std::string&, const std::string&>("./src/shaders/src/BasicScreenSpaceVertexShader.vs", "./src/shaders/src/BasicScreenSpaceFragmentShader.fs");
+	SSShader->Load();
+
+	ScreenQuad = ObjectBase::NewObject<MeshData, std::string>("ScreenQuad");
+	ScreenQuad->Vertices = QuadVertices;
+	ScreenQuad->Indices = QuadIndices;
+	ScreenQuad->SetupBufferObjects();
 }
 
 void Renderer::RenderFrame()
 {
+	// FIRST PASS
+
+	PrimaryFrameBuffer->Use();
 //	glDepthMask(GL_FALSE);
 //	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	glViewport(0, 0, PrimaryFrameBuffer->GetWidth(), PrimaryFrameBuffer->GetHeight());
 
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
 
@@ -155,6 +188,21 @@ void Renderer::RenderFrame()
 
 		MeshComp->MeshData->Draw();
 	}
+
+	FrameBuffer::Unbind();
+
+	// SECOND PASS
+	glViewport(0, 0, 1280, 720);
+
+	glDisable(GL_DEPTH_TEST);
+	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	SSShader->Use();
+	SSShader->SetInt("colorBuffer", 0);
+	PrimaryFrameBuffer->GetTexture(0)->Use(GL_TEXTURE0);
+	ScreenQuad->Draw();
+
 }
 
 void Renderer::SetupShader(ShaderPtr InShader)

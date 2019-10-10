@@ -183,6 +183,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\src\BasicFragmentShader.fs" />
+    <None Include="src\shaders\src\BasicScreenSpaceFragmentShader.fs" />
+    <None Include="src\shaders\src\BasicScreenSpaceVertexShader.vs" />
     <None Include="src\shaders\src\BasicVertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -217,5 +217,11 @@
     <None Include="src\shaders\src\BasicFragmentShader.fs">
       <Filter>Source Files\shaders\src</Filter>
     </None>
+    <None Include="src\shaders\src\BasicScreenSpaceFragmentShader.fs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+    <None Include="src\shaders\src\BasicScreenSpaceVertexShader.vs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
   </ItemGroup>
 </Project>
