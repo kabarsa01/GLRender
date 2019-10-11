@@ -1,6 +1,7 @@
 #include "./RenderPass.h"
 
 RenderPass::RenderPass()
+	: ObjectBase()
 {
 }
 
@@ -13,6 +14,16 @@ FrameBufferPtr RenderPass::GetFrameBuffer()
 	return FrameBufferInstance;
 }
 
-void RenderPass::Draw()
+void RenderPass::SetResolution(int InWidth, int InHeight)
+{
+	Width = InWidth;
+	Height = InHeight;
+}
+
+void RenderPass::InitPass()
+{
+}
+
+void RenderPass::DrawPass()
 {
 }

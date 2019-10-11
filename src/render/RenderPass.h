@@ -10,9 +10,13 @@ public:
 	virtual ~RenderPass();
 
 	FrameBufferPtr GetFrameBuffer();
+	void SetResolution(int InWidth, int InHeight);
 
-	virtual void Draw();
+	virtual void InitPass();
+	virtual void DrawPass();
 protected:
+	int Width;
+	int Height;
 	FrameBufferPtr FrameBufferInstance;
 };
 
