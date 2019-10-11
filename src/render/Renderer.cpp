@@ -55,18 +55,18 @@ void main() \n \
 //======================================================================
 //======================================================================
 
-std::vector<Vertex> QuadVertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-		// positions          // texCoords
-	{{-1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
-	{{-1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
-	{{ 1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
-	{{ 1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}
-};
-
-std::vector<unsigned int> QuadIndices = {
-	0, 1, 2,
-	0, 2, 3
-};
+//std::vector<Vertex> QuadVertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+//		// positions          // texCoords
+//	{{-1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+//	{{-1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+//	{{ 1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+//	{{ 1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}
+//};
+//
+//std::vector<unsigned int> QuadIndices = {
+//	0, 1, 2,
+//	0, 2, 3
+//};
 
 //float vertices[] = {
 //	// coords              // color             // uv coords
@@ -93,9 +93,9 @@ Renderer::~Renderer()
 {
 }
 
-void Renderer::Initialize()
+void Renderer::OnInitialize()
 {
-	ObjectBase::Initialize();
+	ObjectBase::OnInitialize();
 }
 
 void Renderer::Init()
@@ -133,7 +133,7 @@ void Renderer::Init()
 	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
 	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
 	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
-	CameraObj->GetCameraComponent()->SetFarPlane(1000.f);
+	CameraObj->GetCameraComponent()->SetFarPlane(100.f);
 
 	// output simple stats
 	int maxVertexAttrib = 0;
@@ -143,16 +143,13 @@ void Renderer::Init()
 	// Prepare frame buffer and shader for screen space drawing
 
 	PrimaryFrameBuffer = ObjectBase::NewObject<FrameBuffer>();
-	PrimaryFrameBuffer->SetSize(640, 360);
+	PrimaryFrameBuffer->SetSize(Width, Height, false);
 	PrimaryFrameBuffer->GenerateBuffer(1, true, true);
 
 	SSShader = ObjectBase::NewObject<Shader, const std::string&, const std::string&>("./src/shaders/src/BasicScreenSpaceVertexShader.vs", "./src/shaders/src/BasicScreenSpaceFragmentShader.fs");
 	SSShader->Load();
 
-	ScreenQuad = ObjectBase::NewObject<MeshData, std::string>("ScreenQuad");
-	ScreenQuad->Vertices = QuadVertices;
-	ScreenQuad->Indices = QuadIndices;
-	ScreenQuad->SetupBufferObjects();
+	MeshData::FullscreenQuad()->SetupBufferObjects();
 }
 
 void Renderer::RenderFrame()
@@ -192,7 +189,7 @@ void Renderer::RenderFrame()
 	FrameBuffer::Unbind();
 
 	// SECOND PASS
-	glViewport(0, 0, 1280, 720);
+	glViewport(0, 0, Width, Height);
 
 	glDisable(GL_DEPTH_TEST);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
@@ -201,8 +198,29 @@ void Renderer::RenderFrame()
 	SSShader->Use();
 	SSShader->SetInt("colorBuffer", 0);
 	PrimaryFrameBuffer->GetTexture(0)->Use(GL_TEXTURE0);
-	ScreenQuad->Draw();
+	MeshData::FullscreenQuad()->Draw();
 
+}
+
+void Renderer::SetResolution(int InWidth, int InHeight)
+{
+	Width = InWidth;
+	Height = InHeight;
+
+	if (PrimaryFrameBuffer)
+	{
+		PrimaryFrameBuffer->SetSize(Width, Height, true);
+	}
+}
+
+int Renderer::GetWidth() const
+{
+	return Width;
+}
+
+int Renderer::GetHeight() const
+{
+	return Height;
 }
 
 void Renderer::SetupShader(ShaderPtr InShader)

@@ -21,16 +21,23 @@ public:
 	Renderer();
 	virtual ~Renderer();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 
 	void Init();
 	void RenderFrame();
+
+	void SetResolution(int InWidth, int InHeight);
+	int GetWidth() const;
+	int GetHeight() const;
 protected:
 	CameraComponentPtr MainCamera;
 
 	void SetupShader(ShaderPtr InShader);
 private:
 	//======================= VARS ===============================
+	int Width = 1280;
+	int Height = 720;
+
 	std::shared_ptr<Shader> DefaultShader;
 	std::shared_ptr<Texture> DefaultAlbedo;
 	std::shared_ptr<Texture> SecondaryAlbedo;

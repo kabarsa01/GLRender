@@ -17,7 +17,7 @@ public:
 	virtual ~MeshComponent();
 
 	void SetMeshData(MeshDataPtr InMeshData);
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 protected:
 };
 

@@ -142,6 +142,7 @@
     <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshData.cpp" />
     <ClCompile Include="src\render\Renderer.cpp" />
+    <ClCompile Include="src\render\RenderPass.cpp" />
     <ClCompile Include="src\resources\Texture.cpp" />
     <ClCompile Include="src\scene\camera\CameraComponent.cpp" />
     <ClCompile Include="src\scene\camera\CameraObject.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\render\Material.h" />
     <ClInclude Include="src\render\MeshData.h" />
     <ClInclude Include="src\render\Renderer.h" />
+    <ClInclude Include="src\render\RenderPass.h" />
     <ClInclude Include="src\resources\Texture.h" />
     <ClInclude Include="src\scene\camera\CameraComponent.h" />
     <ClInclude Include="src\scene\camera\CameraObject.h" />

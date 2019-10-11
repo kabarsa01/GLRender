@@ -1,4 +1,5 @@
 #include "render/FrameBuffer.h"
+#include "data/DataManager.h"
 #include "resources/Texture.h"
 
 #include <string>
@@ -14,10 +15,15 @@ FrameBuffer::~FrameBuffer()
 {
 }
 
-void FrameBuffer::SetSize(int InWidth, int InHeight)
+void FrameBuffer::SetSize(int InWidth, int InHeight, bool InRecreateBuffers)
 {
 	Width = InWidth;
 	Height = InHeight;
+	if (InRecreateBuffers)
+	{
+		DestroyBuffer();
+		GenerateBuffer(ColorBuffersCount, UseGeneratedTextures, UseDepth);
+	}
 }
 
 int FrameBuffer::GetWidth()
@@ -38,6 +44,7 @@ void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool 
 	}
 
 	ColorBuffersCount = InColorBuffersCount;
+	UseGeneratedTextures = InGenerateTextures;
 	UseDepth = InUseDepth;
 
 	glGenFramebuffers(1, &ID);
@@ -49,7 +56,7 @@ void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool 
 	}
 	//GL_READ_FRAMEBUFFER or GL_DRAW_FRAMEBUFFER variants maybe
 	glBindFramebuffer(GL_FRAMEBUFFER, ID);
-	for (size_t TextureIndex = 0; TextureIndex < Textures.size(); TextureIndex++)
+	for (unsigned int TextureIndex = 0; TextureIndex < Textures.size(); TextureIndex++)
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + TextureIndex, GL_TEXTURE_2D, Textures[TextureIndex]->GetID(), 0);
 	}
@@ -75,6 +82,23 @@ void FrameBuffer::DestroyBuffer()
 	if (ID != 0xffffffff)
 	{
 		glDeleteFramebuffers(1, &ID);
+		ID = 0xffffffff;
+
+		if (UseGeneratedTextures)
+		{
+			for (size_t TexIndex = 0; TexIndex < Textures.size(); TexIndex++)
+			{
+				DataManager::GetInstance()->DeleteResource(Textures[TexIndex]);
+				Textures[TexIndex]->DestroyBuffer();
+			}
+			Textures.clear();
+			if (DepthTexture)
+			{
+				DataManager::GetInstance()->DeleteResource(DepthTexture);
+				DepthTexture->DestroyBuffer();
+				DepthTexture = nullptr;
+			}
+		}
 	}
 }
 
@@ -110,6 +134,11 @@ void FrameBuffer::Use()
 void FrameBuffer::Unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void FrameBuffer::OnDestroy()
+{
+	DestroyBuffer();
 }
 
 void FrameBuffer::GenerateTextures()

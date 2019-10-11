@@ -13,9 +13,9 @@ Scene::~Scene()
 {
 }
 
-void Scene::Initialize()
+void Scene::OnInitialize()
 {
-	ObjectBase::Initialize();
+	ObjectBase::OnInitialize();
 }
 
 void Scene::RegisterSceneObject(SceneObjectBasePtr InSceneObject)

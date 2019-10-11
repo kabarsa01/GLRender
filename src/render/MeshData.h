@@ -35,8 +35,11 @@ public:
 	unsigned int VBO = -1;
 	unsigned int EBO = -1;
 
-	MeshData(string InId);
+	MeshData(const string& InId);
+	MeshData(const string& InId, const std::vector<Vertex>& InVertices, const std::vector<unsigned int>& InIndices);
 	virtual ~MeshData();
+
+	virtual void OnDestroy() override;
 
 	// Inherited via Resource
 	virtual bool Load() override;
@@ -45,6 +48,9 @@ public:
 	void SetupBufferObjects();
 	void DestroyBufferObjects();
 	void Draw();
+
+	// fullscreen quad instance to be used for screen space stuff
+	static std::shared_ptr<MeshData> FullscreenQuad();
 private:
 	MeshData() : Resource(HashString::NONE()) {}
 };

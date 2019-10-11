@@ -21,7 +21,7 @@ public:
 	SceneObjectBase();
 	virtual ~SceneObjectBase();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 	bool RegisterComponent(std::shared_ptr<SceneObjectComponent> InComponent);
 	virtual void Tick(float DeltaTime);
 	void TickComponents(float DeltaTime);
@@ -32,7 +32,7 @@ public:
 	SceneObjectComponentPtr GetComponent();
 	std::vector<SceneObjectComponentPtr> GetComponents() const;
 
-	virtual void Destroy() override;
+	virtual void OnDestroy() override;
 protected:
 	// components container
 	std::vector<SceneObjectComponentPtr> Components;

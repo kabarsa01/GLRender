@@ -34,7 +34,7 @@ void DataManager::ShutdownInstance()
 
 bool DataManager::AddResource(HashString InKey, shared_ptr<Resource> InValue)
 {
-	if (( InValue.get() != nullptr ) && ( ResourcesTable.find(InKey) == ResourcesTable.end() ))
+	if (InValue && ( ResourcesTable.find(InKey) == ResourcesTable.end() ))
 	{
 		ResourcesTable[InKey] = InValue;
 		ResourcesMap[InValue->GetClass().GetName()][InKey] = InValue;
@@ -42,6 +42,28 @@ bool DataManager::AddResource(HashString InKey, shared_ptr<Resource> InValue)
 	}
 
 	return false;
+}
+
+bool DataManager::AddResource(ResourcePtr InValue)
+{
+	return AddResource(InValue->GetResourceId(), InValue);
+}
+
+bool DataManager::DeleteResource(HashString InKey, shared_ptr<Resource> InValue)
+{
+	if (InValue && (ResourcesTable.find(InKey) != ResourcesTable.end()))
+	{
+		ResourcesTable.erase(InKey);
+		ResourcesMap[InValue->GetClass().GetName()].erase(InKey);
+		return true;
+	}
+
+	return false;
+}
+
+bool DataManager::DeleteResource(ResourcePtr InValue)
+{
+	return DeleteResource(InValue->GetResourceId(), InValue);
 }
 
 bool DataManager::IsResourcePresent(HashString InKey)

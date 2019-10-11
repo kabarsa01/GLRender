@@ -10,7 +10,7 @@ public:
 	MeshObject();
 	virtual ~MeshObject();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 
 	std::shared_ptr<MeshComponent> GetMeshComponent();
 protected:

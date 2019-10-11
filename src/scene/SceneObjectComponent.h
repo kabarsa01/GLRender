@@ -12,7 +12,7 @@ public:
 	SceneObjectComponent(std::shared_ptr<SceneObjectBase> InParent);
 	virtual ~SceneObjectComponent();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 	std::shared_ptr<SceneObjectBase> GetParent();
 
 	virtual void TickComponent(float DeltaTime);

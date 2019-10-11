@@ -12,7 +12,8 @@ public:
 	Resource(HashString InId);
 	virtual ~Resource();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
+	virtual void OnDestroy() override;
 	HashString GetResourceId();
 
 	virtual bool Load() = 0;

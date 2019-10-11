@@ -10,9 +10,9 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	, UseAlpha{ InputUsesAlpha }
 	, FlipVertical{ InFlipVertical }
 	, Linear{ InLinear }
+	, Data ( nullptr )
 {
 }
-
 
 Texture::~Texture()
 {

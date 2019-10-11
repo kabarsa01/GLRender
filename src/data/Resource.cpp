@@ -24,10 +24,17 @@ Resource::~Resource()
 {
 }
 
-void Resource::Initialize()
+void Resource::OnInitialize()
 {
-	ObjectBase::Initialize();
+	ObjectBase::OnInitialize();
 	DataManager::GetInstance()->AddResource(Id, get_shared_from_this<Resource>());
+}
+
+void Resource::OnDestroy()
+{
+	Unload();
+	IsValidFlag = false;
+	// ask data manager to destroy this resource ???
 }
 
 HashString Resource::GetResourceId()

@@ -19,9 +19,9 @@ SceneObjectComponent::~SceneObjectComponent()
 
 }
 
-void SceneObjectComponent::Initialize()
+void SceneObjectComponent::OnInitialize()
 {
-	ObjectBase::Initialize();
+	ObjectBase::OnInitialize();
 
 	if (Parent)
 	{

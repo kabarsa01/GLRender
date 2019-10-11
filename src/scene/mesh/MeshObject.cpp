@@ -9,9 +9,9 @@ MeshObject::~MeshObject()
 {
 }
 
-void MeshObject::Initialize()
+void MeshObject::OnInitialize()
 {
-	SceneObjectBase::Initialize();
+	SceneObjectBase::OnInitialize();
 }
 
 std::shared_ptr<MeshComponent> MeshObject::GetMeshComponent()

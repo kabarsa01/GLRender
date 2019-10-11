@@ -11,9 +11,9 @@ SceneObjectBase::~SceneObjectBase()
 {
 }
 
-void SceneObjectBase::Initialize()
+void SceneObjectBase::OnInitialize()
 {
-	ObjectBase::Initialize();
+	ObjectBase::OnInitialize();
 
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
 	Scene->RegisterSceneObject(get_shared_from_this<SceneObjectBase>());
@@ -51,10 +51,10 @@ std::vector<SceneObjectComponentPtr> SceneObjectBase::GetComponents() const
 	return Components;
 }
 
-void SceneObjectBase::Destroy()
+void SceneObjectBase::OnDestroy()
 {
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
-	ObjectBase::Destroy();
+	ObjectBase::OnDestroy();
 }
 
 void SceneObjectBase::IntializeComponents()

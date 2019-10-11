@@ -20,7 +20,7 @@ public:
 	Scene();
 	virtual ~Scene();
 
-	virtual void Initialize() override;
+	virtual void OnInitialize() override;
 	
 	void RegisterSceneObject(SceneObjectBasePtr InSceneObject);
 	void RemoveSceneObject(SceneObjectBasePtr InSceneObject);

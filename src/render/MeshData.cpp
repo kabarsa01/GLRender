@@ -1,8 +1,27 @@
 #include "MeshData.h"
+#include "data/DataManager.h"
 
 #include <glad/glad.h>
 
-MeshData::MeshData(string InId)
+namespace
+{
+	std::vector<Vertex> QuadVertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+		// positions          // texCoords
+	{{-1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+	{{-1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+	{{ 1.0f, -1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+	{{ 1.0f,  1.0f,  0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}
+	};
+
+	std::vector<unsigned int> QuadIndices = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	std::string FullscreenQuadId = "MeshData_FullscreenQuad";
+};
+
+MeshData::MeshData(const string& InId)
 	: Resource{InId}
 	, VAO{ (unsigned int)-1 }
 	, VBO{ (unsigned int)-1 }
@@ -11,9 +30,24 @@ MeshData::MeshData(string InId)
 
 }
 
+MeshData::MeshData(const string& InId, const std::vector<Vertex>& InVertices, const std::vector<unsigned int>& InIndices)
+	: Resource{ InId }
+	, VAO{ (unsigned int)-1 }
+	, VBO{ (unsigned int)-1 }
+	, EBO{ (unsigned int)-1 }
+	, Vertices( InVertices )
+	, Indices( InIndices )
+{
+}
+
 MeshData::~MeshData()
 {
 
+}
+
+void MeshData::OnDestroy()
+{
+	DestroyBufferObjects();
 }
 
 void MeshData::SetupBufferObjects()
@@ -63,6 +97,16 @@ void MeshData::Draw()
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, (GLsizei) Indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+MeshDataPtr MeshData::FullscreenQuad()
+{
+	return DataManager::GetInstance()->RequestResourceByType<MeshData, const string&, const std::vector<Vertex>&, const std::vector<unsigned int>&>(
+		FullscreenQuadId,
+		FullscreenQuadId,
+		QuadVertices,
+		QuadIndices
+	);
 }
 
 bool MeshData::Load()

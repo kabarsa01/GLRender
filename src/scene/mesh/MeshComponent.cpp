@@ -33,9 +33,9 @@ void MeshComponent::SetMeshData(MeshDataPtr InMeshData)
 	MeshData = InMeshData;
 }
 
-void MeshComponent::Initialize()
+void MeshComponent::OnInitialize()
 {
-	SceneObjectComponent::Initialize();
+	SceneObjectComponent::OnInitialize();
 	// default quad mesh
 
 }

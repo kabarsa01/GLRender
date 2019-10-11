@@ -15,7 +15,7 @@ public:
 	FrameBuffer();
 	virtual ~FrameBuffer();
 
-	void SetSize(int InWidth, int InHeight);
+	void SetSize(int InWidth, int InHeight, bool InRecreateBuffers);
 	int GetWidth();
 	int GetHeight();
 	void GenerateBuffer(unsigned int InColorBuffersCount = 1, bool InGenerateTextures = false, bool InUseDepth = false);
@@ -28,11 +28,14 @@ public:
 
 	void Use();
 	static void Unbind();
+
+	virtual void OnDestroy() override;
 protected:
 	unsigned int ID;
 	int Width;
 	int Height;
 	bool UseDepth;
+	bool UseGeneratedTextures;
 	int ColorBuffersCount = 1;
 
 	TexturePtr DepthTexture;

@@ -23,8 +23,8 @@ public:
 	template <typename Type, typename OriginalType>
 	static std::shared_ptr<Type> Cast(std::shared_ptr<OriginalType> InPointer);
 
-	virtual void Initialize();
-	virtual void Destroy();
+	virtual void OnInitialize();
+	virtual void OnDestroy();
 private:
 	std::shared_ptr<Class> InstanceClass;
 };
@@ -43,7 +43,7 @@ template<typename Type, typename ...ArgTypes>
 inline std::shared_ptr<Type> ObjectBase::NewObject(ArgTypes ...Args)
 {
 	std::shared_ptr<Type> NewObjectPtr = std::make_shared<Type>(Args...);
-	NewObjectPtr->Initialize();
+	NewObjectPtr->OnInitialize();
 	return NewObjectPtr;
 }
 

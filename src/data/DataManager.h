@@ -19,6 +19,9 @@ public:
 	static void ShutdownInstance();
 
 	bool AddResource(HashString InKey, shared_ptr<Resource> InValue);
+	bool AddResource(ResourcePtr InValue);
+	bool DeleteResource(HashString InKey, shared_ptr<Resource> InValue);
+	bool DeleteResource(ResourcePtr InValue);
 	bool IsResourcePresent(HashString InKey);
 	shared_ptr<Resource> GetResource(HashString InKey);
 	template<class T>
