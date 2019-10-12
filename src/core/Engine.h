@@ -8,6 +8,8 @@ class Engine
 {
 public:
 	static Engine* GetInstance();
+	static ScenePtr GetSceneInstance();
+	static RendererPtr GetRendererInstance();
 
 	void InitModules();
 

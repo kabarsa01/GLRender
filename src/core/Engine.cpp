@@ -8,6 +8,16 @@ Engine * Engine::GetInstance()
 	return StaticInstance;
 }
 
+ScenePtr Engine::GetSceneInstance()
+{
+	return StaticInstance->GetScene();
+}
+
+RendererPtr Engine::GetRendererInstance()
+{
+	return StaticInstance->GetRenderer();
+}
+
 void Engine::InitModules()
 {
 	SceneInstance = ObjectBase::NewObject<Scene>();

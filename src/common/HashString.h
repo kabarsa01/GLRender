@@ -12,6 +12,7 @@ class HashString
 {
 public:
 	HashString(std::string InString);
+	HashString(const char* InString);
 	virtual ~HashString();
 
 	static HashString NONE();

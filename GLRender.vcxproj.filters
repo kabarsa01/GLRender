@@ -55,6 +55,9 @@
     <Filter Include="Source Files\common">
       <UniqueIdentifier>{3391731a-bd03-4261-9453-84b311dd0cfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\render\passes">
+      <UniqueIdentifier>{9a2e5294-1a5c-4c3a-97e9-98e098fd2802}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -138,6 +141,15 @@
     <ClCompile Include="src\render\RenderPass.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\passes\MainRenderPass.cpp">
+      <Filter>Source Files\render\passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\passes\ScreenOutputRenderPass.cpp">
+      <Filter>Source Files\render\passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\passes\ZPrepassRenderPass.cpp">
+      <Filter>Source Files\render\passes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -215,6 +227,15 @@
     <ClInclude Include="src\render\RenderPass.h">
       <Filter>Source Files\render</Filter>
     </ClInclude>
+    <ClInclude Include="src\render\passes\MainRenderPass.h">
+      <Filter>Source Files\render\passes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\passes\ScreenOutputRenderPass.h">
+      <Filter>Source Files\render\passes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\passes\ZPrepassRenderPass.h">
+      <Filter>Source Files\render\passes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\src\BasicVertexShader.vs">
@@ -227,6 +248,12 @@
       <Filter>Source Files\shaders\src</Filter>
     </None>
     <None Include="src\shaders\src\BasicScreenSpaceVertexShader.vs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+    <None Include="src\shaders\src\ZPrepassFragmentShader.fs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+    <None Include="src\shaders\src\ZPrepassVertexShader.vs">
       <Filter>Source Files\shaders\src</Filter>
     </None>
   </ItemGroup>

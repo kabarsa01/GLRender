@@ -141,6 +141,9 @@
     <ClCompile Include="src\render\FrameBuffer.cpp" />
     <ClCompile Include="src\render\Material.cpp" />
     <ClCompile Include="src\render\MeshData.cpp" />
+    <ClCompile Include="src\render\passes\MainRenderPass.cpp" />
+    <ClCompile Include="src\render\passes\ScreenOutputRenderPass.cpp" />
+    <ClCompile Include="src\render\passes\ZPrepassRenderPass.cpp" />
     <ClCompile Include="src\render\Renderer.cpp" />
     <ClCompile Include="src\render\RenderPass.cpp" />
     <ClCompile Include="src\resources\Texture.cpp" />
@@ -168,6 +171,9 @@
     <ClInclude Include="src\render\FrameBuffer.h" />
     <ClInclude Include="src\render\Material.h" />
     <ClInclude Include="src\render\MeshData.h" />
+    <ClInclude Include="src\render\passes\MainRenderPass.h" />
+    <ClInclude Include="src\render\passes\ScreenOutputRenderPass.h" />
+    <ClInclude Include="src\render\passes\ZPrepassRenderPass.h" />
     <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\render\RenderPass.h" />
     <ClInclude Include="src\resources\Texture.h" />
@@ -188,6 +194,8 @@
     <None Include="src\shaders\src\BasicScreenSpaceFragmentShader.fs" />
     <None Include="src\shaders\src\BasicScreenSpaceVertexShader.vs" />
     <None Include="src\shaders\src\BasicVertexShader.vs" />
+    <None Include="src\shaders\src\ZPrepassFragmentShader.fs" />
+    <None Include="src\shaders\src\ZPrepassVertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

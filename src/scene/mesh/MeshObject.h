@@ -18,3 +18,5 @@ protected:
 
 	virtual void IntializeComponents() override;
 };
+
+typedef std::shared_ptr<MeshObject> MeshObjectPtr;

@@ -18,7 +18,7 @@ public:
 	void SetSize(int InWidth, int InHeight, bool InRecreateBuffers);
 	int GetWidth();
 	int GetHeight();
-	void GenerateBuffer(unsigned int InColorBuffersCount = 1, bool InGenerateTextures = false, bool InUseDepth = false);
+	void GenerateBuffer(unsigned int InColorBuffersCount, bool InGenerateTextures, bool InUseDepth, bool InGenerateDepth);
 	void DestroyBuffer();
 
 	void SetTexture(TexturePtr InTexture, unsigned int InIndex);
@@ -35,6 +35,7 @@ protected:
 	int Width;
 	int Height;
 	bool UseDepth;
+	bool UseGeneratedDepth;
 	bool UseGeneratedTextures;
 	int ColorBuffersCount = 1;
 
@@ -42,6 +43,9 @@ protected:
 	std::vector<TexturePtr> Textures;
 
 	void GenerateTextures();
+	void GenerateDepth();
+	void ResetBuffers();
+	void SetupAttachments();
 };
 
 typedef std::shared_ptr<FrameBuffer> FrameBufferPtr;

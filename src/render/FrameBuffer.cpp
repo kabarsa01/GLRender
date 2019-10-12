@@ -21,8 +21,10 @@ void FrameBuffer::SetSize(int InWidth, int InHeight, bool InRecreateBuffers)
 	Height = InHeight;
 	if (InRecreateBuffers)
 	{
-		DestroyBuffer();
-		GenerateBuffer(ColorBuffersCount, UseGeneratedTextures, UseDepth);
+		ResetBuffers();
+		SetupAttachments();
+		//DestroyBuffer();
+		//GenerateBuffer(ColorBuffersCount, UseGeneratedTextures, UseDepth, UseGeneratedDepth);
 	}
 }
 
@@ -36,7 +38,7 @@ int FrameBuffer::GetHeight()
 	return Height;
 }
 
-void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool InGenerateTextures/* = false*/, bool InUseDepth/* = false*/)
+void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool InGenerateTextures/* = false*/, bool InUseDepth/* = false*/, bool InGenerateDepth/* = false*/)
 {
 	if (ID != 0xffffffff)
 	{
@@ -46,6 +48,7 @@ void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool 
 	ColorBuffersCount = InColorBuffersCount;
 	UseGeneratedTextures = InGenerateTextures;
 	UseDepth = InUseDepth;
+	UseGeneratedDepth = InGenerateDepth;
 
 	glGenFramebuffers(1, &ID);
 	// check if textures should be generated or the ones set from the outside
@@ -54,16 +57,12 @@ void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool 
 	{
 		GenerateTextures();
 	}
+	if (UseDepth && InGenerateDepth)
+	{
+		GenerateDepth();
+	}
 	//GL_READ_FRAMEBUFFER or GL_DRAW_FRAMEBUFFER variants maybe
-	glBindFramebuffer(GL_FRAMEBUFFER, ID);
-	for (unsigned int TextureIndex = 0; TextureIndex < Textures.size(); TextureIndex++)
-	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + TextureIndex, GL_TEXTURE_2D, Textures[TextureIndex]->GetID(), 0);
-	}
-	if (UseDepth)
-	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, DepthTexture->GetID(), 0);
-	}
+	SetupAttachments();
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
@@ -156,15 +155,46 @@ void FrameBuffer::GenerateTextures()
 		Tex->InitializeBuffer();
 		Textures[Index] = Tex;
 	}
+}
 
+void FrameBuffer::GenerateDepth()
+{
+	std::string TextureId = std::to_string(ID) + std::to_string(ColorBuffersCount);
+	DepthTexture = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
+	DepthTexture->SetUseEmpty(true);
+	DepthTexture->SetSize(Width, Height);
+	DepthTexture->SetUseDepth(true);
+	DepthTexture->InitializeBuffer();
+}
+
+void FrameBuffer::ResetBuffers()
+{
+	for (size_t Index = 0; Index < ColorBuffersCount; Index++)
+	{
+		TexturePtr Tex = Textures[Index];
+		Tex->SetSize(Width, Height);
+		Tex->DestroyBuffer();
+		Tex->InitializeBuffer();
+	}
+
+	if (DepthTexture && UseGeneratedDepth)
+	{
+		DepthTexture->SetSize(Width, Height);
+		DepthTexture->DestroyBuffer();
+		DepthTexture->InitializeBuffer();
+	}
+}
+
+void FrameBuffer::SetupAttachments()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, ID);
+	for (unsigned int TextureIndex = 0; TextureIndex < Textures.size(); TextureIndex++)
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + TextureIndex, GL_TEXTURE_2D, Textures[TextureIndex]->GetID(), 0);
+	}
 	if (UseDepth)
 	{
-		std::string TextureId = std::to_string(ID) + std::to_string(ColorBuffersCount);
-		DepthTexture = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
-		DepthTexture->SetUseEmpty(true);
-		DepthTexture->SetSize(Width, Height);
-		DepthTexture->SetUseDepth(true);
-		DepthTexture->InitializeBuffer();
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, DepthTexture->GetID(), 0);
 	}
 }
 

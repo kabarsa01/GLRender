@@ -27,6 +27,11 @@ HashString::HashString(std::string InString)
 	CachedString = StringsMap[HashValue];
 }
 
+HashString::HashString(const char* InString)
+	: HashString( std::string(InString) )
+{
+}
+
 HashString::~HashString()
 {
 }
