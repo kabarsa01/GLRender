@@ -141,7 +141,7 @@ void Renderer::Init()
 	CameraObjectPtr CameraObj = ObjectBase::NewObject<CameraObject>();
 	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
 	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
-	CameraObj->GetCameraComponent()->SetNearPlane(25.0f);
+	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
 	CameraObj->GetCameraComponent()->SetFarPlane(100.f);
 
 	// output simple stats
@@ -167,41 +167,8 @@ void Renderer::RenderFrame()
 	{
 		RenderPasses[PassIndex]->DrawPass();
 	}
-//	// FIRST PASS
-//
-//	PrimaryFrameBuffer->Use();
-////	glDepthMask(GL_FALSE);
-////	glDepthFunc(GL_LESS);
-//	glEnable(GL_DEPTH_TEST);
-//	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-//
-//	glViewport(0, 0, PrimaryFrameBuffer->GetWidth(), PrimaryFrameBuffer->GetHeight());
-//
-//	ScenePtr Scene = Engine::GetInstance()->GetScene();
-//
-//	MainCamera = Scene->GetSceneComponent<CameraComponent>();
-//
-//	View = MainCamera->CalculateViewMatrix();
-//	Proj = MainCamera->CalculateProjectionMatrix();
-//
-//	// go through mesh components and draw them using assigned materials
-//	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
-//	for (MeshComponentPtr MeshComp : MeshCompVector)
-//	{
-//		MeshComp->GetParent()->Transform.SetRotation({ 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
-//		Model = MeshComp->GetParent()->Transform.GetMatrix();
-//
-//		MaterialPtr Material = MeshComp->Material;
-//		Material->Use();
-//		SetupShader(Material->ShaderInstance);
-//
-//		MeshComp->MeshData->Draw();
-//	}
-//
-//	FrameBuffer::Unbind();
 
-	// SECOND PASS
+	// FINAL PASS
 	glViewport(0, 0, Width, Height);
 
 	glDisable(GL_DEPTH_TEST);
@@ -210,8 +177,7 @@ void Renderer::RenderFrame()
 
 	SSShader->Use();
 	SSShader->SetInt("colorBuffer", 0);
-//	RenderPasses[0]->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
-	RenderPasses[1]->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
+	RenderPasses[1]->GetFrameBuffer()->GetTexture(0)->Use(GL_TEXTURE0);
 	MeshData::FullscreenQuad()->Draw();
 
 }

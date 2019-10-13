@@ -19,26 +19,25 @@ void MainRenderPass::InitPass()
 	int Width = RendererInstance->GetWidth();
 	int Height = RendererInstance->GetHeight();
 
-	FrameBufferInstance = ObjectBase::NewObject<FrameBuffer>();
 	FrameBufferInstance->SetSize(Width, Height, false);
+	FrameBufferInstance->SetAllowExternalDepthReset(false);
 	FrameBufferInstance->SetDepthTexture(RendererInstance->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture());
 	FrameBufferInstance->GenerateBuffer(1, true, true, false);
 }
 
 void MainRenderPass::DrawPass()
 {
-	glDepthMask(GL_FALSE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 
+	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
 	FrameBufferInstance->Use();
-	//	glDepthMask(GL_FALSE);
-	glDepthFunc(GL_LEQUAL);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -56,7 +55,6 @@ void MainRenderPass::DrawPass()
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
-//		MeshComp->GetParent()->Transform.SetRotation({ 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 
 		MaterialPtr Material = MeshComp->Material;

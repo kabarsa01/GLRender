@@ -25,6 +25,7 @@ public:
 	TexturePtr GetTexture(unsigned int InIndex);
 	void SetDepthTexture(TexturePtr InTexture);
 	TexturePtr GetDepthTexture();
+	void SetAllowExternalDepthReset(bool InAllowDepthReset);
 
 	void Use();
 	static void Unbind();
@@ -38,6 +39,7 @@ protected:
 	bool UseGeneratedDepth;
 	bool UseGeneratedTextures;
 	int ColorBuffersCount = 1;
+	bool AllowExternalDepthReset = false;
 
 	TexturePtr DepthTexture;
 	std::vector<TexturePtr> Textures;

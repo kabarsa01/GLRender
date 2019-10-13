@@ -23,8 +23,6 @@ void FrameBuffer::SetSize(int InWidth, int InHeight, bool InRecreateBuffers)
 	{
 		ResetBuffers();
 		SetupAttachments();
-		//DestroyBuffer();
-		//GenerateBuffer(ColorBuffersCount, UseGeneratedTextures, UseDepth, UseGeneratedDepth);
 	}
 }
 
@@ -125,6 +123,11 @@ TexturePtr FrameBuffer::GetDepthTexture()
 	return DepthTexture;
 }
 
+void FrameBuffer::SetAllowExternalDepthReset(bool InAllowDepthReset)
+{
+	AllowExternalDepthReset = InAllowDepthReset;
+}
+
 void FrameBuffer::Use()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, ID);
@@ -177,7 +180,8 @@ void FrameBuffer::ResetBuffers()
 		Tex->InitializeBuffer();
 	}
 
-	if (DepthTexture && UseGeneratedDepth)
+	bool CanResetDepth = UseGeneratedDepth || AllowExternalDepthReset;
+	if (DepthTexture && CanResetDepth)
 	{
 		DepthTexture->SetSize(Width, Height);
 		DepthTexture->DestroyBuffer();

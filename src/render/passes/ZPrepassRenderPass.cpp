@@ -21,7 +21,6 @@ void ZPrepassRenderPass::InitPass()
 	int Width = RendererInstance->GetWidth();
 	int Height = RendererInstance->GetHeight();
 
-	FrameBufferInstance = ObjectBase::NewObject<FrameBuffer>();
 	FrameBufferInstance->SetSize(Width, Height, false);
 	FrameBufferInstance->GenerateBuffer(0, true, true, true);
 
@@ -31,18 +30,17 @@ void ZPrepassRenderPass::InitPass()
 
 void ZPrepassRenderPass::DrawPass()
 {
-	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
-	glEnable(GL_BLEND);
+	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
 	FrameBufferInstance->Use();
-	//	glDepthMask(GL_FALSE);
-	glDepthFunc(GL_LESS);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
