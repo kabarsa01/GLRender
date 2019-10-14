@@ -61,10 +61,10 @@ void MainRenderPass::DrawPass()
 
 		MaterialPtr Material = MeshComp->Material;
 		Material->Use();
-		Material->AddUniformParam<glm::mat4>("model", Model, true);
-		Material->AddUniformParam<glm::mat4>("view", View, true);
-		Material->AddUniformParam<glm::mat4>("projection", Proj, true);
-		Material->AddUniformParam<glm::vec3>("view_pos", MainCamera->GetParent()->Transform.GetLocation(), true);
+		Material->SetUniformParam<glm::mat4>("model", Model);
+		Material->SetUniformParam<glm::mat4>("view", View);
+		Material->SetUniformParam<glm::mat4>("projection", Proj);
+		Material->SetUniformParam<glm::vec3>("view_pos", MainCamera->GetParent()->Transform.GetLocation());
 
 		MeshComp->MeshData->Draw();
 	}

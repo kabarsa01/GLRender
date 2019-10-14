@@ -43,7 +43,9 @@ public:
 	void Use();
 
 	template<typename T>
-	void AddUniformParam(const std::string& InParamName, const T& InParamValue, bool InUpdate = false);
+	void AddUniformParam(const std::string& InParamName, const T& InParamValue);
+	template<typename T>
+	void SetUniformParam(const std::string& InParamName, const T& InParamValue);
 	void AddTextureParam(
 		const std::string& InParamName,
 		const std::string& InTexturePath,
@@ -86,97 +88,133 @@ typedef std::shared_ptr<Material> MaterialPtr;
 //===============================================================================================
 
 template<>
-inline void Material::AddUniformParam<bool>(const std::string & InParamName, const bool & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<bool>(const std::string & InParamName, const bool & InParamValue)
 {
 	BoolParams[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetBool(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<int>(const std::string & InParamName, const int & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<int>(const std::string & InParamName, const int & InParamValue)
 {
 	IntParams[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetInt(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<float>(const std::string & InParamName, const float & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<float>(const std::string & InParamName, const float & InParamValue)
 {
 	FloatParams[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetFloat(InParamName, InParamValue);
-	}
 }
 
 //---------------------------------------------------------------------------------------------
 
 template<>
-inline void Material::AddUniformParam<glm::vec2>(const std::string & InParamName, const glm::vec2 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::vec2>(const std::string & InParamName, const glm::vec2 & InParamValue)
 {
 	Vec2Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetVec2(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<glm::vec3>(const std::string & InParamName, const glm::vec3 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::vec3>(const std::string & InParamName, const glm::vec3 & InParamValue)
 {
 	Vec3Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetVec3(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<glm::vec4>(const std::string & InParamName, const glm::vec4 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::vec4>(const std::string & InParamName, const glm::vec4 & InParamValue)
 {
 	Vec4Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetVec4(InParamName, InParamValue);
-	}
 }
 
 //---------------------------------------------------------------------------------------------
 
 template<>
-inline void Material::AddUniformParam<glm::mat2>(const std::string & InParamName, const glm::mat2 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::mat2>(const std::string & InParamName, const glm::mat2 & InParamValue)
 {
 	Mat2Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetMat2(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<glm::mat3>(const std::string & InParamName, const glm::mat3 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::mat3>(const std::string & InParamName, const glm::mat3 & InParamValue)
 {
 	Mat3Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetMat3(InParamName, InParamValue);
-	}
 }
 
 template<>
-inline void Material::AddUniformParam<glm::mat4>(const std::string & InParamName, const glm::mat4 & InParamValue, bool InUpdate)
+inline void Material::AddUniformParam<glm::mat4>(const std::string & InParamName, const glm::mat4 & InParamValue)
 {
 	Mat4Params[InParamName] = InParamValue;
-	if (InUpdate)
-	{
-		ShaderInstance->SetMat4(InParamName, InParamValue);
-	}
 }
+
+//===============================================================================================
+// template definitions
+//===============================================================================================
+
+template<>
+inline void Material::SetUniformParam<bool>(const std::string & InParamName, const bool & InParamValue)
+{
+	AddUniformParam<bool>(InParamName, InParamValue);
+	ShaderInstance->SetBool(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<int>(const std::string & InParamName, const int & InParamValue)
+{
+	AddUniformParam<int>(InParamName, InParamValue);
+	ShaderInstance->SetInt(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<float>(const std::string & InParamName, const float & InParamValue)
+{
+	AddUniformParam<float>(InParamName, InParamValue);
+	ShaderInstance->SetFloat(InParamName, InParamValue);
+}
+
+//---------------------------------------------------------------------------------------------
+
+template<>
+inline void Material::SetUniformParam<glm::vec2>(const std::string & InParamName, const glm::vec2 & InParamValue)
+{
+	AddUniformParam<glm::vec2>(InParamName, InParamValue);
+	ShaderInstance->SetVec2(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<glm::vec3>(const std::string & InParamName, const glm::vec3 & InParamValue)
+{
+	AddUniformParam<glm::vec3>(InParamName, InParamValue);
+	ShaderInstance->SetVec3(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<glm::vec4>(const std::string & InParamName, const glm::vec4 & InParamValue)
+{
+	AddUniformParam<glm::vec4>(InParamName, InParamValue);
+	ShaderInstance->SetVec4(InParamName, InParamValue);
+}
+
+//---------------------------------------------------------------------------------------------
+
+template<>
+inline void Material::SetUniformParam<glm::mat2>(const std::string & InParamName, const glm::mat2 & InParamValue)
+{
+	AddUniformParam<glm::mat2>(InParamName, InParamValue);
+	ShaderInstance->SetMat2(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<glm::mat3>(const std::string & InParamName, const glm::mat3 & InParamValue)
+{
+	AddUniformParam<glm::mat3>(InParamName, InParamValue);
+	ShaderInstance->SetMat3(InParamName, InParamValue);
+}
+
+template<>
+inline void Material::SetUniformParam<glm::mat4>(const std::string & InParamName, const glm::mat4 & InParamValue)
+{
+	AddUniformParam<glm::mat4>(InParamName, InParamValue);
+	ShaderInstance->SetMat4(InParamName, InParamValue);
+}
+
 
 
