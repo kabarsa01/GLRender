@@ -35,8 +35,6 @@ public:
 	RenderPassPtr GetRenderPass(const HashString& InName);
 protected:
 	CameraComponentPtr MainCamera;
-
-	void SetupShader(ShaderPtr InShader);
 private:
 	//======================= VARS ===============================
 	int Width = 1280;
@@ -48,10 +46,6 @@ private:
 
 	std::vector<RenderPassPtr> RenderPasses;
 	std::map<HashString, unsigned int> RenderPassMap;
-
-	//FrameBufferPtr PrimaryFrameBuffer;
-	ShaderPtr SSShader;
-	MeshDataPtr ScreenQuad;
 	//==================== METHODS ===============================
 
 	void RegisterRenderPass(RenderPassPtr InRenderPass);

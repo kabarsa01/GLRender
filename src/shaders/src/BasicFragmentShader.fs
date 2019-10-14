@@ -16,8 +16,8 @@ uniform vec3 light_color;
 uniform vec3 spec_color;
 uniform vec3 view_pos;
 
-uniform sampler2D albedo;
-uniform sampler2D normalMap;
+uniform sampler2D AlbedoMap;
+uniform sampler2D NormalMap;
 
 out vec4 FragColor;
 
@@ -41,7 +41,7 @@ vec3 CalculateSpec(vec3 InViewDir, vec3 InLightDir, vec3 InNormal, vec3 InSpecCo
 
 vec3 CalculateNormal()
 {
-	vec3 normalVec = texture(normalMap, fs_in.uv).rgb;
+	vec3 normalVec = texture(NormalMap, fs_in.uv).rgb;
 	normalVec = normalize(normalVec * 2.0 - 1.0);
 	normalVec = normalize(fs_in.TBN * normalVec);
 	return normalVec;
@@ -57,7 +57,7 @@ void main()
     //vec3 spec = spec_color * pow(max(dot(reflect_dir, view_dir), 0.0), 32) * spec_strength;
 	vec3 spec = CalculateSpec(light_dir_norm, -1.0 * view_dir, norm, spec_color, spec_strength);
 	vec3 light_res_color = max(dot(light_dir_norm, norm), 0.0f) * light_color;
-	FragColor = vec4(vec3(texture(albedo, fs_in.uv)) * (light_res_color + ambient_color + spec), 1.0);
+	FragColor = vec4(vec3(texture(AlbedoMap, fs_in.uv)) * (light_res_color + ambient_color + spec), 1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/2.2));
 	//FragColor.rgb = norm;
 

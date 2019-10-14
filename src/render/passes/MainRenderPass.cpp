@@ -3,6 +3,8 @@
 #include <core/Engine.h>
 #include <scene/mesh/MeshComponent.h>
 
+#include <glm/glm.hpp>
+
 MainRenderPass::MainRenderPass(const HashString& InName)
 	: RenderPass( InName )
 {
@@ -59,7 +61,10 @@ void MainRenderPass::DrawPass()
 
 		MaterialPtr Material = MeshComp->Material;
 		Material->Use();
-		SetupShader(Material->ShaderInstance);
+		Material->AddUniformParam<glm::mat4>("model", Model, true);
+		Material->AddUniformParam<glm::mat4>("view", View, true);
+		Material->AddUniformParam<glm::mat4>("projection", Proj, true);
+		Material->AddUniformParam<glm::vec3>("view_pos", MainCamera->GetParent()->Transform.GetLocation(), true);
 
 		MeshComp->MeshData->Draw();
 	}
@@ -70,23 +75,6 @@ void MainRenderPass::DrawPass()
 void MainRenderPass::OnResolutionChaged(int InWidth, int InHeight)
 {
 	FrameBufferInstance->SetSize(InWidth, InHeight, true);
-}
-
-void MainRenderPass::SetupShader(ShaderPtr InShader)
-{
-	InShader->SetMat4("model", Model);
-	InShader->SetMat4("view", View);
-	InShader->SetMat4("projection", Proj);
-
-	// uniforms setup once
-	InShader->SetVec3("ambient_color", { 0.04f, 0.04f, 0.045f });
-	InShader->SetVec3("light_dir", { -1.0f, -0.5f, -0.5f });
-	InShader->SetVec3("light_color", { 0.95f, 0.95f, 0.95f });
-	InShader->SetVec3("spec_color", { 1.0f, 0.0f, 0.0f });
-	InShader->SetFloat("spec_strength", 0.0f);
-	InShader->SetVec3("view_pos", MainCamera->GetParent()->Transform.GetLocation());
-	InShader->SetInt("albedo", 0);
-	InShader->SetInt("normalMap", 1);
 }
 
 
