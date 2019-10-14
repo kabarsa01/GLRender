@@ -104,6 +104,7 @@ void Renderer::OnInitialize()
 
 void Renderer::Init()
 {
+	// instantiate and register render passes
 	ZPrepassRenderPassPtr ZPrepass = ObjectBase::NewObject<ZPrepassRenderPass, const HashString&>(std::string("ZPrepass"));
 	ZPrepass->InitPass();
 	RegisterRenderPass(ZPrepass);
@@ -113,7 +114,8 @@ void Renderer::Init()
 	ScreenOutputRenderPassPtr ScreenOutputPass = ObjectBase::NewObject<ScreenOutputRenderPass, const HashString&>(std::string("ScreenOutput"));
 	ScreenOutputPass->InitPass();
 	RegisterRenderPass(ScreenOutputPass);
-
+	//-----------------------------------------------------------------------------------------------
+	// setup default material
 	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
 	Mat->SetShaderPath("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
 	Mat->AddTextureParam("AlbedoMap", "./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg", 0, false, true, false);
