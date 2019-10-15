@@ -68,6 +68,12 @@ glm::mat4 Transform::CalculateRotationMatrix() const
 	return Mat;
 }
 
+glm::mat4 Transform::CalculateViewMatrix() const
+{
+	glm::vec3 Direction = GetForwardVector();
+	return glm::lookAt(Location, Location + Direction, glm::vec3{ 0.0f, 1.0f, 0.0f });
+}
+
 glm::mat4 Transform::CalculateMatrix() const
 {
 	glm::mat4 Mat(1.0f);
@@ -78,6 +84,13 @@ glm::mat4 Transform::CalculateMatrix() const
 	Mat = glm::scale(Mat, Scale);
 
 	return Mat;
+}
+
+glm::vec3 Transform::GetForwardVector() const
+{
+	glm::vec4 Forward = { 0.0f, 0.0f, 1.0f, 0.0f };
+	Forward = Forward * CalculateRotationMatrix();
+	return glm::vec3(Forward);
 }
 
 

@@ -53,6 +53,10 @@ void MainRenderPass::DrawPass()
 	View = MainCamera->CalculateViewMatrix();
 	Proj = MainCamera->CalculateProjectionMatrix();
 
+	RendererPtr Rend = Engine::GetRendererInstance();
+	TexturePtr ShadowMask = Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture();
+	ShadowMask->Use(GL_TEXTURE2);
+
 	// go through mesh components and draw them using assigned materials
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
@@ -61,6 +65,7 @@ void MainRenderPass::DrawPass()
 
 		MaterialPtr Material = MeshComp->Material;
 		Material->Use();
+		Material->ShaderInstance->SetInt("ShadowMap", 2);
 		Material->SetUniformParam<glm::mat4>("model", Model);
 		Material->SetUniformParam<glm::mat4>("view", View);
 		Material->SetUniformParam<glm::mat4>("projection", Proj);

@@ -52,8 +52,6 @@ void Material::DestroyBuffers()
 	{
 		TextureParams[Index].TextureInstance->DestroyBuffer();
 	}
-	//AlbedoMap->DestroyBuffer();
-	//NormalMap->DestroyBuffer();
 }
 
 void Material::Use()
@@ -65,8 +63,6 @@ void Material::Use()
 		MaterialTextureRecord& Rec = TextureParams[Index];
 		Rec.TextureInstance->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
 	}
-	//AlbedoMap->Use(GL_TEXTURE0);
-	//NormalMap->Use(GL_TEXTURE1);
 }
 
 void Material::AddTextureParam(

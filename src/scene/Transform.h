@@ -23,7 +23,10 @@ public:
 	glm::mat4& GetMatrix();
 
 	glm::mat4 CalculateRotationMatrix() const;
+	glm::mat4 CalculateViewMatrix() const;
 	glm::mat4 CalculateMatrix() const;
+
+	glm::vec3 GetForwardVector() const;
 protected:
 	glm::vec3 Location;
 	glm::vec3 Rotation;

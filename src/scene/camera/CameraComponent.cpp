@@ -22,10 +22,8 @@ CameraComponent::~CameraComponent()
 
 glm::mat4 CameraComponent::CalculateViewMatrix() const
 {
-	glm::vec4 Forward = {0.0f, 0.0f, -1.0f, 0.0f};
-	Forward = Forward * Parent->Transform.CalculateRotationMatrix();
 	glm::vec3 Eye = Parent->Transform.GetLocation();
-	glm::vec3 Direction = { Forward.x, Forward.y, Forward.z };
+	glm::vec3 Direction = Parent->Transform.GetForwardVector();
 	return glm::lookAt(Eye, Eye + Direction, glm::vec3{ 0.0f, 1.0f, 0.0f });
 }
 

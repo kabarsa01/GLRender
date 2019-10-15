@@ -22,6 +22,7 @@
 #include "scene/SceneObjectBase.h"
 #include "scene/mesh/MeshObject.h"
 #include "scene/camera/CameraObject.h"
+#include "scene/light/LightObject.h"
 
 #include "import/MeshImporter.h"
 
@@ -30,6 +31,7 @@
 #include "passes/MainRenderPass.h"
 #include "passes/ZPrepassRenderPass.h"
 #include "passes/ScreenOutputRenderPass.h"
+#include "passes/ShadowCastersRenderPass.h"
 
 //======================================================================
 const char* vertexShaderSource = "#version 330 core \n \
@@ -104,16 +106,9 @@ void Renderer::OnInitialize()
 
 void Renderer::Init()
 {
-	// instantiate and register render passes
-	ZPrepassRenderPassPtr ZPrepass = ObjectBase::NewObject<ZPrepassRenderPass, const HashString&>(std::string("ZPrepass"));
-	ZPrepass->InitPass();
-	RegisterRenderPass(ZPrepass);
-	MainRenderPassPtr MainPass = ObjectBase::NewObject<MainRenderPass, const HashString&>(std::string("MainPass"));
-	MainPass->InitPass();
-	RegisterRenderPass(MainPass);
-	ScreenOutputRenderPassPtr ScreenOutputPass = ObjectBase::NewObject<ScreenOutputRenderPass, const HashString&>(std::string("ScreenOutput"));
-	ScreenOutputPass->InitPass();
-	RegisterRenderPass(ScreenOutputPass);
+	LightObjectPtr LightObj = ObjectBase::NewObject<LightObject>();
+	LightObj->Transform.SetRotation(glm::vec3(45.0f, 120.0f, 0.0f));
+	LightObj->Transform.SetLocation(LightObj->Transform.GetForwardVector() * -30.0f);
 	//-----------------------------------------------------------------------------------------------
 	// setup default material
 	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
@@ -122,7 +117,8 @@ void Renderer::Init()
 	Mat->AddTextureParam("NormalMap", "./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg", 1, false, true, true);
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
-	Mat->AddUniformParam<glm::vec3>("light_dir", { -1.0f, -0.5f, -0.5f });
+	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
+	Mat->AddUniformParam<glm::mat4>("light_view", LightObj->Transform.CalculateViewMatrix());
 	Mat->AddUniformParam<glm::vec3>("light_color", { 0.95f, 0.95f, 0.95f });
 	Mat->AddUniformParam<glm::vec3>("spec_color", { 1.0f, 0.0f, 0.0f });
 	Mat->AddUniformParam<float>("spec_strength", 0.0f);
@@ -145,7 +141,7 @@ void Renderer::Init()
 
 	CameraObjectPtr CameraObj = ObjectBase::NewObject<CameraObject>();
 	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
-	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 0.0f, 0.0f));
+	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 180.0f, 0.0f));
 	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
 	CameraObj->GetCameraComponent()->SetFarPlane(100.f);
 
@@ -153,6 +149,20 @@ void Renderer::Init()
 	int maxVertexAttrib = 0;
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttrib);
 	std::cout << "Maximum number of vertex attributes : " << maxVertexAttrib << std::endl;
+
+	// instantiate and register render passes
+	ZPrepassRenderPassPtr ZPrepass = ObjectBase::NewObject<ZPrepassRenderPass, const HashString&>(std::string("ZPrepass"));
+	ZPrepass->InitPass();
+	RegisterRenderPass(ZPrepass);
+	ShadowCastersRenderPassPtr ShadowCastersPass = ObjectBase::NewObject<ShadowCastersRenderPass, const HashString&>(std::string("ShadowCasters"));
+	ShadowCastersPass->InitPass();
+	RegisterRenderPass(ShadowCastersPass);
+	MainRenderPassPtr MainPass = ObjectBase::NewObject<MainRenderPass, const HashString&>(std::string("MainPass"));
+	MainPass->InitPass();
+	RegisterRenderPass(MainPass);
+	ScreenOutputRenderPassPtr ScreenOutputPass = ObjectBase::NewObject<ScreenOutputRenderPass, const HashString&>(std::string("ScreenOutput"));
+	ScreenOutputPass->InitPass();
+	RegisterRenderPass(ScreenOutputPass);
 }
 
 void Renderer::RenderFrame()

@@ -143,6 +143,7 @@
     <ClCompile Include="src\render\MeshData.cpp" />
     <ClCompile Include="src\render\passes\MainRenderPass.cpp" />
     <ClCompile Include="src\render\passes\ScreenOutputRenderPass.cpp" />
+    <ClCompile Include="src\render\passes\ShadowCastersRenderPass.cpp" />
     <ClCompile Include="src\render\passes\ZPrepassRenderPass.cpp" />
     <ClCompile Include="src\render\Renderer.cpp" />
     <ClCompile Include="src\render\RenderPass.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="src\scene\camera\CameraComponent.cpp" />
     <ClCompile Include="src\scene\camera\CameraObject.cpp" />
     <ClCompile Include="src\scene\light\LightComponent.cpp" />
+    <ClCompile Include="src\scene\light\LightObject.cpp" />
     <ClCompile Include="src\scene\mesh\MeshComponent.cpp" />
     <ClCompile Include="src\scene\mesh\MeshObject.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
@@ -173,6 +175,7 @@
     <ClInclude Include="src\render\MeshData.h" />
     <ClInclude Include="src\render\passes\MainRenderPass.h" />
     <ClInclude Include="src\render\passes\ScreenOutputRenderPass.h" />
+    <ClInclude Include="src\render\passes\ShadowCastersRenderPass.h" />
     <ClInclude Include="src\render\passes\ZPrepassRenderPass.h" />
     <ClInclude Include="src\render\Renderer.h" />
     <ClInclude Include="src\render\RenderPass.h" />
@@ -180,6 +183,7 @@
     <ClInclude Include="src\scene\camera\CameraComponent.h" />
     <ClInclude Include="src\scene\camera\CameraObject.h" />
     <ClInclude Include="src\scene\light\LightComponent.h" />
+    <ClInclude Include="src\scene\light\LightObject.h" />
     <ClInclude Include="src\scene\mesh\MeshComponent.h" />
     <ClInclude Include="src\scene\mesh\MeshObject.h" />
     <ClInclude Include="src\scene\Scene.h" />

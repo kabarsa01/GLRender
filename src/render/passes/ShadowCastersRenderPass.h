@@ -4,24 +4,25 @@
 #include <common/HashString.h>
 #include <glm/fwd.hpp>
 #include <shaders/Shader.h>
-#include <scene/camera/CameraComponent.h>
+#include <scene/light/LightComponent.h>
 
-class MainRenderPass : public RenderPass
+class ShadowCastersRenderPass : public RenderPass
 {
 public:
-	MainRenderPass(const HashString& InName);
-	virtual ~MainRenderPass();
+	ShadowCastersRenderPass(const HashString& InName);
+	virtual ~ShadowCastersRenderPass();
 
 	virtual void InitPass() override;
 	virtual void DrawPass() override;
 	virtual void OnResolutionChaged(int InWidth, int InHeight) override;
 protected:
-	CameraComponentPtr MainCamera;
+	ShaderPtr DepthShader;
+	LightComponentPtr MainLight;
 
 	glm::mat4 Model;
 	glm::mat4 View;
 	glm::mat4 Proj;
 };
 
-typedef std::shared_ptr<MainRenderPass> MainRenderPassPtr;
+typedef std::shared_ptr<ShadowCastersRenderPass> ShadowCastersRenderPassPtr;
 

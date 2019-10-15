@@ -58,8 +58,6 @@ public:
 	void SetupParams();
 
 	ShaderPtr ShaderInstance;
-	TexturePtr AlbedoMap;
-	TexturePtr NormalMap;
 protected:
 	std::string VertexShaderPath;
 	std::string FragmentShaderPath;

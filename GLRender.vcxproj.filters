@@ -150,6 +150,12 @@
     <ClCompile Include="src\render\passes\ZPrepassRenderPass.cpp">
       <Filter>Source Files\render\passes</Filter>
     </ClCompile>
+    <ClCompile Include="src\render\passes\ShadowCastersRenderPass.cpp">
+      <Filter>Source Files\render\passes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\light\LightObject.cpp">
+      <Filter>Source Files\scene\light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -235,6 +241,12 @@
     </ClInclude>
     <ClInclude Include="src\render\passes\ZPrepassRenderPass.h">
       <Filter>Source Files\render\passes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\passes\ShadowCastersRenderPass.h">
+      <Filter>Source Files\render\passes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\light\LightObject.h">
+      <Filter>Source Files\scene\light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
