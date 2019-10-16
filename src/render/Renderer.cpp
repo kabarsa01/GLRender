@@ -160,7 +160,7 @@ void Renderer::Init()
 			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
 			MO->GetMeshComponent()->Material = Mat;
 			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
-			MO->Transform.SetLocation({ -20.0f, -17.0f, 0.0f });
+			MO->Transform.SetLocation({ -25.0f, -17.0f, -1.0f });
 		}
 	}
 

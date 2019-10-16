@@ -50,12 +50,13 @@ vec3 CalculateNormal()
 	return normalVec;
 }
 
-float CalculateShadow(vec4 LightSpacePos)
+float CalculateShadow(vec4 LightSpacePos, vec3 LightDir, vec3 Normal)
 {
     vec3 ProjectedPos = LightSpacePos.xyz / LightSpacePos.w;
     ProjectedPos = ProjectedPos * 0.5 + 0.5;
     float ShadowDepth = texture(ShadowMap, ProjectedPos.xy).r;
-    return (ProjectedPos.z > (ShadowDepth + 0.05)) ? 1.0 : 0.0;
+    float bias = max(0.02 * (1.0 - dot(Normal, LightDir)), 0.005);
+    return ( (ProjectedPos.z - bias) > ShadowDepth ) ? 1.0 : 0.0;
 }
 
 void main()
@@ -68,7 +69,7 @@ void main()
     //vec3 spec = spec_color * pow(max(dot(reflect_dir, view_dir), 0.0), 32) * spec_strength;
 	vec3 spec = CalculateSpec(light_dir_norm, -1.0 * view_dir, norm, spec_color, spec_strength);
 	vec3 light_res_color = max(dot(light_dir_norm, norm), 0.0f) * light_color;
-    float shadow = CalculateShadow(fs_in.light_pos);
+    float shadow = CalculateShadow(fs_in.light_pos, light_dir_norm, norm);
 	FragColor = vec4(vec3(texture(AlbedoMap, fs_in.uv)) * ((light_res_color + spec) * (1.0 - shadow) + ambient_color), 1.0);
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/2.2));
 	//FragColor.rgb = norm;

@@ -20,8 +20,11 @@ void ShadowCastersRenderPass::InitPass()
 {
 	RendererPtr RendererInstance = Engine::GetRendererInstance();
 
-	FrameBufferInstance->SetSize(1024, 1024, false);
-	FrameBufferInstance->GenerateBuffer(0, true, true, true);
+	FrameBufferInstance->SetSize(2048, 2048, false);
+	FrameBufferInstance->SetColorBuffersCount(0);
+	FrameBufferInstance->SetUseDepth(true);
+	FrameBufferInstance->SetUseStencil(false);
+	FrameBufferInstance->GenerateBuffer(true, true);
 
 	DataManager *DM = DataManager::GetInstance();
 	std::string VertexPath = "./src/shaders/src/ZPrepassVertexShader.vs";
@@ -32,8 +35,10 @@ void ShadowCastersRenderPass::InitPass()
 
 void ShadowCastersRenderPass::DrawPass()
 {
+	FrameBufferInstance->Use();
+
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 
@@ -43,11 +48,10 @@ void ShadowCastersRenderPass::DrawPass()
 //	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
-	FrameBufferInstance->Use();
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	glViewport(0, 0, 1024, 1024);
+	glViewport(0, 0, 2048, 2048);
 
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
 	MainLight = Scene->GetSceneComponent<LightComponent>();
@@ -65,7 +69,6 @@ void ShadowCastersRenderPass::DrawPass()
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
-		MeshComp->GetParent()->Transform.SetRotation({ 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 		DepthShader->SetMat4("model", Model);
 		MeshComp->MeshData->Draw();

@@ -36,26 +36,39 @@ int FrameBuffer::GetHeight()
 	return Height;
 }
 
-void FrameBuffer::GenerateBuffer(unsigned int InColorBuffersCount/* = 1*/, bool InGenerateTextures/* = false*/, bool InUseDepth/* = false*/, bool InGenerateDepth/* = false*/)
+void FrameBuffer::SetColorBuffersCount(unsigned int InColorBuffersCount)
+{
+	ColorBuffersCount = InColorBuffersCount;
+}
+
+void FrameBuffer::SetUseDepth(bool InUseDepth)
+{
+	UseDepth = InUseDepth;
+}
+
+void FrameBuffer::SetUseStencil(bool InUseStencil)
+{
+	UseStencil = InUseStencil;
+}
+
+void FrameBuffer::GenerateBuffer(bool InGenerateTextures/* = false*/, bool InGenerateDepth/* = false*/)
 {
 	if (ID != 0xffffffff)
 	{
 		return;
 	}
 
-	ColorBuffersCount = InColorBuffersCount;
-	UseGeneratedTextures = InGenerateTextures;
-	UseDepth = InUseDepth;
-	UseGeneratedDepth = InGenerateDepth;
+	GenerateTexturesFlag = InGenerateTextures;
+	GenerateDepthFlag = InGenerateDepth;
 
 	glGenFramebuffers(1, &ID);
 	// check if textures should be generated or the ones set from the outside
 	// will be used
-	if (InGenerateTextures)
+	if (GenerateTexturesFlag)
 	{
 		GenerateTextures();
 	}
-	if (UseDepth && InGenerateDepth)
+	if (UseDepth && GenerateDepthFlag)
 	{
 		GenerateDepth();
 	}
@@ -81,7 +94,7 @@ void FrameBuffer::DestroyBuffer()
 		glDeleteFramebuffers(1, &ID);
 		ID = 0xffffffff;
 
-		if (UseGeneratedTextures)
+		if (GenerateTexturesFlag)
 		{
 			for (size_t TexIndex = 0; TexIndex < Textures.size(); TexIndex++)
 			{
@@ -167,7 +180,7 @@ void FrameBuffer::GenerateDepth()
 	DepthTexture->SetUseEmpty(true);
 	DepthTexture->SetSize(Width, Height);
 	DepthTexture->SetUseDepth(true);
-//	DepthTexture->SetUseStencil(true);
+	DepthTexture->SetUseStencil(UseStencil);
 	DepthTexture->InitializeBuffer();
 }
 
@@ -181,7 +194,7 @@ void FrameBuffer::ResetBuffers()
 		Tex->InitializeBuffer();
 	}
 
-	bool CanResetDepth = UseGeneratedDepth || AllowExternalDepthReset;
+	bool CanResetDepth = GenerateDepthFlag || AllowExternalDepthReset;
 	if (DepthTexture && CanResetDepth)
 	{
 		DepthTexture->SetSize(Width, Height);

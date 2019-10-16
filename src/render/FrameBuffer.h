@@ -18,7 +18,10 @@ public:
 	void SetSize(int InWidth, int InHeight, bool InRecreateBuffers);
 	int GetWidth();
 	int GetHeight();
-	void GenerateBuffer(unsigned int InColorBuffersCount, bool InGenerateTextures, bool InUseDepth, bool InGenerateDepth);
+	void SetColorBuffersCount(unsigned int InColorBuffersCount);
+	void SetUseDepth(bool InUseDepth);
+	void SetUseStencil(bool InUseStencil);
+	void GenerateBuffer(bool InGenerateTextures, bool InGenerateDepth);
 	void DestroyBuffer();
 
 	void SetTexture(TexturePtr InTexture, unsigned int InIndex);
@@ -35,9 +38,10 @@ protected:
 	unsigned int ID;
 	int Width;
 	int Height;
-	bool UseDepth;
-	bool UseGeneratedDepth;
-	bool UseGeneratedTextures;
+	bool UseDepth = true;
+	bool UseStencil = true;
+	bool GenerateDepthFlag;
+	bool GenerateTexturesFlag;
 	int ColorBuffersCount = 1;
 	bool AllowExternalDepthReset = false;
 

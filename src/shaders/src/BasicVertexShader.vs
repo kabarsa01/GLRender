@@ -1,9 +1,12 @@
 #version 330 core
+
 layout(location = 0) in vec3 InPos;
 layout(location = 1) in vec3 InNormal;
 layout(location = 2) in vec2 InUV;
 layout(location = 3) in vec3 InTangent;
 layout(location = 4) in vec3 InBitangent;
+
+invariant gl_Position;
 
 out VS_OUT
 {

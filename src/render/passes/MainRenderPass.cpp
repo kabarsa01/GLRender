@@ -22,28 +22,32 @@ void MainRenderPass::InitPass()
 	int Height = RendererInstance->GetHeight();
 
 	FrameBufferInstance->SetSize(Width, Height, false);
-//	FrameBufferInstance->SetAllowExternalDepthReset(false);
-//	FrameBufferInstance->SetDepthTexture(RendererInstance->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture());
-	FrameBufferInstance->GenerateBuffer(1, true, true, true);//false);
+	FrameBufferInstance->SetColorBuffersCount(1);
+	FrameBufferInstance->SetUseDepth(true);
+	FrameBufferInstance->SetUseStencil(true);
+	FrameBufferInstance->SetAllowExternalDepthReset(false);
+	FrameBufferInstance->SetDepthTexture(RendererInstance->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture());
+	FrameBufferInstance->GenerateBuffer(true, false);
 }
 
 void MainRenderPass::DrawPass()
 {
+	FrameBufferInstance->Use();
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 
-	//glDepthMask(GL_FALSE);
-	glDepthMask(GL_TRUE);
+	glStencilMask(GL_FALSE);//GL_TRUE);
+	glDepthMask(GL_FALSE);//GL_TRUE);
 	glDepthFunc(GL_LEQUAL);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
-	FrameBufferInstance->Use();
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-//	glClear(GL_COLOR_BUFFER_BIT);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glViewport(0, 0, FrameBufferInstance->GetWidth(), FrameBufferInstance->GetHeight());
 

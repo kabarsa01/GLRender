@@ -46,8 +46,8 @@ void Texture::InitializeBuffer()
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
 
-		GLint MinFilterParam = UseStencil ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST;
-		GLint MagFilterParam = UseStencil ? GL_LINEAR : GL_NEAREST;
+		GLint MinFilterParam = UseDepth ? GL_NEAREST : GL_LINEAR_MIPMAP_LINEAR;
+		GLint MagFilterParam = UseDepth ? GL_NEAREST : GL_LINEAR;
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

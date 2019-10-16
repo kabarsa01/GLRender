@@ -38,14 +38,18 @@ void ScreenOutputRenderPass::DrawPass()
 	// FINAL PASS
 	glViewport(0, 0, Rend->GetWidth(), Rend->GetHeight());
 
+	glStencilMask(GL_FALSE);
+	glDepthMask(GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	ScreenQuadShader->Use();
 	
 	Rend->GetRenderPass(std::string("MainPass"))->GetFrameBuffer()->GetTexture(0)->Use(GL_TEXTURE0);
 	//Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
+	//Rend->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
 	MeshData::FullscreenQuad()->Draw();
 }
 
