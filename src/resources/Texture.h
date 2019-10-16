@@ -9,6 +9,18 @@
 class Texture : public Resource
 {
 public:
+	enum Filtering
+	{
+		F_Nearest = 0,
+		F_Linear
+	};
+	enum WrapMode
+	{
+		WM_Tile = 0,
+		WM_MirroredTile,
+		WM_Clamp
+	};
+
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
 	virtual ~Texture();
 
