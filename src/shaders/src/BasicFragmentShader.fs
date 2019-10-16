@@ -2,11 +2,11 @@
 
 in VS_OUT
 {
+	vec4 light_pos;
 	vec3 world_pos;
 	vec3 normal;
 	vec2 uv;
 	mat3 TBN;
-	vec4 light_pos;
 } fs_in;
 
 uniform float spec_strength;
@@ -55,7 +55,7 @@ float CalculateShadow(vec4 LightSpacePos)
     vec3 ProjectedPos = LightSpacePos.xyz / LightSpacePos.w;
     ProjectedPos = ProjectedPos * 0.5 + 0.5;
     float ShadowDepth = texture(ShadowMap, ProjectedPos.xy).r;
-    return ProjectedPos.z > ShadowDepth + 1.0 ? 1.0 : 0.3;
+    return (ProjectedPos.z > (ShadowDepth + 0.05)) ? 1.0 : 0.0;
 }
 
 void main()

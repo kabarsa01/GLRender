@@ -20,6 +20,8 @@ public:
 	void SetSize(int Width, int Height);
 	void SetUseEmpty(bool InUseEmpty);
 	void SetUseDepth(bool InUseDepth);
+	void SetUseStencil(bool InUseStencil);
+	bool IsUsingStencil();
 
 	unsigned int GetID() const;
 	unsigned char* GetData() const;
@@ -34,6 +36,7 @@ protected:
 	bool Linear;
 	bool UseEmpty = false;
 	bool UseDepth = false;
+	bool UseStencil = false;
 
 	unsigned int ID = -1;
 	unsigned char* Data;

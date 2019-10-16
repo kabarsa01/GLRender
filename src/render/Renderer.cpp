@@ -107,8 +107,18 @@ void Renderer::OnInitialize()
 void Renderer::Init()
 {
 	LightObjectPtr LightObj = ObjectBase::NewObject<LightObject>();
-	LightObj->Transform.SetRotation(glm::vec3(45.0f, 120.0f, 0.0f));
-	LightObj->Transform.SetLocation(LightObj->Transform.GetForwardVector() * -30.0f);
+	LightObj->Transform.SetRotation(glm::vec3(45.0f, -90.0f, 0.0f));
+	LightObj->Transform.SetLocation(LightObj->Transform.GetForwardVector() * -50.0f);
+	glm::mat4 LightSpaceMatrix = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 0.1f, 100.0f) * LightObj->Transform.CalculateViewMatrix();
+
+	CameraObjectPtr CameraObj = ObjectBase::NewObject<CameraObject>();
+	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
+	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 180.0f, 0.0f));
+	//CameraObj->Transform.SetRotation(glm::vec3(45.0f, -90.0f, 0.0f));
+	//CameraObj->Transform.SetLocation(glm::vec3(0.0f, 5.0f, 0.0f) + CameraObj->Transform.GetForwardVector() * -35.0f);
+	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
+	CameraObj->GetCameraComponent()->SetFarPlane(100.f);
+	//CameraObj->GetCameraComponent()->SetFOV(60.f);
 	//-----------------------------------------------------------------------------------------------
 	// setup default material
 	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
@@ -118,7 +128,7 @@ void Renderer::Init()
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
-	Mat->AddUniformParam<glm::mat4>("light_view", LightObj->Transform.CalculateViewMatrix());
+	Mat->AddUniformParam<glm::mat4>("light_view", LightSpaceMatrix);
 	Mat->AddUniformParam<glm::vec3>("light_color", { 0.95f, 0.95f, 0.95f });
 	Mat->AddUniformParam<glm::vec3>("spec_color", { 1.0f, 0.0f, 0.0f });
 	Mat->AddUniformParam<float>("spec_strength", 0.0f);
@@ -127,23 +137,32 @@ void Renderer::Init()
 	Mat->InitializeBuffers();
 	Mat->SetupParams();
 
-	MeshImporter Importer;
-	//Importer.Import("./content/nanosuit/nanosuit.obj");
-	Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
-	for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 	{
-		MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
-		MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
-		MO->GetMeshComponent()->Material = Mat;
-		MO->GetMeshComponent()->MeshData->SetupBufferObjects();
-		MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
+		MeshImporter Importer;
+		//Importer.Import("./content/nanosuit/nanosuit.obj");
+		Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
+		{
+			MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
+			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
+			MO->GetMeshComponent()->Material = Mat;
+			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
+			MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
+		}
 	}
-
-	CameraObjectPtr CameraObj = ObjectBase::NewObject<CameraObject>();
-	CameraObj->Transform.SetLocation(glm::vec3(0.0f, 15.0f, 30.0f));
-	CameraObj->Transform.SetRotation(glm::vec3(30.0f, 180.0f, 0.0f));
-	CameraObj->GetCameraComponent()->SetNearPlane(0.15f);
-	CameraObj->GetCameraComponent()->SetFarPlane(100.f);
+	{
+		MeshImporter Importer;
+		//Importer.Import("./content/nanosuit/nanosuit.obj");
+		Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
+		{
+			MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
+			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
+			MO->GetMeshComponent()->Material = Mat;
+			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
+			MO->Transform.SetLocation({ -20.0f, -17.0f, 0.0f });
+		}
+	}
 
 	// output simple stats
 	int maxVertexAttrib = 0;

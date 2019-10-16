@@ -46,10 +46,13 @@ void Texture::InitializeBuffer()
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
 
+		GLint MinFilterParam = UseStencil ? GL_LINEAR_MIPMAP_LINEAR : GL_NEAREST;
+		GLint MagFilterParam = UseStencil ? GL_LINEAR : GL_NEAREST;
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, MinFilterParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, MagFilterParam);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -85,6 +88,16 @@ void Texture::SetUseDepth(bool InUseDepth)
 	UseDepth = InUseDepth;
 }
 
+void Texture::SetUseStencil(bool InUseStencil)
+{
+	UseStencil = InUseStencil;
+}
+
+bool Texture::IsUsingStencil()
+{
+	return UseStencil;
+}
+
 unsigned int Texture::GetID() const
 {
 	return ID;
@@ -118,7 +131,7 @@ GLint Texture::GetInternalFormat()
 {
 	if (UseDepth)
 	{
-		return GL_DEPTH24_STENCIL8;
+		return UseStencil ? GL_DEPTH24_STENCIL8 : GL_DEPTH_COMPONENT;
 	}
 
 	GLint InternalFormat = 0;
@@ -137,7 +150,7 @@ GLenum Texture::GetFormat()
 {
 	if (UseDepth)
 	{
-		return GL_DEPTH_STENCIL;
+		return UseStencil ? GL_DEPTH_STENCIL : GL_DEPTH_COMPONENT;
 	}
 
 	return UseAlpha ? GL_RGBA : GL_RGB;
@@ -145,7 +158,7 @@ GLenum Texture::GetFormat()
 
 GLenum Texture::GetType()
 {
-	return UseDepth ? GL_UNSIGNED_INT_24_8 : GL_UNSIGNED_BYTE;
+	return UseDepth ? (UseStencil ? GL_UNSIGNED_INT_24_8 : GL_FLOAT) : GL_UNSIGNED_BYTE;
 }
 
 Texture::Texture()

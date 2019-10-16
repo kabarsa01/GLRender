@@ -89,7 +89,7 @@ glm::mat4 Transform::CalculateMatrix() const
 glm::vec3 Transform::GetForwardVector() const
 {
 	glm::vec4 Forward = { 0.0f, 0.0f, 1.0f, 0.0f };
-	Forward = Forward * CalculateRotationMatrix();
+	Forward = CalculateRotationMatrix() * Forward;
 	return glm::vec3(Forward);
 }
 

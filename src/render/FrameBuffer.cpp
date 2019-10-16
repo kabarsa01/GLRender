@@ -167,6 +167,7 @@ void FrameBuffer::GenerateDepth()
 	DepthTexture->SetUseEmpty(true);
 	DepthTexture->SetSize(Width, Height);
 	DepthTexture->SetUseDepth(true);
+//	DepthTexture->SetUseStencil(true);
 	DepthTexture->InitializeBuffer();
 }
 
@@ -198,7 +199,8 @@ void FrameBuffer::SetupAttachments()
 	}
 	if (UseDepth)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, DepthTexture->GetID(), 0);
+		GLenum Attachment = DepthTexture->IsUsingStencil() ? GL_DEPTH_STENCIL_ATTACHMENT : GL_DEPTH_ATTACHMENT;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, Attachment, GL_TEXTURE_2D, DepthTexture->GetID(), 0);
 	}
 }
 

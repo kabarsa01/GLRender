@@ -1,5 +1,6 @@
 #include "./ZPrepassRenderPass.h"
 #include "../Renderer.h"
+#include "data/DataManager.h"
 #include <core/Engine.h>
 #include <scene/mesh/MeshComponent.h>
 
@@ -24,8 +25,11 @@ void ZPrepassRenderPass::InitPass()
 	FrameBufferInstance->SetSize(Width, Height, false);
 	FrameBufferInstance->GenerateBuffer(0, true, true, true);
 
-	DepthShader = ObjectBase::NewObject<Shader, const std::string&, const std::string&>("./src/shaders/src/ZPrepassVertexShader.vs", "./src/shaders/src/ZPrepassFragmentShader.fs");
-	DepthShader->Load();
+	DataManager *DM = DataManager::GetInstance();
+	std::string VertexPath = "./src/shaders/src/ZPrepassVertexShader.vs";
+	std::string FragmentPath = "./src/shaders/src/ZPrepassFragmentShader.fs";
+	std::string ShaderId = VertexPath + FragmentPath;
+	DepthShader = DM->RequestResourceByType<Shader, const std::string&, const std::string&>(ShaderId, VertexPath, FragmentPath);
 }
 
 void ZPrepassRenderPass::DrawPass()
@@ -36,7 +40,7 @@ void ZPrepassRenderPass::DrawPass()
 	glEnable(GL_CULL_FACE);
 
 	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_LEQUAL);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
@@ -57,11 +61,13 @@ void ZPrepassRenderPass::DrawPass()
 	DepthShader->SetMat4("view", View);
 	DepthShader->SetMat4("projection", Proj);
 
+	float Counter = 0.0f;
 	// go through mesh components and draw them using assigned materials
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
-		MeshComp->GetParent()->Transform.SetRotation({ 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
+		MeshComp->GetParent()->Transform.SetRotation({ Counter + 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
+		Counter += 45.0f;
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 		DepthShader->SetMat4("model", Model);
 		MeshComp->MeshData->Draw();

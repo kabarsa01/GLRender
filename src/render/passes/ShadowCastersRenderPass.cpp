@@ -20,9 +20,6 @@ void ShadowCastersRenderPass::InitPass()
 {
 	RendererPtr RendererInstance = Engine::GetRendererInstance();
 
-	int Width = RendererInstance->GetWidth();
-	int Height = RendererInstance->GetHeight();
-
 	FrameBufferInstance->SetSize(1024, 1024, false);
 	FrameBufferInstance->GenerateBuffer(0, true, true, true);
 
@@ -36,13 +33,14 @@ void ShadowCastersRenderPass::InitPass()
 void ShadowCastersRenderPass::DrawPass()
 {
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_STENCIL_TEST);
+	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glEnable(GL_CULL_FACE);
 
 	glDepthMask(GL_TRUE);
-	glDepthFunc(GL_LESS);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glStencilMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
 	FrameBufferInstance->Use();
@@ -55,8 +53,8 @@ void ShadowCastersRenderPass::DrawPass()
 	MainLight = Scene->GetSceneComponent<LightComponent>();
 
 	View = MainLight->GetParent()->Transform.CalculateViewMatrix();//CalculateViewMatrix();
-	float near_plane = 1.0f, far_plane = 100.0f;
-	Proj = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+	float near_plane = 0.1f, far_plane = 100.0f;
+	Proj = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, near_plane, far_plane);
 
 	// go through mesh components and draw them using assigned materials
 	DepthShader->Use();
