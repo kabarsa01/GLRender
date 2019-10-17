@@ -25,8 +25,6 @@ bool Material::Load()
 			Rec.FlipVertical, 
 			Rec.Linear);
 	}
-	//AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoMapPath, AlbedoMapPath, false, true, false);
-	//NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalMapPath, NormalMapPath, false, true, true);
 
 	return true;
 }
@@ -40,10 +38,10 @@ void Material::InitializeBuffers()
 {
 	for (size_t Index = 0; Index < TextureParams.size(); Index++)
 	{
+		TextureParams[Index].TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
+		TextureParams[Index].TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
 		TextureParams[Index].TextureInstance->InitializeBuffer();
 	}
-	//AlbedoMap->InitializeBuffer();
-	//NormalMap->InitializeBuffer();
 }
 
 void Material::DestroyBuffers()

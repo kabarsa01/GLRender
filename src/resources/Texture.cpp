@@ -11,6 +11,10 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	, FlipVertical{ InFlipVertical }
 	, Linear{ InLinear }
 	, Data ( nullptr )
+	, MinFiltering ( F_Linear )
+	, MagFiltering( F_Linear )
+	, WrapU( WM_Tile )
+	, WrapV( WM_Tile )
 {
 }
 
@@ -46,13 +50,10 @@ void Texture::InitializeBuffer()
 		glGenTextures(1, &ID);
 		glBindTexture(GL_TEXTURE_2D, ID);
 
-		GLint MinFilterParam = UseDepth ? GL_NEAREST : GL_LINEAR_MIPMAP_LINEAR;
-		GLint MagFilterParam = UseDepth ? GL_NEAREST : GL_LINEAR;
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, MinFilterParam);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, MagFilterParam);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetMappedWrap( WrapU ));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetMappedWrap( WrapV ));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetMappedFiltering( MinFiltering ));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetMappedFiltering( MagFiltering ));
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -96,6 +97,58 @@ void Texture::SetUseStencil(bool InUseStencil)
 bool Texture::IsUsingStencil()
 {
 	return UseStencil;
+}
+
+void Texture::SetFilteringMode(FilteringMode InFilteringMode, FilteringModeTarget InTarget)
+{
+	switch (InTarget)
+	{
+	case FMT_Min:
+		MinFiltering = InFilteringMode;
+		break;
+	case FMT_Mag:
+		MagFiltering = InFilteringMode;
+		break;
+	}
+}
+
+Texture::FilteringMode Texture::GetFilteringMode(FilteringModeTarget InTarget)
+{
+	switch (InTarget)
+	{
+	case FMT_Min:
+		return MinFiltering;
+		break;
+	case FMT_Mag:
+		return MagFiltering;
+		break;
+	}
+}
+
+void Texture::SetWrapMode(WrapMode InWrapMode, WrapModeTarget InTarget)
+{
+	switch (InTarget)
+	{
+	case WMT_U:
+		WrapU = InWrapMode;
+		break;
+	case WMT_V:
+		WrapV = InWrapMode;
+		break;
+	}
+}
+
+Texture::WrapMode Texture::GetWrapMode(WrapModeTarget InTarget)
+{
+	switch (InTarget)
+	{
+	case WMT_U:
+		return WrapU;
+		break;
+	case WMT_V:
+		return WrapV;
+		break;
+	}
 }
 
 unsigned int Texture::GetID() const
@@ -159,6 +212,54 @@ GLenum Texture::GetFormat()
 GLenum Texture::GetType()
 {
 	return UseDepth ? (UseStencil ? GL_UNSIGNED_INT_24_8 : GL_FLOAT) : GL_UNSIGNED_BYTE;
+}
+
+GLint Texture::GetMappedFiltering(FilteringMode InFilteringMode)
+{
+	GLint Result;
+	switch (InFilteringMode)
+	{
+	case FilteringMode::F_Nearest:
+		Result = GL_NEAREST;
+		break;
+	case FilteringMode::F_Linear:
+		Result = GL_LINEAR;
+		break;
+	case FilteringMode::F_Nearest_MipmapNearest:
+		Result = GL_NEAREST_MIPMAP_NEAREST;
+		break;
+	case FilteringMode::F_Linear_MipmapNearest:
+		Result = GL_LINEAR_MIPMAP_NEAREST;
+		break;
+	case FilteringMode::F_Nearest_MipmapLinear:
+		Result = GL_NEAREST_MIPMAP_LINEAR;
+		break;
+	case FilteringMode::F_Linear_MipmapLinear:
+		Result = GL_LINEAR_MIPMAP_LINEAR;
+		break;
+	}
+	return Result;
+}
+
+GLint Texture::GetMappedWrap(WrapMode InWrapMode)
+{
+	GLint Result;
+	switch (InWrapMode)
+	{
+	case WrapMode::WM_Tile:
+		Result = GL_REPEAT;
+		break;
+	case WrapMode::WM_MirroredTile:
+		Result = GL_MIRRORED_REPEAT;
+		break;
+	case WrapMode::WM_ClampEdge:
+		Result = GL_CLAMP_TO_EDGE;
+		break;
+	case WrapMode::WM_ClampBorder:
+		Result = GL_CLAMP_TO_BORDER;
+		break;
+	}
+	return Result;
 }
 
 Texture::Texture()

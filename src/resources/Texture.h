@@ -9,16 +9,31 @@
 class Texture : public Resource
 {
 public:
-	enum Filtering
+	enum FilteringModeTarget
+	{
+		FMT_Mag = 0,
+		FMT_Min
+	};
+	enum FilteringMode
 	{
 		F_Nearest = 0,
-		F_Linear
+		F_Linear,
+		F_Nearest_MipmapNearest, // one mip, nearest pixel
+		F_Linear_MipmapNearest, // one mip, linear pixel
+		F_Nearest_MipmapLinear, // two mips, nearest pixels
+		F_Linear_MipmapLinear, // two mips, linear pixels
+	};
+	enum WrapModeTarget
+	{
+		WMT_U = 0,
+		WMT_V
 	};
 	enum WrapMode
 	{
 		WM_Tile = 0,
 		WM_MirroredTile,
-		WM_Clamp
+		WM_ClampEdge,
+		WM_ClampBorder
 	};
 
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
@@ -34,6 +49,10 @@ public:
 	void SetUseDepth(bool InUseDepth);
 	void SetUseStencil(bool InUseStencil);
 	bool IsUsingStencil();
+	void SetFilteringMode(FilteringMode InFilteringMode, FilteringModeTarget InTarget);
+	FilteringMode GetFilteringMode(FilteringModeTarget InTarget);
+	void SetWrapMode(WrapMode InWrapMode, WrapModeTarget InTarget);
+	WrapMode GetWrapMode(WrapModeTarget InTarget);
 
 	unsigned int GetID() const;
 	unsigned char* GetData() const;
@@ -50,6 +69,11 @@ protected:
 	bool UseDepth = false;
 	bool UseStencil = false;
 
+	FilteringMode MinFiltering;
+	FilteringMode MagFiltering;
+	WrapMode WrapU;
+	WrapMode WrapV;
+
 	unsigned int ID = -1;
 	unsigned char* Data;
 	int Width;
@@ -59,6 +83,8 @@ protected:
 	GLint GetInternalFormat();
 	GLenum GetFormat();
 	GLenum GetType();
+	GLint GetMappedFiltering(FilteringMode InFilteringMode);
+	GLint GetMappedWrap(WrapMode InWrapMode);
 private:
 	Texture();
 };
