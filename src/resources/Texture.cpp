@@ -15,6 +15,7 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	, MagFiltering( F_Linear )
 	, WrapU( WM_Tile )
 	, WrapV( WM_Tile )
+	, BorderColor( 1.0f, 1.0f, 1.0f, 1.0f )
 {
 }
 
@@ -56,6 +57,8 @@ void Texture::InitializeBuffer()
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GetMappedWrap( WrapU ));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GetMappedWrap( WrapV ));
+		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, &BorderColor.r);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetMappedFiltering( MinFiltering ));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetMappedFiltering( MagFiltering ));
 
@@ -157,6 +160,11 @@ Texture::WrapMode Texture::GetWrapMode(WrapModeTarget InTarget)
 	return WrapU;
 }
 
+void Texture::SetBorderColor(const glm::vec4 InBorderColor)
+{
+	BorderColor = InBorderColor;
+}
+
 unsigned int Texture::GetID() const
 {
 	return ID;
@@ -177,11 +185,11 @@ bool Texture::GetFlipVertical()
 	return FlipVertical;
 }
 
-void Texture::Use(GLenum textureUnit) const
+void Texture::Use(int InSlotLocation) const
 {
 	if (ID != -1)
 	{
-		glActiveTexture(textureUnit);
+		glActiveTexture(GL_TEXTURE0 + InSlotLocation);
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
 }

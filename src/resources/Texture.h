@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "data/Resource.h"
 #include <string>
@@ -53,13 +54,14 @@ public:
 	FilteringMode GetFilteringMode(FilteringModeTarget InTarget);
 	void SetWrapMode(WrapMode InWrapMode, WrapModeTarget InTarget);
 	WrapMode GetWrapMode(WrapModeTarget InTarget);
+	void SetBorderColor(const glm::vec4 InBorderColor);
 
 	unsigned int GetID() const;
 	unsigned char* GetData() const;
 	std::string GetPath();
 	bool GetFlipVertical();
 
-	void Use(GLenum textureUnit) const;
+	void Use(int InSlotLocation) const;
 protected:
 	std::string Path;
 	bool FlipVertical;
@@ -68,6 +70,7 @@ protected:
 	bool UseEmpty = false;
 	bool UseDepth = false;
 	bool UseStencil = false;
+	glm::vec4 BorderColor;
 
 	FilteringMode MinFiltering;
 	FilteringMode MagFiltering;

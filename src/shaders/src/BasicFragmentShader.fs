@@ -54,9 +54,25 @@ float CalculateShadow(vec4 LightSpacePos, vec3 LightDir, vec3 Normal)
 {
     vec3 ProjectedPos = LightSpacePos.xyz / LightSpacePos.w;
     ProjectedPos = ProjectedPos * 0.5 + 0.5;
-    float ShadowDepth = texture(ShadowMap, ProjectedPos.xy).r;
+    if (ProjectedPos.z > 1.0)
+    {
+        return 0.0;
+    }
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(ShadowMap, 0);
     float bias = max(0.02 * (1.0 - dot(Normal, LightDir)), 0.005);
-    return ( (ProjectedPos.z - bias) > ShadowDepth ) ? 1.0 : 0.0;
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(ShadowMap, ProjectedPos.xy + vec2(x, y) * texelSize).r; 
+            shadow += ( (ProjectedPos.z - bias) > pcfDepth ) ? 1.0 : 0.0;        
+        }    
+    }
+    return shadow /= 9.0;
+    //float ShadowDepth = texture(ShadowMap, ProjectedPos.xy).r;
+    //float bias = max(0.02 * (1.0 - dot(Normal, LightDir)), 0.005);
+    //return ( (ProjectedPos.z - bias) > ShadowDepth ) ? 1.0 : 0.0;
 }
 
 void main()

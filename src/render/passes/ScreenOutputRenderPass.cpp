@@ -47,9 +47,9 @@ void ScreenOutputRenderPass::DrawPass()
 
 	ScreenQuadShader->Use();
 	
-	Rend->GetRenderPass(std::string("MainPass"))->GetFrameBuffer()->GetTexture(0)->Use(GL_TEXTURE0);
-	//Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
-	//Rend->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture()->Use(GL_TEXTURE0);
+	Rend->GetRenderPass(std::string("MainPass"))->GetFrameBuffer()->GetTexture(0)->Use(0);
+	//Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture()->Use(0);
+	//Rend->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture()->Use(0);
 	MeshData::FullscreenQuad()->Draw();
 }
 

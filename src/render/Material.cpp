@@ -63,7 +63,7 @@ void Material::Use()
 		MaterialTextureRecord& Rec = TextureParams[TexParamPair.first];
 		if (Rec.TextureInstance)
 		{
-			Rec.TextureInstance->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
+			Rec.TextureInstance->Use(Rec.TextureSlotLocation);
 		}
 	}
 }
@@ -100,7 +100,7 @@ void Material::UpdateTextureParam(const std::string & InParamName, const Texture
 	Rec.TextureInstance = InTexture;
 	if (InUse && InTexture)
 	{
-		InTexture->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
+		InTexture->Use(Rec.TextureSlotLocation);
 	}
 }
 
