@@ -60,7 +60,6 @@ void MainRenderPass::DrawPass()
 
 	RendererPtr Rend = Engine::GetRendererInstance();
 	TexturePtr ShadowMask = Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture();
-	ShadowMask->Use(GL_TEXTURE2);
 
 	// go through mesh components and draw them using assigned materials
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
