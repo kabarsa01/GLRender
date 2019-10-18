@@ -15,15 +15,13 @@ bool Material::Load()
 	DataManager *DM = DataManager::GetInstance();
 	ShaderInstance = DM->RequestResourceByType<Shader, const std::string&, const std::string&>(VertexShaderPath + FragmentShaderPath, VertexShaderPath, FragmentShaderPath);
 
-	for (size_t Index = 0; Index < TextureParams.size(); Index++)
+	for (auto TexParamPair : TextureParams)
 	{
-		MaterialTextureRecord& Rec = TextureParams[Index];
-		Rec.TextureInstance = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(
-			Rec.Path, 
-			Rec.Path, 
-			Rec.InputUsesAlpha, 
-			Rec.FlipVertical, 
-			Rec.Linear);
+		MaterialTextureRecord& Rec = TexParamPair.second;
+		if (( !Rec.TextureInstance ) && ( Rec.Path.length() > 0 ))
+		{
+			Rec.TextureInstance = DM->GetResourceByType<Texture>(Rec.Path);
+		}
 	}
 
 	return true;
@@ -36,19 +34,23 @@ bool Material::Unload()
 
 void Material::InitializeBuffers()
 {
-	for (size_t Index = 0; Index < TextureParams.size(); Index++)
+	for (auto TexParamPair : TextureParams)
 	{
-		TextureParams[Index].TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
-		TextureParams[Index].TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
-		TextureParams[Index].TextureInstance->InitializeBuffer();
+		const TexturePtr& TextureInstance = TextureParams[TexParamPair.first].TextureInstance;
+		if (TextureInstance)
+		{
+			TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
+			TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
+			TextureInstance->InitializeBuffer();
+		}
 	}
 }
 
 void Material::DestroyBuffers()
 {
-	for (size_t Index = 0; Index < TextureParams.size(); Index++)
+	for (auto TexParamPair : TextureParams)
 	{
-		TextureParams[Index].TextureInstance->DestroyBuffer();
+		TexParamPair.second.TextureInstance->DestroyBuffer();
 	}
 }
 
@@ -56,31 +58,50 @@ void Material::Use()
 {
 	ShaderInstance->Use();
 
-	for (size_t Index = 0; Index < TextureParams.size(); Index++)
+	for (auto TexParamPair : TextureParams)
 	{
-		MaterialTextureRecord& Rec = TextureParams[Index];
-		Rec.TextureInstance->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
+		MaterialTextureRecord& Rec = TextureParams[TexParamPair.first];
+		if (Rec.TextureInstance)
+		{
+			Rec.TextureInstance->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
+		}
 	}
 }
 
-void Material::AddTextureParam(
-	const std::string & InParamName, 
-	const std::string& InTexturePath, 
-	int InLocation, 
-	bool InputUsesAlpha/* = false*/, 
-	bool InFlipVertical/* = true*/, 
-	bool InLinear/* = true*/)
+void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation)
 {
 	MaterialTextureRecord Rec;
 
-	Rec.InputUsesAlpha = InputUsesAlpha;
-	Rec.FlipVertical = InFlipVertical;
-	Rec.Linear = InLinear;
 	Rec.ParamName = InParamName;
-	Rec.Path = InTexturePath;
+	Rec.Path = InPath;
+	Rec.TextureInstance = InTexture;
 	Rec.TextureSlotLocation = InLocation;
 
-	TextureParams.push_back(Rec);
+	TextureParams[InParamName] = Rec;
+}
+
+void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr & InTexture, int InLocation)
+{
+	AddTextureParam(InParamName, InPath, InTexture, InLocation);
+	ShaderInstance->Use();
+	ShaderInstance->SetInt(InParamName, InLocation);
+}
+
+void Material::UpdateTextureParam(const std::string & InParamName, const TexturePtr & InTexture, bool InUse)
+{
+	if (TextureParams.find(InParamName) == TextureParams.end())
+	{
+		return;
+	}
+
+	ShaderInstance->Use();
+
+	MaterialTextureRecord& Rec = TextureParams[InParamName];
+	Rec.TextureInstance = InTexture;
+	if (InUse && InTexture)
+	{
+		InTexture->Use(GL_TEXTURE0 + Rec.TextureSlotLocation);
+	}
 }
 
 void Material::SetShaderPath(const std::string & InVertexShaderPath, const std::string & InFragmentShaderPath)
@@ -132,9 +153,9 @@ void Material::SetupParams()
 		ShaderInstance->SetMat4(Pair.first, Pair.second);
 	}
 
-	for (size_t Index = 0; Index < TextureParams.size(); Index++)
+	for (auto TexParamPair : TextureParams)
 	{
-		MaterialTextureRecord& Rec = TextureParams[Index];
+		MaterialTextureRecord& Rec = TextureParams[TexParamPair.first];
 		ShaderInstance->SetInt(Rec.ParamName, Rec.TextureSlotLocation);
 	}
 }

@@ -16,9 +16,6 @@
 struct MaterialTextureRecord
 {
 public:
-	bool InputUsesAlpha;
-	bool FlipVertical;
-	bool Linear;
 	std::string ParamName;
 	std::string Path;
 	int TextureSlotLocation;
@@ -46,13 +43,9 @@ public:
 	void AddUniformParam(const std::string& InParamName, const T& InParamValue);
 	template<typename T>
 	void SetUniformParam(const std::string& InParamName, const T& InParamValue);
-	void AddTextureParam(
-		const std::string& InParamName,
-		const std::string& InTexturePath,
-		int InLocation,
-		bool InputUsesAlpha = false,
-		bool InFlipVertical = true,
-		bool InLinear = true);
+	void AddTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation);
+	void SetTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation);
+	void UpdateTextureParam(const std::string& InParamName, const TexturePtr& InTexture, bool InUse);
 
 	void SetShaderPath(const std::string& InVertexShaderPath, const std::string& InFragmentShaderPath);
 	void SetupParams();
@@ -74,7 +67,7 @@ protected:
 	std::map<std::string, glm::mat3>	Mat3Params;
 	std::map<std::string, glm::mat4>	Mat4Params;
 
-	std::vector<MaterialTextureRecord> TextureParams;
+	std::map<std::string, MaterialTextureRecord> TextureParams;
 private:
 	Material();
 };

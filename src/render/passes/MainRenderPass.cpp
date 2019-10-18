@@ -69,8 +69,8 @@ void MainRenderPass::DrawPass()
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 
 		MaterialPtr Material = MeshComp->Material;
+		Material->UpdateTextureParam("ShadowMap", ShadowMask, false);
 		Material->Use();
-		Material->ShaderInstance->SetInt("ShadowMap", 2);
 		Material->SetUniformParam<glm::mat4>("model", Model);
 		Material->SetUniformParam<glm::mat4>("view", View);
 		Material->SetUniformParam<glm::mat4>("projection", Proj);

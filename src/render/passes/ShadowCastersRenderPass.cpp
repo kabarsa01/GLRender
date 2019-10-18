@@ -20,7 +20,7 @@ void ShadowCastersRenderPass::InitPass()
 {
 	RendererPtr RendererInstance = Engine::GetRendererInstance();
 
-	FrameBufferInstance->SetSize(2048, 2048, false);
+	FrameBufferInstance->SetSize(Width, Height, false);
 	FrameBufferInstance->SetColorBuffersCount(0);
 	FrameBufferInstance->SetUseDepth(true);
 	FrameBufferInstance->SetUseStencil(false);
@@ -51,7 +51,7 @@ void ShadowCastersRenderPass::DrawPass()
 	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	glViewport(0, 0, 2048, 2048);
+	glViewport(0, 0, Width, Height);
 
 	ScenePtr Scene = Engine::GetInstance()->GetScene();
 	MainLight = Scene->GetSceneComponent<LightComponent>();
@@ -79,7 +79,14 @@ void ShadowCastersRenderPass::DrawPass()
 
 void ShadowCastersRenderPass::OnResolutionChaged(int InWidth, int InHeight)
 {
+	// we preserve shadow resolution across different screen resolutions
 //	FrameBufferInstance->SetSize(InWidth, InHeight, true);
+}
+
+void ShadowCastersRenderPass::SetShadowResolution(int InWidth, int InHeight)
+{
+	Width = InWidth;
+	Height = InHeight;
 }
 
 

@@ -5,6 +5,7 @@ Shader::Shader(const std::string &InVertexPath, const std::string &InFragmentPat
 	: Resource{ InVertexPath + InFragmentPath }
 	, VertexPath(InVertexPath)
 	, FragmentPath(InFragmentPath)
+	, ID ( static_cast<unsigned int>(-1) )
 {
 }
 
@@ -132,7 +133,7 @@ unsigned int Shader::CreateAndLinkProgram(unsigned int vertexShader, unsigned in
 
 bool Shader::Load()
 {
-	if ( IsValid() )
+	if ( ID != static_cast<unsigned int>(-1) )
 	{
 		return true;
 	}
@@ -186,6 +187,7 @@ bool Shader::Unload()
 	if ( ID != static_cast<unsigned int>(-1) )
 	{
 		glDeleteProgram(ID);
+		SetValid(false);
 		return true;
 	}
 	return false;

@@ -168,7 +168,7 @@ void FrameBuffer::GenerateTextures()
 		Tex->SetUseEmpty(true);
 		Tex->SetSize(Width, Height);
 		Tex->SetUseDepth(false);
-		Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Min);
+		Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
 		Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
 		Tex->InitializeBuffer();
 		Textures[Index] = Tex;

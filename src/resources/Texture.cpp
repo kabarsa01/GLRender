@@ -26,9 +26,12 @@ Texture::~Texture()
 
 bool Texture::Load()
 {
-	stbi_set_flip_vertically_on_load(FlipVertical);
-	Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
-	SetValid(Data);
+	if (Data == nullptr)
+	{
+		stbi_set_flip_vertically_on_load(FlipVertical);
+		Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
+		SetValid(Data);
+	}
 	return Data != nullptr;
 }
 
@@ -38,6 +41,7 @@ bool Texture::Unload()
 	{
 		stbi_image_free(Data);
 		Data = nullptr;
+		SetValid(false);
 		return true;
 	}
 	return false;
@@ -60,7 +64,7 @@ void Texture::InitializeBuffer()
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Texture buffer already exist" << std::endl;
 	}
 }
 
@@ -123,6 +127,7 @@ Texture::FilteringMode Texture::GetFilteringMode(FilteringModeTarget InTarget)
 		return MagFiltering;
 		break;
 	}
+	return MinFiltering;
 }
 
 void Texture::SetWrapMode(WrapMode InWrapMode, WrapModeTarget InTarget)
@@ -149,6 +154,7 @@ Texture::WrapMode Texture::GetWrapMode(WrapModeTarget InTarget)
 		return WrapV;
 		break;
 	}
+	return WrapU;
 }
 
 unsigned int Texture::GetID() const

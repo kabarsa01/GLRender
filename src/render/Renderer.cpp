@@ -106,6 +106,8 @@ void Renderer::OnInitialize()
 
 void Renderer::Init()
 {
+	DataManager* DM = DataManager::GetInstance();
+
 	LightObjectPtr LightObj = ObjectBase::NewObject<LightObject>();
 	LightObj->Transform.SetRotation(glm::vec3(45.0f, -90.0f, 0.0f));
 	LightObj->Transform.SetLocation(LightObj->Transform.GetForwardVector() * -50.0f);
@@ -123,8 +125,13 @@ void Renderer::Init()
 	// setup default material
 	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
 	Mat->SetShaderPath("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
-	Mat->AddTextureParam("AlbedoMap", "./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg", 0, false, true, false);
-	Mat->AddTextureParam("NormalMap", "./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg", 1, false, true, true);
+	std::string AlbedoPath("./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg");
+	std::string NormalPath("./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
+	TexturePtr AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
+	TexturePtr NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalPath, NormalPath, false, true, true);
+	Mat->AddTextureParam("AlbedoMap", AlbedoPath, AlbedoMap, 0);
+	Mat->AddTextureParam("NormalMap", NormalPath, NormalMap, 1);
+	Mat->AddTextureParam("ShadowMap", "", nullptr, 2);
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });

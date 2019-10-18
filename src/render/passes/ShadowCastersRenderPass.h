@@ -15,6 +15,8 @@ public:
 	virtual void InitPass() override;
 	virtual void DrawPass() override;
 	virtual void OnResolutionChaged(int InWidth, int InHeight) override;
+
+	void SetShadowResolution(int InWidth, int InHeight);
 protected:
 	ShaderPtr DepthShader;
 	LightComponentPtr MainLight;
@@ -22,6 +24,9 @@ protected:
 	glm::mat4 Model;
 	glm::mat4 View;
 	glm::mat4 Proj;
+
+	int Width = { 1024 };
+	int Height = { 1024 };
 };
 
 typedef std::shared_ptr<ShadowCastersRenderPass> ShadowCastersRenderPassPtr;
