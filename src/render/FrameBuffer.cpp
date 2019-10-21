@@ -210,10 +210,16 @@ void FrameBuffer::ResetBuffers()
 void FrameBuffer::SetupAttachments()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, ID);
+	std::vector<unsigned int> Attachments(Textures.size());
 	for (unsigned int TextureIndex = 0; TextureIndex < Textures.size(); TextureIndex++)
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + TextureIndex, GL_TEXTURE_2D, Textures[TextureIndex]->GetID(), 0);
+		unsigned int AttachmentType = GL_COLOR_ATTACHMENT0 + TextureIndex;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, AttachmentType, GL_TEXTURE_2D, Textures[TextureIndex]->GetID(), 0);
+		Attachments[TextureIndex] = AttachmentType;
 	}
+	// tell OpenGL which color attachments we'll use for rendering 
+	glDrawBuffers(Attachments.size(), Attachments.data());
+
 	if (UseDepth)
 	{
 		GLenum Attachment = DepthTexture->IsUsingStencil() ? GL_DEPTH_STENCIL_ATTACHMENT : GL_DEPTH_ATTACHMENT;
