@@ -45,7 +45,7 @@ void MainRenderPass::DrawPass()
 //	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glCullFace(GL_BACK);
 
-	glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
+	glClearColor(0.5f, 0.6f, 0.7f, 1.0f);
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT);
 

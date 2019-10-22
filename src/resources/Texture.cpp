@@ -11,8 +11,8 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	, FlipVertical{ InFlipVertical }
 	, Linear{ InLinear }
 	, Data ( nullptr )
-	, MinFiltering ( F_Linear )
-	, MagFiltering( F_Linear )
+	, MinFiltering ( F_Linear_MipmapLinear )
+	, MagFiltering( F_Linear_MipmapLinear )
 	, WrapU( WM_Tile )
 	, WrapV( WM_Tile )
 	, BorderColor( 1.0f, 1.0f, 1.0f, 1.0f )
@@ -84,6 +84,11 @@ void Texture::SetSize(int InWidth, int InHeight)
 {
 	Width = InWidth;
 	Height = InHeight;
+}
+
+void Texture::SetUseFloat16(bool InUseFloat16)
+{
+	UseFloat16 = InUseFloat16;
 }
 
 void Texture::SetUseEmpty(bool InUseEmpty)
@@ -204,7 +209,7 @@ GLint Texture::GetInternalFormat()
 	GLint InternalFormat = 0;
 	if (Linear)
 	{
-		InternalFormat = UseAlpha ? GL_RGBA : GL_RGB;
+		InternalFormat = UseFloat16 ? (UseAlpha ? GL_RGBA16F : GL_RGB16F) : (UseAlpha ? GL_RGBA : GL_RGB);
 	}
 	else
 	{
@@ -225,7 +230,11 @@ GLenum Texture::GetFormat()
 
 GLenum Texture::GetType()
 {
-	return UseDepth ? (UseStencil ? GL_UNSIGNED_INT_24_8 : GL_FLOAT) : GL_UNSIGNED_BYTE;
+	if (UseDepth)
+	{
+		return UseStencil ? GL_UNSIGNED_INT_24_8 : GL_FLOAT;
+	}
+	return UseFloat16 ? GL_FLOAT : GL_UNSIGNED_BYTE;
 }
 
 GLint Texture::GetMappedFiltering(FilteringMode InFilteringMode)

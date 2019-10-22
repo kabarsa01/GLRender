@@ -70,7 +70,7 @@ void ZPrepassRenderPass::DrawPass()
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
-		MeshComp->GetParent()->Transform.SetRotation({ 10.0f * (float)glfwGetTime(), 0.0f , -90.0f });
+		MeshComp->GetParent()->Transform.SetRotation({ -90.0f, 10.0f * (float)glfwGetTime(), 0.0 });
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 		DepthShader->SetMat4("model", Model);
 		MeshComp->MeshData->Draw();

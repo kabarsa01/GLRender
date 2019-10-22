@@ -125,18 +125,19 @@ void Renderer::Init()
 	// setup default material
 	MaterialPtr Mat = ObjectBase::NewObject<Material, HashString>(std::string("DefaultMaterial"));
 	Mat->SetShaderPath("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
-	std::string AlbedoPath("./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg");
-	std::string NormalPath("./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
-//	std::string MetallnessPath("./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
-	std::string RoughnessPath("./content/root/Aset_wood_root_M_rkswd_4K_Roughness.jpg");
-	std::string AOPath("./content/root/Aset_wood_root_M_rkswd_4K_Cavity.jpg");
+	std::string AlbedoPath("./content/gun/Textures/Cerberus_A.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg");
+	std::string NormalPath("./content/gun/Textures/Cerberus_N.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
+	std::string MetallnessPath("./content/gun/Textures/Cerberus_M.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
+	std::string RoughnessPath("./content/gun/Textures/Cerberus_R.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Roughness.jpg");
+	std::string AOPath("./content/gun/Textures/Raw/Cerberus_AO.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Cavity.jpg");
 	TexturePtr AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
 	TexturePtr NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalPath, NormalPath, false, true, true);
+	TexturePtr MetallnessMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(MetallnessPath, MetallnessPath, false, true, false);
 	TexturePtr RoughnessMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(RoughnessPath, RoughnessPath, false, true, false);
 	TexturePtr AOMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
 	Mat->AddTextureParam("AlbedoMap", AlbedoPath, AlbedoMap, 0);
 	Mat->AddTextureParam("NormalMap", NormalPath, NormalMap, 1);
-	Mat->AddTextureParam("MetallnessMap", "", nullptr, 2);
+	Mat->AddTextureParam("MetallnessMap", MetallnessPath, MetallnessMap, 2);
 	Mat->AddTextureParam("RoughnessMap", RoughnessPath, RoughnessMap, 3);
 	Mat->AddTextureParam("AOMap", AOPath, AOMap, 4);
 	Mat->AddTextureParam("ShadowMap", "", nullptr, 5);
@@ -144,7 +145,7 @@ void Renderer::Init()
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
 	Mat->AddUniformParam<glm::mat4>("light_view", LightSpaceMatrix);
-	Mat->AddUniformParam<glm::vec3>("light_color", { 0.95f, 0.95f, 0.95f });
+	Mat->AddUniformParam<glm::vec3>("light_color", { 6.0f, 6.0f, 6.0f });
 	Mat->AddUniformParam<glm::vec3>("spec_color", { 1.0f, 0.0f, 0.0f });
 	Mat->AddUniformParam<float>("spec_strength", 0.0f);
 
@@ -155,27 +156,31 @@ void Renderer::Init()
 	{
 		MeshImporter Importer;
 		//Importer.Import("./content/nanosuit/nanosuit.obj");
-		Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		//Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		Importer.Import("./content/gun/Cerberus_LP.FBX");
 		for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 		{
 			MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
 			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
 			MO->GetMeshComponent()->Material = Mat;
 			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
-			MO->Transform.SetLocation({ 0.0f, -7.0f, 0.0f });
+			MO->Transform.SetLocation({ 0.0f, -1.0f, -3.0f });
+			MO->Transform.SetScale({ 0.3f, 0.3f, 0.3f });
 		}
 	}
 	{
 		MeshImporter Importer;
 		//Importer.Import("./content/nanosuit/nanosuit.obj");
-		Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		//Importer.Import("./content/root/Aset_wood_root_M_rkswd_LOD0.FBX");
+		Importer.Import("./content/gun/Cerberus_LP.FBX");
 		for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 		{
 			MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
 			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
 			MO->GetMeshComponent()->Material = Mat;
 			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
-			MO->Transform.SetLocation({ -25.0f, -17.0f, -1.0f });
+			MO->Transform.SetLocation({ -25.0f, -12.0f, -13.0f });
+			MO->Transform.SetScale({ 0.3f, 0.3f, 0.3f });
 		}
 	}
 

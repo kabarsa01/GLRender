@@ -46,6 +46,7 @@ public:
 	void DestroyBuffer();
 
 	void SetSize(int Width, int Height);
+	void SetUseFloat16(bool InUseFloat16);
 	void SetUseEmpty(bool InUseEmpty);
 	void SetUseDepth(bool InUseDepth);
 	void SetUseStencil(bool InUseStencil);
@@ -67,6 +68,7 @@ protected:
 	bool FlipVertical;
 	bool UseAlpha;
 	bool Linear;
+	bool UseFloat16 = false;
 	bool UseEmpty = false;
 	bool UseDepth = false;
 	bool UseStencil = false;

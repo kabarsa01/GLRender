@@ -122,9 +122,9 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float Roughness)
 void main()
 {
     vec3 Albedo = texture(AlbedoMap, fs_in.uv).rgb;
-    float Metallic = 0.0;//texture(MetallnessMap, fs_in.uv).r;
+    float Metallic = texture(MetallnessMap, fs_in.uv).r;
     float Roughness = texture(RoughnessMap, fs_in.uv).r;
-    float AO = 1.0;//texture(AOMap, fs_in.uv).r;
+    float AO = texture(AOMap, fs_in.uv).r;
 
     vec3 N = CalculateNormal();//normalize(fs_in.normal);
     vec3 V = normalize(view_pos - fs_in.world_pos);
@@ -135,7 +135,8 @@ void main()
         vec3 H = normalize(V + L);
 
         float Attenuation = 1.0;
-        vec3 Radiance = light_color * Attenuation;
+		float ShadowAttenuation = CalculateShadow(fs_in.light_pos, L, N);
+        vec3 Radiance = light_color * Attenuation * (1.0 - ShadowAttenuation);
 
         vec3 F0 = vec3(0.04); 
         F0 = mix(F0, Albedo, Metallic);
@@ -155,11 +156,12 @@ void main()
         Lo += (kD * Albedo / PI + Specular) * Radiance * NdotL;
     }
 
-    vec3 Ambient = vec3(0.03) * Albedo * AO;
+	// some artificial ambient lighting
+    vec3 Ambient = vec3(0.1) * Albedo * AO;
     vec3 Color = Ambient + Lo;
 	
-// HDR tonemapping
-//    Color = Color / (Color + vec3(1.0));
+	// HDR tonemapping
+    Color = Color / (Color + vec3(1.0));
     Color = pow(Color, vec3(1.0/2.2));  
    
     FragColor = vec4(Color, 1.0);

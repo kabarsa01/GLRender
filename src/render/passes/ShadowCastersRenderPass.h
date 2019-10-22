@@ -25,8 +25,8 @@ protected:
 	glm::mat4 View;
 	glm::mat4 Proj;
 
-	int Width = { 512 };
-	int Height = { 512 };
+	int Width = { 1024 };
+	int Height = { 1024 };
 };
 
 typedef std::shared_ptr<ShadowCastersRenderPass> ShadowCastersRenderPassPtr;
