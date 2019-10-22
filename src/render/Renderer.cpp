@@ -127,11 +127,19 @@ void Renderer::Init()
 	Mat->SetShaderPath("./src/shaders/src/BasicVertexShader.vs", "./src/shaders/src/BasicFragmentShader.fs");
 	std::string AlbedoPath("./content/root/Aset_wood_root_M_rkswd_4K_Albedo.jpg");
 	std::string NormalPath("./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
+//	std::string MetallnessPath("./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
+	std::string RoughnessPath("./content/root/Aset_wood_root_M_rkswd_4K_Roughness.jpg");
+	std::string AOPath("./content/root/Aset_wood_root_M_rkswd_4K_Cavity.jpg");
 	TexturePtr AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
 	TexturePtr NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalPath, NormalPath, false, true, true);
+	TexturePtr RoughnessMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(RoughnessPath, RoughnessPath, false, true, false);
+	TexturePtr AOMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
 	Mat->AddTextureParam("AlbedoMap", AlbedoPath, AlbedoMap, 0);
 	Mat->AddTextureParam("NormalMap", NormalPath, NormalMap, 1);
-	Mat->AddTextureParam("ShadowMap", "", nullptr, 2);
+	Mat->AddTextureParam("MetallnessMap", "", nullptr, 2);
+	Mat->AddTextureParam("RoughnessMap", RoughnessPath, RoughnessMap, 3);
+	Mat->AddTextureParam("AOMap", AOPath, AOMap, 4);
+	Mat->AddTextureParam("ShadowMap", "", nullptr, 5);
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
