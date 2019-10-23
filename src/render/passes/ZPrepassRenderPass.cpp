@@ -26,7 +26,8 @@ void ZPrepassRenderPass::InitPass()
 	FrameBufferInstance->SetColorBuffersCount(0);
 	FrameBufferInstance->SetUseDepth(true);
 	FrameBufferInstance->SetUseStencil(true);
-	FrameBufferInstance->GenerateBuffer(true, true);
+	FrameBufferInstance->CreateTextures();
+	FrameBufferInstance->GenerateBuffers();
 
 	DataManager *DM = DataManager::GetInstance();
 	std::string VertexPath = "./src/shaders/src/ZPrepassVertexShader.vs";

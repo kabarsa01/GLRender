@@ -35,6 +35,7 @@ void Resource::OnDestroy()
 	Unload();
 	IsValidFlag = false;
 	// ask data manager to destroy this resource ???
+	ObjectBase::OnDestroy();
 }
 
 HashString Resource::GetResourceId()

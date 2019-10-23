@@ -38,6 +38,7 @@ public:
 	};
 
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
+	Texture(const std::string& InPath);
 	virtual ~Texture();
 
 	virtual bool Load() override;
@@ -46,6 +47,9 @@ public:
 	void DestroyBuffer();
 
 	void SetSize(int Width, int Height);
+	void SetUseAlpha(bool InUseAlpha);
+	void SetFlipVertical(bool InFlipVertical);
+	void SetLinear(bool InLinear);
 	void SetUseFloat16(bool InUseFloat16);
 	void SetUseEmpty(bool InUseEmpty);
 	void SetUseDepth(bool InUseDepth);
@@ -63,11 +67,14 @@ public:
 	bool GetFlipVertical();
 
 	void Use(int InSlotLocation) const;
+
+	virtual void OnInitialize() override;
+	virtual void OnDestroy() override;
 protected:
 	std::string Path;
-	bool FlipVertical;
-	bool UseAlpha;
-	bool Linear;
+	bool FlipVertical = true;
+	bool UseAlpha = false;
+	bool Linear = false;
 	bool UseFloat16 = false;
 	bool UseEmpty = false;
 	bool UseDepth = false;
@@ -81,8 +88,8 @@ protected:
 
 	unsigned int ID = -1;
 	unsigned char* Data;
-	int Width;
-	int Height;
+	int Width = 512;
+	int Height = 512;
 	int NumChannels;
 
 	GLint GetInternalFormat();

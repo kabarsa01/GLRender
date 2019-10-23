@@ -25,9 +25,10 @@ void MainRenderPass::InitPass()
 	FrameBufferInstance->SetColorBuffersCount(1);
 	FrameBufferInstance->SetUseDepth(true);
 	FrameBufferInstance->SetUseStencil(true);
-	FrameBufferInstance->SetAllowExternalDepthReset(false);
+	FrameBufferInstance->SetAllowDepthReset(false);
 	FrameBufferInstance->SetDepthTexture(RendererInstance->GetRenderPass(std::string("ZPrepass"))->GetFrameBuffer()->GetDepthTexture());
-	FrameBufferInstance->GenerateBuffer(true, false);
+	FrameBufferInstance->CreateTextures();
+	FrameBufferInstance->GenerateBuffers();
 }
 
 void MainRenderPass::DrawPass()

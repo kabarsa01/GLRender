@@ -4,7 +4,7 @@
 #include <iostream>
 
 Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVertical, bool InLinear)
-	: Resource{ InPath }
+	: Resource( InPath )
 	, ID{ (unsigned int)-1 }
 	, Path{ InPath }
 	, UseAlpha{ InputUsesAlpha }
@@ -15,8 +15,14 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	, MagFiltering( F_Linear_MipmapLinear )
 	, WrapU( WM_Tile )
 	, WrapV( WM_Tile )
-	, BorderColor( 1.0f, 1.0f, 1.0f, 1.0f )
+	, BorderColor( 0.0f, 0.0f, 0.0f, 0.0f )
 {
+}
+
+Texture::Texture(const std::string& InPath)
+	: Texture( InPath, false, true, false )
+{
+
 }
 
 Texture::~Texture()
@@ -84,6 +90,21 @@ void Texture::SetSize(int InWidth, int InHeight)
 {
 	Width = InWidth;
 	Height = InHeight;
+}
+
+void Texture::SetUseAlpha(bool InUseAlpha)
+{
+	UseAlpha = InUseAlpha;
+}
+
+void Texture::SetFlipVertical(bool InFlipVertical)
+{
+	FlipVertical = InFlipVertical;
+}
+
+void Texture::SetLinear(bool InLinear)
+{
+	Linear = InLinear;
 }
 
 void Texture::SetUseFloat16(bool InUseFloat16)
@@ -197,6 +218,18 @@ void Texture::Use(int InSlotLocation) const
 		glActiveTexture(GL_TEXTURE0 + InSlotLocation);
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
+}
+
+void Texture::OnInitialize()
+{
+	Resource::OnInitialize();
+}
+
+void Texture::OnDestroy()
+{
+	DestroyBuffer();
+	Unload();
+	Resource::OnDestroy();
 }
 
 GLint Texture::GetInternalFormat()

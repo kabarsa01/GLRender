@@ -8,6 +8,7 @@
 FrameBuffer::FrameBuffer()
 	: ObjectBase()
 	, ID ( 0xffffffff )
+	, DepthTexture( nullptr )
 {
 }
 
@@ -51,26 +52,45 @@ void FrameBuffer::SetUseStencil(bool InUseStencil)
 	UseStencil = InUseStencil;
 }
 
-void FrameBuffer::GenerateBuffer(bool InGenerateTextures/* = false*/, bool InGenerateDepth/* = false*/)
+void FrameBuffer::CreateTextures()
 {
-	if (ID != 0xffffffff)
+	Textures.resize(ColorBuffersCount);
+	for (size_t Index = 0; Index < ColorBuffersCount; Index++)
 	{
-		return;
+		if (Textures[Index])
+		{
+			continue;
+		}
+		Textures[Index] = CreateTexture(Index);
 	}
 
-	GenerateTexturesFlag = InGenerateTextures;
-	GenerateDepthFlag = InGenerateDepth;
+	if (!DepthTexture && UseDepth)
+	{
+		DepthTexture = CreateDepth();
+	}
+}
 
-	glGenFramebuffers(1, &ID);
+void FrameBuffer::GenerateBuffers()
+{
 	// check if textures should be generated or the ones set from the outside
 	// will be used
-	if (GenerateTexturesFlag)
+	for (size_t Index = 0; Index < ColorBuffersCount; Index++)
 	{
-		GenerateTextures();
+		if (!Textures[Index])
+		{
+			Textures[Index] = CreateTexture(Index);
+		}
+		Textures[Index]->InitializeBuffer();
 	}
-	if (UseDepth && GenerateDepthFlag)
+
+	if (!DepthTexture && UseDepth)
 	{
-		GenerateDepth();
+		DepthTexture = CreateDepth();
+	}
+
+	if (DepthTexture)
+	{
+		DepthTexture->InitializeBuffer();
 	}
 	//GL_READ_FRAMEBUFFER or GL_DRAW_FRAMEBUFFER variants maybe
 	SetupAttachments();
@@ -87,27 +107,24 @@ void FrameBuffer::GenerateBuffer(bool InGenerateTextures/* = false*/, bool InGen
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void FrameBuffer::DestroyBuffer()
+void FrameBuffer::DestroyBuffers()
 {
 	if (ID != 0xffffffff)
 	{
 		glDeleteFramebuffers(1, &ID);
 		ID = 0xffffffff;
 
-		if (GenerateTexturesFlag)
+		for (size_t TexIndex = 0; TexIndex < Textures.size(); TexIndex++)
 		{
-			for (size_t TexIndex = 0; TexIndex < Textures.size(); TexIndex++)
-			{
-				DataManager::GetInstance()->DeleteResource(Textures[TexIndex]);
-				Textures[TexIndex]->DestroyBuffer();
-			}
-			Textures.clear();
-			if (DepthTexture)
-			{
-				DataManager::GetInstance()->DeleteResource(DepthTexture);
-				DepthTexture->DestroyBuffer();
-				DepthTexture = nullptr;
-			}
+			DataManager::GetInstance()->DeleteResource(Textures[TexIndex]);
+			Textures[TexIndex]->DestroyBuffer();
+		}
+		Textures.clear();
+		if (DepthTexture)
+		{
+			DataManager::GetInstance()->DeleteResource(DepthTexture);
+			DepthTexture->DestroyBuffer();
+			DepthTexture = nullptr;
 		}
 	}
 }
@@ -136,9 +153,9 @@ TexturePtr FrameBuffer::GetDepthTexture()
 	return DepthTexture;
 }
 
-void FrameBuffer::SetAllowExternalDepthReset(bool InAllowDepthReset)
+void FrameBuffer::SetAllowDepthReset(bool InAllowDepthReset)
 {
-	AllowExternalDepthReset = InAllowDepthReset;
+	AllowDepthReset = InAllowDepthReset;
 }
 
 void FrameBuffer::Use()
@@ -153,40 +170,43 @@ void FrameBuffer::Unbind()
 
 void FrameBuffer::OnDestroy()
 {
-	DestroyBuffer();
+	DestroyBuffers();
 }
 
-void FrameBuffer::GenerateTextures()
+void FrameBuffer::OnInitialize()
 {
-	Textures.clear();
-	Textures.resize(ColorBuffersCount);
-	for (size_t Index = 0; Index < ColorBuffersCount; Index++)
+	if (ID != 0xffffffff)
 	{
-		// generate texture resource id as a framebuffer id and texture index
-		std::string TextureId = std::to_string(ID) + std::to_string(Index);
-		TexturePtr Tex = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
-		Tex->SetUseEmpty(true);
-		Tex->SetSize(Width, Height);
-		Tex->SetUseDepth(false);
-		Tex->SetUseFloat16(true);
-		Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Min);
-		Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Mag);
-		Tex->InitializeBuffer();
-		Textures[Index] = Tex;
+		return;
 	}
+
+	glGenFramebuffers(1, &ID);
 }
 
-void FrameBuffer::GenerateDepth()
+TexturePtr FrameBuffer::CreateTexture(size_t InIndex)
+{
+	std::string TextureId = std::to_string(ID) + std::to_string(InIndex);
+	TexturePtr Tex = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
+	Tex->SetUseEmpty(true);
+	Tex->SetSize(Width, Height);
+	Tex->SetUseDepth(false);
+	Tex->SetUseFloat16(true);
+	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Min);
+	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Mag);
+	return Tex;
+}
+
+TexturePtr FrameBuffer::CreateDepth()
 {
 	std::string TextureId = std::to_string(ID) + std::to_string(ColorBuffersCount);
-	DepthTexture = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
-	DepthTexture->SetUseEmpty(true);
-	DepthTexture->SetSize(Width, Height);
-	DepthTexture->SetUseDepth(true);
-	DepthTexture->SetUseStencil(UseStencil);
-	DepthTexture->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
-	DepthTexture->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
-	DepthTexture->InitializeBuffer();
+	TexturePtr Tex = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
+	Tex->SetUseEmpty(true);
+	Tex->SetSize(Width, Height);
+	Tex->SetUseDepth(true);
+	Tex->SetUseStencil(UseStencil);
+	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
+	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
+	return Tex;
 }
 
 void FrameBuffer::ResetBuffers()
@@ -199,8 +219,7 @@ void FrameBuffer::ResetBuffers()
 		Tex->InitializeBuffer();
 	}
 
-	bool CanResetDepth = GenerateDepthFlag || AllowExternalDepthReset;
-	if (DepthTexture && CanResetDepth)
+	if (DepthTexture && AllowDepthReset)
 	{
 		DepthTexture->SetSize(Width, Height);
 		DepthTexture->DestroyBuffer();
