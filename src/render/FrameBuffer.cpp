@@ -191,8 +191,8 @@ TexturePtr FrameBuffer::CreateTexture(size_t InIndex)
 	Tex->SetSize(Width, Height);
 	Tex->SetUseDepth(false);
 	Tex->SetUseFloat16(true);
-	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Min);
-	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Mag);
+	Tex->SetFilteringMode(Texture::FilteringMode::FM_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Min);
+	Tex->SetFilteringMode(Texture::FilteringMode::FM_Linear_MipmapLinear, Texture::FilteringModeTarget::FMT_Mag);
 	return Tex;
 }
 
@@ -204,8 +204,8 @@ TexturePtr FrameBuffer::CreateDepth()
 	Tex->SetSize(Width, Height);
 	Tex->SetUseDepth(true);
 	Tex->SetUseStencil(UseStencil);
-	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
-	Tex->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
+	Tex->SetFilteringMode(Texture::FilteringMode::FM_Linear, Texture::FilteringModeTarget::FMT_Min);
+	Tex->SetFilteringMode(Texture::FilteringMode::FM_Linear, Texture::FilteringModeTarget::FMT_Mag);
 	return Tex;
 }
 

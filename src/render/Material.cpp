@@ -39,8 +39,8 @@ void Material::InitializeBuffers()
 		const TexturePtr& TextureInstance = TextureParams[TexParamPair.first].TextureInstance;
 		if (TextureInstance)
 		{
-			TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Min);
-			TextureInstance->SetFilteringMode(Texture::FilteringMode::F_Linear, Texture::FilteringModeTarget::FMT_Mag);
+			TextureInstance->SetFilteringMode(Texture::FilteringMode::FM_Linear, Texture::FilteringModeTarget::FMT_Min);
+			TextureInstance->SetFilteringMode(Texture::FilteringMode::FM_Linear, Texture::FilteringModeTarget::FMT_Mag);
 			TextureInstance->InitializeBuffer();
 		}
 	}

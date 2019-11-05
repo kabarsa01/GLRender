@@ -10,6 +10,12 @@
 class Texture : public Resource
 {
 public:
+	// we will limit ourselves to 2d texture and cubemap for now
+	enum TargetType
+	{
+		TT_2D = 0,
+		TT_Cubemap
+	};
 	enum FilteringModeTarget
 	{
 		FMT_Mag = 0,
@@ -17,12 +23,12 @@ public:
 	};
 	enum FilteringMode
 	{
-		F_Nearest = 0,
-		F_Linear,
-		F_Nearest_MipmapNearest, // one mip, nearest pixel
-		F_Linear_MipmapNearest, // one mip, linear pixel
-		F_Nearest_MipmapLinear, // two mips, nearest pixels
-		F_Linear_MipmapLinear, // two mips, linear pixels
+		FM_Nearest = 0,
+		FM_Linear,
+		FM_Nearest_MipmapNearest, // one mip, nearest pixel
+		FM_Linear_MipmapNearest, // one mip, linear pixel
+		FM_Nearest_MipmapLinear, // two mips, nearest pixels
+		FM_Linear_MipmapLinear, // two mips, linear pixels
 	};
 	enum WrapModeTarget
 	{
@@ -46,6 +52,8 @@ public:
 	void InitializeBuffer();
 	void DestroyBuffer();
 
+	void SetTargetType(TargetType InTarget);
+	TargetType GetTargetType();
 	void SetSize(int Width, int Height);
 	void SetUseAlpha(bool InUseAlpha);
 	void SetFlipVertical(bool InFlipVertical);
@@ -72,6 +80,9 @@ public:
 	virtual void OnDestroy() override;
 protected:
 	std::string Path;
+
+	TargetType Target;
+
 	bool FlipVertical = true;
 	bool UseAlpha = false;
 	bool Linear = false;
@@ -92,11 +103,12 @@ protected:
 	int Height = 512;
 	int NumChannels;
 
-	GLint GetInternalFormat();
-	GLenum GetFormat();
-	GLenum GetType();
-	GLint GetMappedFiltering(FilteringMode InFilteringMode);
-	GLint GetMappedWrap(WrapMode InWrapMode);
+	GLenum GetTarget() const;
+	GLint GetInternalFormat() const;
+	GLenum GetFormat() const;
+	GLenum GetType() const;
+	GLint GetMappedFiltering(FilteringMode InFilteringMode) const;
+	GLint GetMappedWrap(WrapMode InWrapMode) const;
 private:
 	Texture();
 };
