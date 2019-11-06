@@ -7,11 +7,10 @@ Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVert
 	: Resource( InPath )
 	, ID{ (unsigned int)-1 }
 	, Path{ InPath }
-	, Target( TT_2D )
 	, UseAlpha{ InputUsesAlpha }
 	, FlipVertical{ InFlipVertical }
 	, Linear{ InLinear }
-	, Data ( nullptr )
+	, Data {}
 	, MinFiltering ( FM_Linear_MipmapLinear )
 	, MagFiltering( FM_Linear_MipmapLinear )
 	, WrapU( WM_Tile )
@@ -26,6 +25,12 @@ Texture::Texture(const std::string& InPath)
 
 }
 
+Texture::Texture(const std::vector<std::string>& InPath)
+	: Texture( InPath.at(0), false, true, false )
+{
+	Path = InPath;
+}
+
 Texture::~Texture()
 {
 	DestroyBuffer();
@@ -34,21 +39,28 @@ Texture::~Texture()
 
 bool Texture::Load()
 {
-	if (Data == nullptr)
+	if (Data.size() == 0)
 	{
-		stbi_set_flip_vertically_on_load(FlipVertical);
-		Data = stbi_load(Path.c_str(), &Width, &Height, &NumChannels, 0);
-		SetValid(Data);
+		Data.resize(Path.size());
+		for (size_t Index = 0; Index < Path.size(); Index++)
+		{
+			stbi_set_flip_vertically_on_load(FlipVertical);
+			Data[Index] = stbi_load(Path[Index].c_str(), &Width, &Height, &NumChannels, 0);
+		}
+		SetValid(true);
 	}
-	return Data != nullptr;
+	return Data.size() > 0;
 }
 
 bool Texture::Unload()
 {
-	if (Data != nullptr)
+	if (Data.size() > 0)
 	{
-		stbi_image_free(Data);
-		Data = nullptr;
+		for (size_t Index = 0; Index < Data.size(); Index++)
+		{
+			if (Data[Index] != nullptr) stbi_image_free(Data[Index]);
+		}
+		Data.clear();
 		SetValid(false);
 		return true;
 	}
@@ -70,7 +82,8 @@ void Texture::InitializeBuffer()
 		glTexParameteri(TextureTarget, GL_TEXTURE_MIN_FILTER, GetMappedFiltering( MinFiltering ));
 		glTexParameteri(TextureTarget, GL_TEXTURE_MAG_FILTER, GetMappedFiltering( MagFiltering ));
 
-		glTexImage2D(TextureTarget, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data);
+		SetupBufferData();
+
 		glGenerateMipmap(TextureTarget);
 	}
 	else
@@ -88,17 +101,17 @@ void Texture::DestroyBuffer()
 	}
 }
 
-void Texture::SetTargetType(TargetType InTarget)
-{
-	if (ID == -1)
-	{
-		Target = InTarget;
-	}
-}
+//void Texture::SetTargetType(TargetType InTarget)
+//{
+//	if (ID == -1)
+//	{
+//		Target = InTarget;
+//	}
+//}
 
-Texture::TargetType Texture::GetTargetType()
+Texture::TargetType Texture::GetTargetType() const
 {
-	return Target;
+	return TT_2D;
 }
 
 void Texture::SetSize(int InWidth, int InHeight)
@@ -211,14 +224,14 @@ unsigned int Texture::GetID() const
 	return ID;
 }
 
-unsigned char * Texture::GetData() const
+unsigned char * Texture::GetData(unsigned int InIndex) const
 {
-	return Data;
+	return Data[InIndex];
 }
 
-std::string Texture::GetPath()
+std::string Texture::GetPath(unsigned int InIndex)
 {
-	return Path;
+	return Path[InIndex];
 }
 
 bool Texture::GetFlipVertical()
@@ -249,7 +262,7 @@ void Texture::OnDestroy()
 
 GLenum Texture::GetTarget() const
 {
-	switch (Target)
+	switch (GetTargetType())
 	{
 	case TargetType::TT_2D:
 		return GL_TEXTURE_2D;
@@ -344,6 +357,22 @@ GLint Texture::GetMappedWrap(WrapMode InWrapMode) const
 		break;
 	}
 	return Result;
+}
+
+void Texture::SetupBufferData() const
+{
+	switch (GetTargetType())
+	{
+	case TargetType::TT_2D:
+		glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data[0]);
+		break;
+	case TargetType::TT_Cubemap:
+		for (unsigned int Index = 0; Index < 6; Index++)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Index, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data[Index]);
+		}
+		break;
+	}
 }
 
 Texture::Texture()

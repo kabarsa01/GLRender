@@ -6,6 +6,7 @@
 
 #include "data/Resource.h"
 #include <string>
+#include <vector>
 
 class Texture : public Resource
 {
@@ -45,6 +46,7 @@ public:
 
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
 	Texture(const std::string& InPath);
+	Texture(const std::vector<std::string>& InPath);
 	virtual ~Texture();
 
 	virtual bool Load() override;
@@ -52,8 +54,8 @@ public:
 	void InitializeBuffer();
 	void DestroyBuffer();
 
-	void SetTargetType(TargetType InTarget);
-	TargetType GetTargetType();
+	//	void SetTargetType(TargetType InTarget);
+	virtual TargetType GetTargetType() const;
 	void SetSize(int Width, int Height);
 	void SetUseAlpha(bool InUseAlpha);
 	void SetFlipVertical(bool InFlipVertical);
@@ -70,8 +72,8 @@ public:
 	void SetBorderColor(const glm::vec4 InBorderColor);
 
 	unsigned int GetID() const;
-	unsigned char* GetData() const;
-	std::string GetPath();
+	unsigned char* GetData(unsigned int InIndex = 0) const;
+	std::string GetPath(unsigned int InIndex = 0);
 	bool GetFlipVertical();
 
 	void Use(int InSlotLocation) const;
@@ -79,9 +81,9 @@ public:
 	virtual void OnInitialize() override;
 	virtual void OnDestroy() override;
 protected:
-	std::string Path;
+	std::vector<std::string> Path;
 
-	TargetType Target;
+	//TargetType Target;
 
 	bool FlipVertical = true;
 	bool UseAlpha = false;
@@ -98,7 +100,7 @@ protected:
 	WrapMode WrapV;
 
 	unsigned int ID = -1;
-	unsigned char* Data;
+	std::vector<unsigned char*> Data;
 	int Width = 512;
 	int Height = 512;
 	int NumChannels;
@@ -109,6 +111,7 @@ protected:
 	GLenum GetType() const;
 	GLint GetMappedFiltering(FilteringMode InFilteringMode) const;
 	GLint GetMappedWrap(WrapMode InWrapMode) const;
+	virtual void SetupBufferData() const;
 private:
 	Texture();
 };
