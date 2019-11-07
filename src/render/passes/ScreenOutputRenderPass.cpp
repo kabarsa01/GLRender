@@ -8,7 +8,7 @@
 #include "render/MeshData.h"
 #include "render/FrameBuffer.h"
 
-#include "resources/Texture.h"
+#include "resources/Texture2D.h"
 
 ScreenOutputRenderPass::ScreenOutputRenderPass(const HashString & InName)
 	: RenderPass(InName)

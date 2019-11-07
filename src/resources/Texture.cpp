@@ -6,29 +6,15 @@
 Texture::Texture(const std::string& InPath, bool InputUsesAlpha, bool InFlipVertical, bool InLinear)
 	: Resource( InPath )
 	, ID{ (unsigned int)-1 }
-	, Path{ InPath }
 	, UseAlpha{ InputUsesAlpha }
 	, FlipVertical{ InFlipVertical }
 	, Linear{ InLinear }
-	, Data {}
 	, MinFiltering ( FM_Linear_MipmapLinear )
 	, MagFiltering( FM_Linear_MipmapLinear )
 	, WrapU( WM_Tile )
 	, WrapV( WM_Tile )
 	, BorderColor( 0.0f, 0.0f, 0.0f, 0.0f )
 {
-}
-
-Texture::Texture(const std::string& InPath)
-	: Texture( InPath, false, true, false )
-{
-
-}
-
-Texture::Texture(const std::vector<std::string>& InPath)
-	: Texture( InPath.at(0), false, true, false )
-{
-	Path = InPath;
 }
 
 Texture::~Texture()
@@ -39,31 +25,11 @@ Texture::~Texture()
 
 bool Texture::Load()
 {
-	if (Data.size() == 0)
-	{
-		Data.resize(Path.size());
-		for (size_t Index = 0; Index < Path.size(); Index++)
-		{
-			stbi_set_flip_vertically_on_load(FlipVertical);
-			Data[Index] = stbi_load(Path[Index].c_str(), &Width, &Height, &NumChannels, 0);
-		}
-		SetValid(true);
-	}
-	return Data.size() > 0;
+	return false;
 }
 
 bool Texture::Unload()
 {
-	if (Data.size() > 0)
-	{
-		for (size_t Index = 0; Index < Data.size(); Index++)
-		{
-			if (Data[Index] != nullptr) stbi_image_free(Data[Index]);
-		}
-		Data.clear();
-		SetValid(false);
-		return true;
-	}
 	return false;
 }
 
@@ -100,14 +66,6 @@ void Texture::DestroyBuffer()
 		ID = -1;
 	}
 }
-
-//void Texture::SetTargetType(TargetType InTarget)
-//{
-//	if (ID == -1)
-//	{
-//		Target = InTarget;
-//	}
-//}
 
 Texture::TargetType Texture::GetTargetType() const
 {
@@ -222,16 +180,6 @@ void Texture::SetBorderColor(const glm::vec4 InBorderColor)
 unsigned int Texture::GetID() const
 {
 	return ID;
-}
-
-unsigned char * Texture::GetData(unsigned int InIndex) const
-{
-	return Data[InIndex];
-}
-
-std::string Texture::GetPath(unsigned int InIndex)
-{
-	return Path[InIndex];
 }
 
 bool Texture::GetFlipVertical()
@@ -361,18 +309,6 @@ GLint Texture::GetMappedWrap(WrapMode InWrapMode) const
 
 void Texture::SetupBufferData() const
 {
-	switch (GetTargetType())
-	{
-	case TargetType::TT_2D:
-		glTexImage2D(GL_TEXTURE_2D, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data[0]);
-		break;
-	case TargetType::TT_Cubemap:
-		for (unsigned int Index = 0; Index < 6; Index++)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + Index, 0, GetInternalFormat(), Width, Height, 0, GetFormat(), GetType(), UseEmpty ? NULL : Data[Index]);
-		}
-		break;
-	}
 }
 
 Texture::Texture()

@@ -45,8 +45,6 @@ public:
 	};
 
 	Texture(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
-	Texture(const std::string& InPath);
-	Texture(const std::vector<std::string>& InPath);
 	virtual ~Texture();
 
 	virtual bool Load() override;
@@ -72,8 +70,6 @@ public:
 	void SetBorderColor(const glm::vec4 InBorderColor);
 
 	unsigned int GetID() const;
-	unsigned char* GetData(unsigned int InIndex = 0) const;
-	std::string GetPath(unsigned int InIndex = 0);
 	bool GetFlipVertical();
 
 	void Use(int InSlotLocation) const;
@@ -81,10 +77,6 @@ public:
 	virtual void OnInitialize() override;
 	virtual void OnDestroy() override;
 protected:
-	std::vector<std::string> Path;
-
-	//TargetType Target;
-
 	bool FlipVertical = true;
 	bool UseAlpha = false;
 	bool Linear = false;
@@ -100,7 +92,6 @@ protected:
 	WrapMode WrapV;
 
 	unsigned int ID = -1;
-	std::vector<unsigned char*> Data;
 	int Width = 512;
 	int Height = 512;
 	int NumChannels;

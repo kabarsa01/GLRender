@@ -2,6 +2,7 @@
 
 #include <shaders/Shader.h>
 #include <resources/Texture.h>
+#include <resources/Texture2D.h>
 
 #include <GLFW/glfw3.h>
 #include <cstdio>
@@ -130,11 +131,11 @@ void Renderer::Init()
 	std::string MetallnessPath("./content/gun/Textures/Cerberus_M.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Normal_LOD0.jpg");
 	std::string RoughnessPath("./content/gun/Textures/Cerberus_R.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Roughness.jpg");
 	std::string AOPath("./content/gun/Textures/Raw/Cerberus_AO.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Cavity.jpg");
-	TexturePtr AlbedoMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
-	TexturePtr NormalMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(NormalPath, NormalPath, false, true, true);
-	TexturePtr MetallnessMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(MetallnessPath, MetallnessPath, false, true, false);
-	TexturePtr RoughnessMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(RoughnessPath, RoughnessPath, false, true, false);
-	TexturePtr AOMap = DM->RequestResourceByType<Texture, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
+	Texture2DPtr AlbedoMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
+	Texture2DPtr NormalMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(NormalPath, NormalPath, false, true, true);
+	Texture2DPtr MetallnessMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(MetallnessPath, MetallnessPath, false, true, false);
+	Texture2DPtr RoughnessMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(RoughnessPath, RoughnessPath, false, true, false);
+	Texture2DPtr AOMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
 	Mat->AddTextureParam("AlbedoMap", AlbedoPath, AlbedoMap, 0);
 	Mat->AddTextureParam("NormalMap", NormalPath, NormalMap, 1);
 	Mat->AddTextureParam("MetallnessMap", MetallnessPath, MetallnessMap, 2);

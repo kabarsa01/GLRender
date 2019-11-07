@@ -1,6 +1,6 @@
 #include "render/FrameBuffer.h"
 #include "data/DataManager.h"
-#include "resources/Texture.h"
+#include "resources/Texture2D.h"
 
 #include <string>
 #include <iostream>
@@ -129,7 +129,7 @@ void FrameBuffer::DestroyBuffers()
 	}
 }
 
-void FrameBuffer::SetTexture(TexturePtr InTexture, unsigned int InIndex)
+void FrameBuffer::SetTexture(Texture2DPtr InTexture, unsigned int InIndex)
 {
 	if (InIndex >= Textures.size())
 	{
@@ -138,17 +138,17 @@ void FrameBuffer::SetTexture(TexturePtr InTexture, unsigned int InIndex)
 	Textures[InIndex] = InTexture;
 }
 
-TexturePtr FrameBuffer::GetTexture(unsigned int InIndex)
+Texture2DPtr FrameBuffer::GetTexture(unsigned int InIndex)
 {
 	return Textures[InIndex];
 }
 
-void FrameBuffer::SetDepthTexture(TexturePtr InTexture)
+void FrameBuffer::SetDepthTexture(Texture2DPtr InTexture)
 {
 	DepthTexture = InTexture;
 }
 
-TexturePtr FrameBuffer::GetDepthTexture()
+Texture2DPtr FrameBuffer::GetDepthTexture()
 {
 	return DepthTexture;
 }
@@ -183,10 +183,10 @@ void FrameBuffer::OnInitialize()
 	glGenFramebuffers(1, &ID);
 }
 
-TexturePtr FrameBuffer::CreateTexture(size_t InIndex)
+Texture2DPtr FrameBuffer::CreateTexture(size_t InIndex)
 {
 	std::string TextureId = std::to_string(ID) + std::to_string(InIndex);
-	TexturePtr Tex = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
+	Texture2DPtr Tex = ObjectBase::NewObject<Texture2D, std::string, bool, bool, bool>(TextureId, false, false, true);
 	Tex->SetUseEmpty(true);
 	Tex->SetSize(Width, Height);
 	Tex->SetUseDepth(false);
@@ -196,10 +196,10 @@ TexturePtr FrameBuffer::CreateTexture(size_t InIndex)
 	return Tex;
 }
 
-TexturePtr FrameBuffer::CreateDepth()
+Texture2DPtr FrameBuffer::CreateDepth()
 {
 	std::string TextureId = std::to_string(ID) + std::to_string(ColorBuffersCount);
-	TexturePtr Tex = ObjectBase::NewObject<Texture, std::string, bool, bool, bool>(TextureId, false, false, true);
+	Texture2DPtr Tex = ObjectBase::NewObject<Texture2D, std::string, bool, bool, bool>(TextureId, false, false, true);
 	Tex->SetUseEmpty(true);
 	Tex->SetSize(Width, Height);
 	Tex->SetUseDepth(true);
@@ -213,7 +213,7 @@ void FrameBuffer::ResetBuffers()
 {
 	for (size_t Index = 0; Index < ColorBuffersCount; Index++)
 	{
-		TexturePtr Tex = Textures[Index];
+		Texture2DPtr Tex = Textures[Index];
 		Tex->SetSize(Width, Height);
 		Tex->DestroyBuffer();
 		Tex->InitializeBuffer();

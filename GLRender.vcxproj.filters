@@ -156,6 +156,12 @@
     <ClCompile Include="src\scene\light\LightObject.cpp">
       <Filter>Source Files\scene\light</Filter>
     </ClCompile>
+    <ClCompile Include="src\resources\Texture2D.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\resources\TextureCube.cpp">
+      <Filter>Source Files\resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -247,6 +253,12 @@
     </ClInclude>
     <ClInclude Include="src\scene\light\LightObject.h">
       <Filter>Source Files\scene\light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\Texture2D.h">
+      <Filter>Source Files\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resources\TextureCube.h">
+      <Filter>Source Files\resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

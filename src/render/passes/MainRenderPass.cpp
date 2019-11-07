@@ -60,7 +60,7 @@ void MainRenderPass::DrawPass()
 	Proj = MainCamera->CalculateProjectionMatrix();
 
 	RendererPtr Rend = Engine::GetRendererInstance();
-	TexturePtr ShadowMask = Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture();
+	Texture2DPtr ShadowMask = Rend->GetRenderPass(std::string("ShadowCasters"))->GetFrameBuffer()->GetDepthTexture();
 
 	// go through mesh components and draw them using assigned materials
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();

@@ -6,8 +6,8 @@
 
 #include "core/ObjectBase.h"
 
-class Texture;
-typedef std::shared_ptr<Texture> TexturePtr;
+class Texture2D;
+typedef std::shared_ptr<Texture2D> Texture2DPtr;
 
 class FrameBuffer : public ObjectBase
 {
@@ -25,10 +25,10 @@ public:
 	void GenerateBuffers();
 	void DestroyBuffers();
 
-	void SetTexture(TexturePtr InTexture, unsigned int InIndex);
-	TexturePtr GetTexture(unsigned int InIndex);
-	void SetDepthTexture(TexturePtr InTexture);
-	TexturePtr GetDepthTexture();
+	void SetTexture(Texture2DPtr InTexture, unsigned int InIndex);
+	Texture2DPtr GetTexture(unsigned int InIndex);
+	void SetDepthTexture(Texture2DPtr InTexture);
+	Texture2DPtr GetDepthTexture();
 	void SetAllowDepthReset(bool InAllowDepthReset);
 
 	void Use();
@@ -46,11 +46,11 @@ protected:
 	int ColorBuffersCount = 1;
 	bool AllowDepthReset = true;
 
-	TexturePtr DepthTexture;
-	std::vector<TexturePtr> Textures;
+	Texture2DPtr DepthTexture;
+	std::vector<Texture2DPtr> Textures;
 
-	TexturePtr CreateTexture(size_t InIndex);
-	TexturePtr CreateDepth();
+	Texture2DPtr CreateTexture(size_t InIndex);
+	Texture2DPtr CreateDepth();
 	void ResetBuffers();
 	void SetupAttachments();
 };
