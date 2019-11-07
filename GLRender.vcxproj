@@ -202,6 +202,8 @@
     <None Include="src\shaders\src\BasicScreenSpaceFragmentShader.fs" />
     <None Include="src\shaders\src\BasicScreenSpaceVertexShader.vs" />
     <None Include="src\shaders\src\BasicVertexShader.vs" />
+    <None Include="src\shaders\src\SkyboxFragmentShader.fs" />
+    <None Include="src\shaders\src\SkyboxVertexShader.vs" />
     <None Include="src\shaders\src\ZPrepassFragmentShader.fs" />
     <None Include="src\shaders\src\ZPrepassVertexShader.vs" />
   </ItemGroup>

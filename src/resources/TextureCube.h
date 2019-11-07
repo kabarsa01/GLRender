@@ -12,8 +12,7 @@
 class TextureCube : public Texture
 {
 public:
-	TextureCube(const std::vector<std::string>& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
-	TextureCube(const std::vector<std::string>& InPath);
+	TextureCube(const std::vector<std::string>& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = false);
 	virtual ~TextureCube();
 
 	virtual bool Load() override;

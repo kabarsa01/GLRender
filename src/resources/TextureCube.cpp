@@ -10,11 +10,6 @@ TextureCube::TextureCube(const std::vector<std::string>& InPath, bool InputUsesA
 {
 }
 
-TextureCube::TextureCube(const std::vector<std::string>& InPath)
-	: TextureCube( InPath, false, true, false )
-{
-}
-
 TextureCube::~TextureCube()
 {
 }

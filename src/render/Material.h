@@ -8,6 +8,7 @@
 #include "core/ObjectBase.h"
 #include "data/Resource.h"
 #include "shaders/Shader.h"
+#include "resources/Texture.h"
 #include "resources/Texture2D.h"
 
 //=================================================================================
@@ -19,8 +20,10 @@ public:
 	std::string ParamName;
 	std::string Path;
 	int TextureSlotLocation;
-	Texture2DPtr TextureInstance;
+	TexturePtr TextureInstance;
 };
+
+//---------------------------------------------------------------------------------
 
 //=================================================================================
 //=================================================================================
@@ -43,9 +46,9 @@ public:
 	void AddUniformParam(const std::string& InParamName, const T& InParamValue);
 	template<typename T>
 	void SetUniformParam(const std::string& InParamName, const T& InParamValue);
-	void AddTextureParam(const std::string& InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation);
-	void SetTextureParam(const std::string& InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation);
-	void UpdateTextureParam(const std::string& InParamName, const Texture2DPtr& InTexture, bool InUse);
+	void AddTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation);
+	void SetTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation);
+	void UpdateTextureParam(const std::string& InParamName, const TexturePtr& InTexture, bool InUse);
 
 	void SetShaderPath(const std::string& InVertexShaderPath, const std::string& InFragmentShaderPath);
 	void SetupParams();

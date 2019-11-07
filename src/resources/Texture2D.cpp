@@ -10,12 +10,6 @@ Texture2D::Texture2D(const std::string& InPath, bool InputUsesAlpha, bool InFlip
 {
 }
 
-Texture2D::Texture2D(const std::string& InPath)
-	: Texture2D( InPath, false, true, false )
-{
-
-}
-
 Texture2D::~Texture2D()
 {
 }

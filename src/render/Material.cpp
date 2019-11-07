@@ -36,7 +36,7 @@ void Material::InitializeBuffers()
 {
 	for (auto TexParamPair : TextureParams)
 	{
-		const Texture2DPtr& TextureInstance = TextureParams[TexParamPair.first].TextureInstance;
+		const TexturePtr& TextureInstance = TextureParams[TexParamPair.first].TextureInstance;
 		if (TextureInstance)
 		{
 			TextureInstance->SetFilteringMode(Texture::FilteringMode::FM_Linear, Texture::FilteringModeTarget::FMT_Min);
@@ -68,7 +68,7 @@ void Material::Use()
 	}
 }
 
-void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation)
+void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation)
 {
 	MaterialTextureRecord Rec;
 
@@ -80,14 +80,14 @@ void Material::AddTextureParam(const std::string & InParamName, const std::strin
 	TextureParams[InParamName] = Rec;
 }
 
-void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const Texture2DPtr & InTexture, int InLocation)
+void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr & InTexture, int InLocation)
 {
 	AddTextureParam(InParamName, InPath, InTexture, InLocation);
 	ShaderInstance->Use();
 	ShaderInstance->SetInt(InParamName, InLocation);
 }
 
-void Material::UpdateTextureParam(const std::string & InParamName, const Texture2DPtr & InTexture, bool InUse)
+void Material::UpdateTextureParam(const std::string & InParamName, const TexturePtr & InTexture, bool InUse)
 {
 	if (TextureParams.find(InParamName) == TextureParams.end())
 	{

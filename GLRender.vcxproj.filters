@@ -280,5 +280,11 @@
     <None Include="src\shaders\src\ZPrepassVertexShader.vs">
       <Filter>Source Files\shaders\src</Filter>
     </None>
+    <None Include="src\shaders\src\SkyboxFragmentShader.fs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
+    <None Include="src\shaders\src\SkyboxVertexShader.vs">
+      <Filter>Source Files\shaders\src</Filter>
+    </None>
   </ItemGroup>
 </Project>

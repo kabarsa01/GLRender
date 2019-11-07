@@ -12,8 +12,7 @@
 class Texture2D : public Texture
 {
 public:
-	Texture2D(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = true);
-	Texture2D(const std::string& InPath);
+	Texture2D(const std::string& InPath, bool InputUsesAlpha = false, bool InFlipVertical = true, bool InLinear = false);
 	virtual ~Texture2D();
 
 	virtual bool Load() override;
