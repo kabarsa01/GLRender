@@ -1,5 +1,6 @@
 #include "Material.h"
 #include "data/DataManager.h"
+#include <resources/TextureCube.h>
 
 Material::Material(HashString InId)
 	: Resource(InId)
@@ -20,7 +21,14 @@ bool Material::Load()
 		MaterialTextureRecord& Rec = TexParamPair.second;
 		if (( !Rec.TextureInstance ) && ( Rec.Path.length() > 0 ))
 		{
-			Rec.TextureInstance = DM->GetResourceByType<Texture2D>(Rec.Path);
+			if (Rec.IsCubemap)
+			{
+				Rec.TextureInstance = DM->GetResourceByType<TextureCube>(Rec.Path);
+			}
+			else
+			{
+				Rec.TextureInstance = DM->GetResourceByType<Texture2D>(Rec.Path);
+			}
 		}
 	}
 
@@ -68,7 +76,7 @@ void Material::Use()
 	}
 }
 
-void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation)
+void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap)
 {
 	MaterialTextureRecord Rec;
 
@@ -80,7 +88,7 @@ void Material::AddTextureParam(const std::string & InParamName, const std::strin
 	TextureParams[InParamName] = Rec;
 }
 
-void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr & InTexture, int InLocation)
+void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr & InTexture, int InLocation, bool IsCubemap)
 {
 	AddTextureParam(InParamName, InPath, InTexture, InLocation);
 	ShaderInstance->Use();
@@ -102,6 +110,11 @@ void Material::UpdateTextureParam(const std::string & InParamName, const Texture
 	{
 		InTexture->Use(Rec.TextureSlotLocation);
 	}
+}
+
+MaterialTextureRecord& Material::GetTextureParam(const std::string& InParamName)
+{
+	return TextureParams[InParamName];
 }
 
 void Material::SetShaderPath(const std::string & InVertexShaderPath, const std::string & InFragmentShaderPath)

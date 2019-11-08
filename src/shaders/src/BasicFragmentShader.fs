@@ -23,6 +23,7 @@ uniform sampler2D MetallnessMap;
 uniform sampler2D RoughnessMap;
 uniform sampler2D AOMap;
 uniform sampler2D ShadowMap;
+uniform samplerCube IrradianceMap;
 
 out vec4 FragColor;
 
@@ -84,6 +85,11 @@ vec3 FresnelSchlick(float CosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(1.0 - CosTheta, 5.0);
 }
 
+vec3 FresnelSchlickRoughness(float CosTheta, vec3 F0, float Roughness)
+{
+    return F0 + (max(vec3(1.0 - Roughness), F0) - F0) * pow(1.0 - CosTheta, 5.0);
+}  
+
 float DistributionGGX(vec3 N, vec3 H, float Roughness)
 {
     float a      = Roughness*Roughness;
@@ -126,9 +132,19 @@ void main()
     float Roughness = texture(RoughnessMap, fs_in.uv).r;
     float AO = texture(AOMap, fs_in.uv).r;
 
-    vec3 N = CalculateNormal();//normalize(fs_in.normal);
+    vec3 N = CalculateNormal();
     vec3 V = normalize(view_pos - fs_in.world_pos);
     vec3 Lo = vec3(0.0);
+    vec3 F0 = vec3(0.04);
+    F0 = mix(F0, Albedo, Metallic);
+    vec3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, Roughness);
+    // some ambient lighting
+    vec3 kS = F;
+    vec3 kD = 1.0 - kS;
+    vec3 Irradiance = texture(IrradianceMap, N).rgb;
+    vec3 Diffuse    = Irradiance * Albedo;
+    vec3 Ambient    = (kD * Diffuse) * AO;
+
     for (int i = 0; i < 1; ++i)
     {
         vec3 L = normalize(-1.0 * light_dir);
@@ -138,9 +154,6 @@ void main()
 		float ShadowAttenuation = CalculateShadow(fs_in.light_pos, L, N);
         vec3 Radiance = light_color * Attenuation * (1.0 - ShadowAttenuation);
 
-        vec3 F0 = vec3(0.04); 
-        F0 = mix(F0, Albedo, Metallic);
-        vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
         float NDF = DistributionGGX(N, H, Roughness);  
         float G = GeometrySmith(N, V, L, Roughness);
 
@@ -156,10 +169,8 @@ void main()
         Lo += (kD * Albedo / PI + Specular) * Radiance * NdotL;
     }
 
-	// some artificial ambient lighting
-    vec3 Ambient = vec3(0.1) * Albedo * AO;
+    // final color which is direct and ambient lighting
     vec3 Color = Ambient + Lo;
-	
 	// HDR tonemapping
     Color = Color / (Color + vec3(1.0));
     Color = pow(Color, vec3(1.0/2.2));  

@@ -156,6 +156,8 @@
     <ClCompile Include="src\scene\light\LightObject.cpp" />
     <ClCompile Include="src\scene\mesh\MeshComponent.cpp" />
     <ClCompile Include="src\scene\mesh\MeshObject.cpp" />
+    <ClCompile Include="src\scene\misc\SkyboxComponent.cpp" />
+    <ClCompile Include="src\scene\misc\SkyboxObject.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneObjectBase.cpp" />
     <ClCompile Include="src\scene\SceneObjectComponent.cpp" />
@@ -190,6 +192,8 @@
     <ClInclude Include="src\scene\light\LightObject.h" />
     <ClInclude Include="src\scene\mesh\MeshComponent.h" />
     <ClInclude Include="src\scene\mesh\MeshObject.h" />
+    <ClInclude Include="src\scene\misc\SkyboxComponent.h" />
+    <ClInclude Include="src\scene\misc\SkyboxObject.h" />
     <ClInclude Include="src\scene\Scene.h" />
     <ClInclude Include="src\scene\SceneObjectBase.h" />
     <ClInclude Include="src\scene\SceneObjectComponent.h" />

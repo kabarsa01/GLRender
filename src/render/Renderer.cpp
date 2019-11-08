@@ -22,6 +22,7 @@
 #include "scene/Scene.h"
 #include "scene/SceneObjectBase.h"
 #include "scene/mesh/MeshObject.h"
+#include "scene/misc/SkyboxObject.h"
 #include "scene/camera/CameraObject.h"
 #include "scene/light/LightObject.h"
 
@@ -134,12 +135,12 @@ void Renderer::Init()
 	std::string RoughnessPath("./content/gun/Textures/Cerberus_R.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Roughness.jpg");
 	std::string AOPath("./content/gun/Textures/Raw/Cerberus_AO.tga");//"./content/root/Aset_wood_root_M_rkswd_4K_Cavity.jpg");
 	std::vector<std::string> SkyboxPath = {
-		"./content/textures/cubemaps/sunset/sunset_rt.tga",
-		"./content/textures/cubemaps/sunset/sunset_lt.tga",
-		"./content/textures/cubemaps/sunset/sunset_up.tga",
-		"./content/textures/cubemaps/sunset/sunset_dn.tga",
-		"./content/textures/cubemaps/sunset/sunset_bk.tga",
-		"./content/textures/cubemaps/sunset/sunset_ft.tga"
+		"./content/textures/cubemaps/hw_crater/craterlake_rt.tga",
+		"./content/textures/cubemaps/hw_crater/craterlake_lf.tga",
+		"./content/textures/cubemaps/hw_crater/craterlake_up.tga",
+		"./content/textures/cubemaps/hw_crater/craterlake_dn.tga",
+		"./content/textures/cubemaps/hw_crater/craterlake_bk.tga",
+		"./content/textures/cubemaps/hw_crater/craterlake_ft.tga"
 	};
 
 	Texture2DPtr AlbedoMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(AlbedoPath, AlbedoPath, false, true, false);
@@ -147,7 +148,7 @@ void Renderer::Init()
 	Texture2DPtr MetallnessMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(MetallnessPath, MetallnessPath, false, true, false);
 	Texture2DPtr RoughnessMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(RoughnessPath, RoughnessPath, false, true, false);
 	Texture2DPtr AOMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
-	TextureCubePtr SkyboxMap = DM->RequestResourceByType<TextureCube, const std::vector<std::string>&>(SkyboxPath[0], SkyboxPath);
+	TextureCubePtr SkyboxMap = DM->RequestResourceByType<TextureCube, const std::vector<std::string>&, bool, bool, bool>(SkyboxPath[0], SkyboxPath, false, false, false);
 
 	Mat->AddTextureParam("AlbedoMap", AlbedoPath, ObjectBase::Cast<Texture, Texture2D>(AlbedoMap), 0);
 	Mat->AddTextureParam("NormalMap", NormalPath, ObjectBase::Cast<Texture, Texture2D>(NormalMap), 1);
@@ -155,6 +156,7 @@ void Renderer::Init()
 	Mat->AddTextureParam("RoughnessMap", RoughnessPath, ObjectBase::Cast<Texture, Texture2D>(RoughnessMap), 3);
 	Mat->AddTextureParam("AOMap", AOPath, ObjectBase::Cast<Texture, Texture2D>(AOMap), 4);
 	Mat->AddTextureParam("ShadowMap", "", nullptr, 5);
+	Mat->AddTextureParam("IrradianceMap", "", ObjectBase::Cast<Texture, TextureCube>(SkyboxMap), 6, true);
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
@@ -169,7 +171,7 @@ void Renderer::Init()
 
 	MaterialPtr SkyboxMat = ObjectBase::NewObject<Material, HashString>(std::string("SkyboxMaterial"));
 	SkyboxMat->SetShaderPath("./src/shaders/src/SkyboxVertexShader.vs", "./src/shaders/src/SkyboxFragmentShader.fs");
-	SkyboxMat->AddTextureParam("SkyboxMap", "", ObjectBase::Cast<Texture, TextureCube>(SkyboxMap), 0);
+	SkyboxMat->AddTextureParam("SkyboxMap", "", ObjectBase::Cast<Texture, TextureCube>(SkyboxMap), 0, true);
 	SkyboxMat->Load();
 	SkyboxMat->InitializeBuffers();
 	SkyboxMat->SetupParams();
@@ -212,11 +214,12 @@ void Renderer::Init()
 		Importer.Import("./content/cube/cube.FBX");
 		for (unsigned int MeshIndex = 0; MeshIndex < Importer.GetMeshes().size(); MeshIndex++)
 		{
-			MeshObjectPtr MO = ObjectBase::NewObject<MeshObject>();
-			MO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
-			MO->GetMeshComponent()->Material = SkyboxMat;
-			MO->GetMeshComponent()->MeshData->SetupBufferObjects();
-			MO->Transform.SetRotation({ 0.0f, 45.0f, 0.0f });
+			SkyboxObjectPtr SO = ObjectBase::NewObject<SkyboxObject>();
+			SO->GetMeshComponent()->MeshData = Importer.GetMeshes()[MeshIndex];
+			SO->GetMeshComponent()->Material = SkyboxMat;
+			SO->GetMeshComponent()->MeshData->SetupBufferObjects();
+//			SO->Transform.SetScale({ 5.0f, 5.0f, 5.0f });
+//			MO->Transform.SetRotation({ 0.0f, 45.0f, 0.0f });
 		}
 	}
 

@@ -58,6 +58,9 @@
     <Filter Include="Source Files\render\passes">
       <UniqueIdentifier>{9a2e5294-1a5c-4c3a-97e9-98e098fd2802}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\scene\misc">
+      <UniqueIdentifier>{7cb636f0-f4b3-45b8-b350-8a6953885560}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad\glad.c">
@@ -162,6 +165,12 @@
     <ClCompile Include="src\resources\TextureCube.cpp">
       <Filter>Source Files\resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\scene\misc\SkyboxObject.cpp">
+      <Filter>Source Files\scene\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\misc\SkyboxComponent.cpp">
+      <Filter>Source Files\scene\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\Shader.h">
@@ -259,6 +268,12 @@
     </ClInclude>
     <ClInclude Include="src\resources\TextureCube.h">
       <Filter>Source Files\resources</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\misc\SkyboxObject.h">
+      <Filter>Source Files\scene\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\misc\SkyboxComponent.h">
+      <Filter>Source Files\scene\misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

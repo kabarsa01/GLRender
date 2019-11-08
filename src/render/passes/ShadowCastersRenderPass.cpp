@@ -70,6 +70,10 @@ void ShadowCastersRenderPass::DrawPass()
 	std::vector<MeshComponentPtr> MeshCompVector = Scene->GetSceneComponentsCast<MeshComponent>();
 	for (MeshComponentPtr MeshComp : MeshCompVector)
 	{
+		if (!MeshComp->CastShadows)
+		{
+			continue;
+		}
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 		DepthShader->SetMat4("model", Model);
 		MeshComp->MeshData->Draw();

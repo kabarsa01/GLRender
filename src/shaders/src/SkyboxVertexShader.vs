@@ -2,8 +2,6 @@
 
 layout(location = 0) in vec3 InPos;
 
-invariant gl_Position;
-
 out vec3 TexCoord;
 
 uniform mat4 view;
