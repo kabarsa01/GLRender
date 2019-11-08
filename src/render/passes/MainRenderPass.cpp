@@ -63,7 +63,6 @@ void MainRenderPass::DrawPass()
 	// Draw skybox
 	SkyboxComponentPtr Skybox = Scene->GetSceneComponent<SkyboxComponent>();
 	Skybox->GetParent()->Transform.SetRotation(MainCamera->GetParent()->Transform.GetRotation());
-//	Model = Skybox->GetParent()->Transform.GetMatrix();
 
 	MaterialPtr Material = Skybox->Material;
 	Material->Use();
@@ -87,7 +86,7 @@ void MainRenderPass::DrawPass()
 		Model = MeshComp->GetParent()->Transform.GetMatrix();
 
 		MaterialPtr Material = MeshComp->Material;
-		Material->UpdateTextureParam("ShadowMap", ShadowMask, false);
+		Material->UpdateTexture2DParam("ShadowMap", ShadowMask, false);
 		Material->Use();
 		Material->SetUniformParam<glm::mat4>("model", Model);
 		Material->SetUniformParam<glm::mat4>("view", View);

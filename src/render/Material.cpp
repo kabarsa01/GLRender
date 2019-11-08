@@ -21,14 +21,7 @@ bool Material::Load()
 		MaterialTextureRecord& Rec = TexParamPair.second;
 		if (( !Rec.TextureInstance ) && ( Rec.Path.length() > 0 ))
 		{
-			if (Rec.IsCubemap)
-			{
-				Rec.TextureInstance = DM->GetResourceByType<TextureCube>(Rec.Path);
-			}
-			else
-			{
-				Rec.TextureInstance = DM->GetResourceByType<Texture2D>(Rec.Path);
-			}
+			Rec.TextureInstance = DM->GetResource<Texture>(Rec.Path);
 		}
 	}
 
@@ -76,40 +69,34 @@ void Material::Use()
 	}
 }
 
-void Material::AddTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap)
+void Material::AddTexture2DParam(const std::string & InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation)
 {
-	MaterialTextureRecord Rec;
-
-	Rec.ParamName = InParamName;
-	Rec.Path = InPath;
-	Rec.TextureInstance = InTexture;
-	Rec.TextureSlotLocation = InLocation;
-
-	TextureParams[InParamName] = Rec;
+	AddTextureParam(InParamName, InPath, InTexture, InLocation, false);
 }
 
-void Material::SetTextureParam(const std::string & InParamName, const std::string& InPath, const TexturePtr & InTexture, int InLocation, bool IsCubemap)
+void Material::SetTexture2DParam(const std::string & InParamName, const std::string& InPath, const Texture2DPtr & InTexture, int InLocation)
 {
-	AddTextureParam(InParamName, InPath, InTexture, InLocation);
-	ShaderInstance->Use();
-	ShaderInstance->SetInt(InParamName, InLocation);
+	SetTextureParam(InParamName, InPath, InTexture, InLocation, false);
 }
 
-void Material::UpdateTextureParam(const std::string & InParamName, const TexturePtr & InTexture, bool InUse)
+void Material::UpdateTexture2DParam(const std::string & InParamName, const Texture2DPtr & InTexture, bool InUse)
 {
-	if (TextureParams.find(InParamName) == TextureParams.end())
-	{
-		return;
-	}
+	UpdateTextureParam(InParamName, InTexture, InUse);
+}
 
-	ShaderInstance->Use();
+void Material::AddTextureCubeParam(const std::string& InParamName, const std::string& InPath, const TextureCubePtr& InTexture, int InLocation)
+{
+	AddTextureParam(InParamName, InPath, InTexture, InLocation, true);
+}
 
-	MaterialTextureRecord& Rec = TextureParams[InParamName];
-	Rec.TextureInstance = InTexture;
-	if (InUse && InTexture)
-	{
-		InTexture->Use(Rec.TextureSlotLocation);
-	}
+void Material::SetTextureCubeParam(const std::string& InParamName, const std::string& InPath, const TextureCubePtr& InTexture, int InLocation)
+{
+	SetTextureParam(InParamName, InPath, InTexture, InLocation, true);
+}
+
+void Material::UpdateTextureCubeParam(const std::string& InParamName, const TextureCubePtr& InTexture, bool InUse)
+{
+	UpdateTextureParam(InParamName, InTexture, InUse);
 }
 
 MaterialTextureRecord& Material::GetTextureParam(const std::string& InParamName)
@@ -170,6 +157,43 @@ void Material::SetupParams()
 	{
 		MaterialTextureRecord& Rec = TextureParams[TexParamPair.first];
 		ShaderInstance->SetInt(Rec.ParamName, Rec.TextureSlotLocation);
+	}
+}
+
+void Material::AddTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap)
+{
+	MaterialTextureRecord Rec;
+
+	Rec.ParamName = InParamName;
+	Rec.Path = InPath;
+	Rec.TextureInstance = InTexture;
+	Rec.IsCubemap = IsCubemap;
+	Rec.TextureSlotLocation = InLocation;
+
+	TextureParams[InParamName] = Rec;
+}
+
+void Material::SetTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap)
+{
+	AddTextureParam(InParamName, InPath, InTexture, InLocation, IsCubemap);
+	ShaderInstance->Use();
+	ShaderInstance->SetInt(InParamName, InLocation);
+}
+
+void Material::UpdateTextureParam(const std::string& InParamName, const TexturePtr& InTexture, bool InUse)
+{
+	if (TextureParams.find(InParamName) == TextureParams.end())
+	{
+		return;
+	}
+
+	ShaderInstance->Use();
+
+	MaterialTextureRecord& Rec = TextureParams[InParamName];
+	Rec.TextureInstance = InTexture;
+	if (InUse && InTexture)
+	{
+		InTexture->Use(Rec.TextureSlotLocation);
 	}
 }
 

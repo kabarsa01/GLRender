@@ -150,13 +150,13 @@ void Renderer::Init()
 	Texture2DPtr AOMap = DM->RequestResourceByType<Texture2D, const std::string&, bool, bool, bool>(AOPath, AOPath, false, true, false);
 	TextureCubePtr SkyboxMap = DM->RequestResourceByType<TextureCube, const std::vector<std::string>&, bool, bool, bool>(SkyboxPath[0], SkyboxPath, false, false, false);
 
-	Mat->AddTextureParam("AlbedoMap", AlbedoPath, ObjectBase::Cast<Texture, Texture2D>(AlbedoMap), 0);
-	Mat->AddTextureParam("NormalMap", NormalPath, ObjectBase::Cast<Texture, Texture2D>(NormalMap), 1);
-	Mat->AddTextureParam("MetallnessMap", MetallnessPath, ObjectBase::Cast<Texture, Texture2D>(MetallnessMap), 2);
-	Mat->AddTextureParam("RoughnessMap", RoughnessPath, ObjectBase::Cast<Texture, Texture2D>(RoughnessMap), 3);
-	Mat->AddTextureParam("AOMap", AOPath, ObjectBase::Cast<Texture, Texture2D>(AOMap), 4);
-	Mat->AddTextureParam("ShadowMap", "", nullptr, 5);
-	Mat->AddTextureParam("IrradianceMap", "", ObjectBase::Cast<Texture, TextureCube>(SkyboxMap), 6, true);
+	Mat->AddTexture2DParam("AlbedoMap", AlbedoPath, AlbedoMap, 0);
+	Mat->AddTexture2DParam("NormalMap", NormalPath, NormalMap, 1);
+	Mat->AddTexture2DParam("MetallnessMap", MetallnessPath, MetallnessMap, 2);
+	Mat->AddTexture2DParam("RoughnessMap", RoughnessPath, RoughnessMap, 3);
+	Mat->AddTexture2DParam("AOMap", AOPath, AOMap, 4);
+	Mat->AddTexture2DParam("ShadowMap", "", nullptr, 5);
+	Mat->AddTextureCubeParam("IrradianceMap", "", SkyboxMap, 6);
 	// uniforms setup once
 	Mat->AddUniformParam<glm::vec3>("ambient_color", { 0.04f, 0.04f, 0.045f });
 	Mat->AddUniformParam<glm::vec3>("light_dir", LightObj->Transform.GetForwardVector());//{ -1.0f, -0.5f, -0.5f });
@@ -171,7 +171,7 @@ void Renderer::Init()
 
 	MaterialPtr SkyboxMat = ObjectBase::NewObject<Material, HashString>(std::string("SkyboxMaterial"));
 	SkyboxMat->SetShaderPath("./src/shaders/src/SkyboxVertexShader.vs", "./src/shaders/src/SkyboxFragmentShader.fs");
-	SkyboxMat->AddTextureParam("SkyboxMap", "", ObjectBase::Cast<Texture, TextureCube>(SkyboxMap), 0, true);
+	SkyboxMat->AddTextureCubeParam("SkyboxMap", "", SkyboxMap, 0);
 	SkyboxMat->Load();
 	SkyboxMat->InitializeBuffers();
 	SkyboxMat->SetupParams();

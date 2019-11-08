@@ -10,6 +10,7 @@
 #include "shaders/Shader.h"
 #include "resources/Texture.h"
 #include "resources/Texture2D.h"
+#include "resources/TextureCube.h"
 
 //=================================================================================
 //=================================================================================
@@ -20,7 +21,7 @@ public:
 	std::string ParamName;
 	std::string Path;
 	int TextureSlotLocation;
-	bool IsCubemap;
+	bool IsCubemap = false;
 	TexturePtr TextureInstance;
 };
 
@@ -47,9 +48,12 @@ public:
 	void AddUniformParam(const std::string& InParamName, const T& InParamValue);
 	template<typename T>
 	void SetUniformParam(const std::string& InParamName, const T& InParamValue);
-	void AddTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap = false);
-	void SetTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap = false);
-	void UpdateTextureParam(const std::string& InParamName, const TexturePtr& InTexture, bool InUse);
+	void AddTexture2DParam(const std::string& InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation);
+	void SetTexture2DParam(const std::string& InParamName, const std::string& InPath, const Texture2DPtr& InTexture, int InLocation);
+	void UpdateTexture2DParam(const std::string& InParamName, const Texture2DPtr& InTexture, bool InUse);
+	void AddTextureCubeParam(const std::string& InParamName, const std::string& InPath, const TextureCubePtr& InTexture, int InLocation);
+	void SetTextureCubeParam(const std::string& InParamName, const std::string& InPath, const TextureCubePtr& InTexture, int InLocation);
+	void UpdateTextureCubeParam(const std::string& InParamName, const TextureCubePtr& InTexture, bool InUse);
 	MaterialTextureRecord& GetTextureParam(const std::string& InParamName);
 
 	void SetShaderPath(const std::string& InVertexShaderPath, const std::string& InFragmentShaderPath);
@@ -73,6 +77,10 @@ protected:
 	std::map<std::string, glm::mat4>	Mat4Params;
 
 	std::map<std::string, MaterialTextureRecord> TextureParams;
+
+	void AddTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap);
+	void SetTextureParam(const std::string& InParamName, const std::string& InPath, const TexturePtr& InTexture, int InLocation, bool IsCubemap);
+	void UpdateTextureParam(const std::string& InParamName, const TexturePtr& InTexture, bool InUse);
 private:
 	Material();
 };
